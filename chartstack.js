@@ -105,7 +105,7 @@
             el.appendChild(svg);
 		};
 
-        function normalizeKeen(o){
+        function normalizeKeenPiechart(o){
             var ar = [];
 
             each(o.result, function(a){
@@ -131,9 +131,11 @@
         // TODO: Check if its a url or map to window JS object.
         if (dataSource){
             chartstack.getJSON(dataSource, function(o){
-                o = normalizeKeen(o);
 
                 if (nodeName == 'piechart'){
+
+                    o = normalizeKeenPiechart(o);
+
                     // Regular pie chart example
                     nv.addGraph(function() {
                         var chart = nv.models.pieChart()

@@ -1,0 +1,14 @@
+/* Just styles here for this test page. Not part of any library. */
+body{
+  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+h3{
+    text-align: center;
+}
+
+section{
+    float: left;
+    border: solid 1px: black;
+    padding-right: 10px;
+}
