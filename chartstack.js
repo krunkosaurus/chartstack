@@ -14,8 +14,9 @@
 	function each(o, cb, s) {
 		var n;
 
-		if (!o)
+		if (!o){
 			return 0;
+        }
 
 		s = !s ? o : s;
 
@@ -29,8 +30,9 @@
 			// Hashtables
 			for (n in o) {
 				if (o.hasOwnProperty(n)) {
-					if (cb.call(s, o[n], n, o) === false)
+					if (cb.call(s, o[n], n, o) === false){
 						return 0;
+                    }
 				}
 			}
 		}
@@ -163,15 +165,16 @@
 
             el.appendChild(self.svg);
 
-            // Check dataSource type and if its a URL set domain.
-            // If its JSON just parse it.
-            if (self.dataSource.match('^http')){
+            // Check dataSource starts with { assum it's JSON or else assume
+            // it's a URL to fetch.  We do not check for http anymore as it
+            // can be a local/relative file.
+            if (self.dataSource.match('^{')){
+                self.dataSource = JSON.parse(self.dataSource);
+            }else{
                 domain = self.dataSource.match(/\/\/(.*?)\//);
                 if (domain){
                     self.domain = domain[1];
                 }
-            }else{
-                self.dataSource = JSON.parse(self.dataSource);
             }
 		};
 
