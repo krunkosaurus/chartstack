@@ -1,4 +1,6 @@
 (function(chartstack) {
+    var adapters, charts;
+
 	// These three functions taken from https://github.com/spocke/punymce
 	function is(o, t) {
 		o = typeof(o);
@@ -44,6 +46,14 @@
 		return o;
 	};
 
+    function bootstrap (){
+        // TODO: Here we decide which graph library we are using.
+        var chartNodes = document.querySelectorAll('piechart,barchart');
+        each(chartNodes, function(el){
+            charts.push(new Chart(el));
+        });
+    }
+
     function getJSON(url, cb) {
         var createXHR, xhr;
         var createXHR = function(){
@@ -72,19 +82,40 @@
         xhr.send()
 	}
 
-    // Array of instantiated charts.
-    chartstack.chartsAr = chartsAr = [];
+    function addAdapter(domain, configObj){
+        each(configObj, function(func, type){
+            if (!adapters[domain]){
+                adapters[domain] = {};
+            }
 
-	// Store them in API as well for plugin use
+            adapters[domain][type] = func;
+
+        });
+    }
+
+    // Placeholder for chartstack data adapters.
+    chartstack.adapters = adapters = {};
+
+    // Array of instantiated charts.
+    chartstack.charts = charts = [];
+
+	// Store them in API as well for plugin use.
 	extend(chartstack, {
 		is : is,
 		each : each,
 		extend : extend,
-        getJSON : getJSON
+        getJSON : getJSON,
+        addAdapter: addAdapter
 	});
 
+    // Main Chart class.
 	chartstack.Chart = Chart = function(el) {
-        var nodeName, dataSource, svg;
+        var defaults;
+        var self = this;
+
+        defaults = {
+            labels: true
+        };
 
 		// TODO should extend Default settings here.
 		function setup() {
@@ -95,64 +126,70 @@
             el.style.display = "inline-block";
 
             // Create the SVG element that D3 needs.
-            svg = document.createElementNS ('http://www.w3.org/2000/svg', 'svg');
+            self.svg = document.createElementNS ('http://www.w3.org/2000/svg', 'svg');
 
-            // Set height and width of SVG.
+            // Set height and width of SVG to it's parent's container.
             each(['width', 'height'], function(m){
                 svg.setAttributeNS (null, m, parseInt(el.getAttribute(m)));
             });
 
             el.appendChild(svg);
+
+            self.el = el;
+            // Type of chart.
+            self.chartType = el.nodeName.toLocaleLowerCase();
+
+            self.dataSource = el.getAttribute('datasource');
+
+            if (self.dataSource){
+                self.domain = self.dataSource.match(/\/\/(.*?)\//)[1];
+            }
 		};
 
-        function normalizeKeenPiechart(o){
-            var ar = [];
-
-            each(o.result, function(a){
-                var keys = Object.keys(a);
-                var entry = {
-                    label: a[keys[0]],
-                    value: a[keys[1]]
-                };
-                ar.push(entry)
-            });
-            console.log('ar', ar);
-            return ar;
-        }
-
-        setup();
-
-        this.nodeEl = el;
-        // Type of chart.
-        this.nodeName = nodeName = el.nodeName.toLocaleLowerCase();
-
-        this.dataSource = dataSource = el.getAttribute('datasource');
-        // If we have a datasource property.
-        // TODO: Check if its a url or map to window JS object.
-        if (dataSource){
-            chartstack.getJSON(dataSource, function(o){
-
-                if (nodeName == 'piechart'){
-
-                    o = normalizeKeenPiechart(o);
-
-                    // Regular pie chart example
-                    nv.addGraph(function() {
-                        var chart = nv.models.pieChart()
-                            .x(function(d) { return d.label })
-                            .y(function(d) { return d.value })
-                            .showLabels(true);
-
-                        d3.select(svg)
-                            .datum(o)
-                            .transition().duration(350)
-                            .call(chart);
-
-                        return chart;
-                    });
+        // Fetches and normalizes data with a callback to pass data to.
+        function fetch(cb){
+            // TODO: Allow support for JS object references here.
+            // Either as embedded JSON or object to window[variable].
+            chartstack.getJSON(self.dataSource, function(o){
+                // Check if data is from a domain request.
+                if (self.domain){
+                    // Check if we have adapters for this domain and that we also
+                    // have a chart adapter for this chart from this domain.
+console.log('self.chartType', self.chartType);
+                    if (adapters[self.domain] && adapters[self.domain][self.chartType]){
+                        var o = adapters[self.domain][self.chartType](o);
+                        cb(o);
+                        // Else just return un-normalized results.
+                    }else{
+                        console.log('nooooooo');
+                        cb(o);
+                    }
+                // The data is local.
+                }else{
+                    // TODO: Parse inline JSON or fetch JS object from window here.
                 }
             });
         }
+
+        setup();
+        fetch(function(o){
+            if (self.chartType == 'piechart'){
+                // Regular pie chart example
+                nv.addGraph(function() {
+                    var chart = nv.models.pieChart()
+                        .x(function(d) { return d.label })
+                        .y(function(d) { return d.value })
+                        .showLabels(true);
+
+                    d3.select(svg)
+                        .datum(o)
+                        .transition().duration(350)
+                        .call(chart);
+
+                    return chart;
+                });
+            }
+        });
 
 		// Public methods
 		extend(this, {
@@ -160,18 +197,14 @@
 			},
 
 			hide : function() {
-			}
+			},
+
+			refresh : function() {
+			},
+
+            fetch : fetch
 		});
 	};
-
-    bootstrap = function(){
-        // TODO: Here we decide which graph library we are using.
-        var charts = document.querySelectorAll('piechart,barchart');
-        each(charts, function(el, i, all){
-            chartsAr.push(new Chart(el));
-        });
-
-    };
 
     document.addEventListener("DOMContentLoaded", bootstrap);
 
