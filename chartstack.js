@@ -228,9 +228,11 @@
                     chart.width(self.width).height(self.height);
 
                     chart.xAxis
-                        .tickFormat(d3.format(',f'));
+                        //.tickFormat(d3.format(',f'));
+                        .tickFormat(function(d) { return d3.time.format('%b %d')(new Date(d)); });
 
                     chart.yAxis
+                        .axisLabel('Count')
                         .tickFormat(d3.format(',.1f'));
 
                     d3.select(self.svg)
