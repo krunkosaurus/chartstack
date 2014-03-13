@@ -4,7 +4,6 @@
         <title>Chartstack test page</title>
         <link href="css/page_styling.css" rel="stylesheet">
         <link href="css/nv.d3.css" rel="stylesheet">
-        <link href="css/chartstack.css" rel="stylesheet">
     </head>
     <body>
         <h1>Chartstack Demo Page</h1>
@@ -35,7 +34,7 @@
         </section>
 
         <section>
-            <barchart width="600px" height="300px" domain="api.keen.io" datasource="https://api.keen.io/3.0/projects/531a54e136bf5a0f8e000002/queries/count?api_key=597cdee063701414f5a10650f70de48d1e5f50e7e87630b7bf4511fe6c0c1d4e982bff79e4b1fb0594a38b5d98481d5fbc2a2512fe67916b8d573c4f1242f853ac65a8881211388f85e7884eab291530d3632a3c35e30483646a3dc59b0ec949b0e5d41d3917528c77771d06ad782231&event_collection=signups&timeframe=last_14_days&timezone=-25200&target_property=platform&group_by=platform&interval=daily"></barchart>
+            <barchart width="600px" height="300px" datasource="https://api.keen.io/3.0/projects/531a54e136bf5a0f8e000002/queries/count?api_key=597cdee063701414f5a10650f70de48d1e5f50e7e87630b7bf4511fe6c0c1d4e982bff79e4b1fb0594a38b5d98481d5fbc2a2512fe67916b8d573c4f1242f853ac65a8881211388f85e7884eab291530d3632a3c35e30483646a3dc59b0ec949b0e5d41d3917528c77771d06ad782231&event_collection=signups&timeframe=last_14_days&timezone=-25200&target_property=platform&group_by=platform&interval=daily"></barchart>
             <h3>6. Daily Signups Last 14 days</h3>
         </section>
 
@@ -43,5 +42,23 @@
         <script src="js/nv.d3.min.js"></script>
         <script src="chartstack.js"></script>
         <script src="chartstack.keen.js"></script>
+
+<!--
+ChartStack by Keen IO
+Summary: ChartStack is an open-source JavaScript library that extends HTML with new, simple yet powerful charting elements like <piechart> and <barchart>. It allows creating complex charts using static or data-driven data with as minimal coding as possible.  Despite it's simplicity ChartStack charts support animations and other advanced features and can be styled and tweaked with CSS.
+
+No charting library lock-in
+Under the hood, ChartStack relies on a charting library but is not fixed to any particular charting library.  It uses NVD3 charting library (built on D3) by default but also currently support Google Charts with more charting libraries to come.
+
+Includes easy transformation of your data format
+We recognize that everybody collects data in different ways and every charting library has it's own arbitrary data format for displaying that data, that's why ChartStack comes with easy methods to normalize incoming data to one unified format. Though there is no real standard for displaying data in charts, once you've setup the normalization plugin for your data source, all charts just work.  We've already included a normalization plugin for Keen IO data sources and the community is invited to add theirs in the ChartStack Github repo.
+
+Change the charting library but not your data
+Because Chartstack understands your data format it means switching to a different supported charting library is as easy as a text change without having to change your data to support the other charting api.  That way you can focus on building and styling your chart.
+
+Support for advanced users
+Chartstack's goal is to be as simple and flexible while not tying you to one Graphing Library.  There are cases however, where one graphing library has features that another doesn't.  Chartstack keeps the underlying library accessible so that advanced users can still access those features.
+-->
+
     </body>
 </html>
