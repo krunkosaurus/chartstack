@@ -108,71 +108,93 @@
         addAdapter: addAdapter
 	});
 
+    // Defaults accessible from outside in case user wants to change them.
+    // DOM properties override defaults.
+    chartstack.defaults = {
+        labels: true
+    };
+
     // Main Chart class.
 	chartstack.Chart = Chart = function(el) {
-        var defaults;
         var self = this;
-
-        defaults = {
-            labels: true
-        };
 
 		// TODO should extend Default settings here.
 		function setup() {
-            var width, height;
-
-            // Our made up HTML nodes are display: inline so we need to make
-            // them block;
-            el.style.display = "inline-block";
-
-            // Create the SVG element that D3 needs.
-            self.svg = document.createElementNS ('http://www.w3.org/2000/svg', 'svg');
-
-            // Set height and width of SVG to it's parent's container.
-            each(['width', 'height'], function(m){
-                svg.setAttributeNS (null, m, parseInt(el.getAttribute(m)));
-            });
-
-            el.appendChild(svg);
+            var domain;
 
             self.el = el;
             // Type of chart.
             self.chartType = el.nodeName.toLocaleLowerCase();
 
+            // Copy global defaults on to this chart.
+            each(chartstack.defaults, function(k, v){
+                self[k] = v;
+            });
+
+            // Find properties on dom element to override defaults.
+            each(['domain', 'labels'], function(attr){
+                var test = el.getAttribute(attr);
+                if (test){
+                    self[attr] = test;
+                }
+            });
+
+            // Data source is required.
             self.dataSource = el.getAttribute('datasource');
 
-            if (self.dataSource){
-                self.domain = self.dataSource.match(/\/\/(.*?)\//)[1];
+            // Our made up HTML nodes are display: inline so we need to make
+            // them block;
+            el.style.display = "inline-block";
+
+            // Setup SVG
+            // =========
+            // Create the SVG element that D3 needs.
+            self.svg = document.createElementNS ('http://www.w3.org/2000/svg', 'svg');
+            // Set height and width of SVG to it's parent's container.
+            each(['width', 'height'], function(m){
+                self.svg.setAttributeNS(null, m, parseInt(el.getAttribute(m)));
+            });
+
+            el.appendChild(self.svg);
+
+            // Check dataSource type and if its a URL set domain.
+            // If its JSON just parse it.
+            if (self.dataSource.match('^http')){
+                domain = self.dataSource.match(/\/\/(.*?)\//);
+                if (domain){
+                    self.domain = domain[1];
+                }
+            }else{
+                self.dataSource = JSON.parse(self.dataSource);
             }
 		};
 
         // Fetches and normalizes data with a callback to pass data to.
         function fetch(cb){
-            // TODO: Allow support for JS object references here.
-            // Either as embedded JSON or object to window[variable].
-            chartstack.getJSON(self.dataSource, function(o){
-                // Check if data is from a domain request.
-                if (self.domain){
-                    // Check if we have adapters for this domain and that we also
-                    // have a chart adapter for this chart from this domain.
-console.log('self.chartType', self.chartType);
-                    if (adapters[self.domain] && adapters[self.domain][self.chartType]){
-                        var o = adapters[self.domain][self.chartType](o);
-                        cb(o);
-                        // Else just return un-normalized results.
-                    }else{
-                        console.log('nooooooo');
-                        cb(o);
-                    }
-                // The data is local.
+            function finish(data){
+                // Check if we have adapters for this domain and that we also
+                // have a chart adapter for this chart from this domain.
+                if (adapters[self.domain] && adapters[self.domain][self.chartType]){
+                    var data = adapters[self.domain][self.chartType](data);
+                    cb(data);
+                    // Else just return un-normalized results.
                 }else{
-                    // TODO: Parse inline JSON or fetch JS object from window here.
+                    cb(data);
                 }
-            });
+            }
+
+            // If this is a URL fetch data.
+            if (typeof self.dataSource == "string"){
+                chartstack.getJSON(self.dataSource, finish);
+            // The data is local.
+            }else{
+                finish(self.dataSource);
+            }
         }
 
         setup();
         fetch(function(o){
+            console.log('o', o);
             if (self.chartType == 'piechart'){
                 // Regular pie chart example
                 nv.addGraph(function() {
@@ -181,7 +203,7 @@ console.log('self.chartType', self.chartType);
                         .y(function(d) { return d.value })
                         .showLabels(true);
 
-                    d3.select(svg)
+                    d3.select(self.svg)
                         .datum(o)
                         .transition().duration(350)
                         .call(chart);
