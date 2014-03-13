@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Chartstack test page</title>
+        <link href="css/nv.d3.css" rel="stylesheet">
+        <link href="css/chartstack.css" rel="stylesheet">
+    </head>
+    <body>
+        <h1>Chartstack test page</h1>
+
+        <piechart width="300px" height="300px" datasource="https://api.keen.io/3.0/projects/531a54e136bf5a0f8e000002/queries/count?api_key=597cdee063701414f5a10650f70de48d1e5f50e7e87630b7bf4511fe6c0c1d4e982bff79e4b1fb0594a38b5d98481d5fbc2a2512fe67916b8d573c4f1242f853ac65a8881211388f85e7884eab291530d3632a3c35e30483646a3dc59b0ec949b0e5d41d3917528c77771d06ad782231&event_collection=signups&timezone=-25200&group_by=platform"></piechart>
+
+        <div id="chart">
+            <svg width="700px" height="300px"></svg>
+        </div>
+
+
+        <script src="js/d3.min.js"></script>
+        <script src="js/nv.d3.min.js"></script>
+        <script src="chartstack.js"></script>
+
+<script>
+
+
+/*
+//Regular pie chart example
+nv.addGraph(function() {
+  var chart = nv.models.pieChart()
+      .x(function(d) { return d.label })
+      .y(function(d) { return d.value })
+      .showLabels(true);
+
+    d3.select("#chart svg")
+        .datum(exampleData())
+        .transition().duration(350)
+        .call(chart);
+
+  return chart;
+});
+*/
+
+//Pie chart example data. Note how there is only a single array of key-value pairs.
+function exampleData() {
+  return  [
+      {
+        "label": "One",
+        "value" : 29.765957771107
+      } ,
+      {
+        "label": "Two",
+        "value" : 0
+      } ,
+      {
+        "label": "Three",
+        "value" : 32.807804682612
+      } ,
+      {
+        "label": "Four",
+        "value" : 196.45946739256
+      } ,
+      {
+        "label": "Five",
+        "value" : 0.19434030906893
+      } ,
+      {
+        "label": "Six",
+        "value" : 98.079782601442
+      } ,
+      {
+        "label": "Seven",
+        "value" : 13.925743130903
+      } ,
+      {
+        "label": "Eight",
+        "value" : 5.1387322875705
+      }
+    ];
+}
+</script>
+    </body>
+</html>
