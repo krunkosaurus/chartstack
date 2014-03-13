@@ -62,7 +62,7 @@
                 try{
                     xhr = new ActiveXObject("Microsoft.XMLHTTP");
                 }catch(e){
-                    console.log(e.message);
+                    console.warn(e.message);
                     xhr = null;
                 }
             }else{
@@ -128,13 +128,19 @@
 
             // Copy global defaults on to this chart.
             each(chartstack.defaults, function(k, v){
-                self[k] = v;
+                self[v] = k;
             });
 
             // Find properties on dom element to override defaults.
             each(['domain', 'labels'], function(attr){
                 var test = el.getAttribute(attr);
                 if (test){
+                    // Support for real booleans.
+                    if (test == 'false' || test == '0' || test == 'off'){
+                        test = false;
+                    }else if (test == 'true' || test == '1' || test == "on"){
+                        test = true;
+                    }
                     self[attr] = test;
                 }
             });
@@ -194,14 +200,13 @@
 
         setup();
         fetch(function(o){
-            console.log('o', o);
             if (self.chartType == 'piechart'){
                 // Regular pie chart example
                 nv.addGraph(function() {
                     var chart = nv.models.pieChart()
                         .x(function(d) { return d.label })
                         .y(function(d) { return d.value })
-                        .showLabels(true);
+                        .showLabels(self.labels);
 
                     d3.select(self.svg)
                         .datum(o)
