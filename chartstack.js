@@ -1,5 +1,5 @@
 (function(chartstack) {
-    var adapters, charts;
+    var adapters, renderers, charts;
 
 	// These three functions taken from https://github.com/spocke/punymce
 	function is(o, t) {
@@ -84,6 +84,7 @@
         xhr.send()
 	}
 
+    // Adapters that normalize 3rd party api to a standard format.
     function addAdapter(domain, configObj){
         each(configObj, function(func, type){
             if (!adapters[domain]){
@@ -95,8 +96,22 @@
         });
     }
 
+    // Chart specific Renderers that Chartstack uses to render charts.
+    function addRenderer(provider, configObj){
+        each(configObj, function(func, type){
+            if (!renderers[provider]){
+                renderers[provider] = {};
+            }
+
+            renderers[provider][type] = func;
+        });
+    }
+
     // Placeholder for chartstack data adapters.
     chartstack.adapters = adapters = {};
+
+    // Placeholder for chartstack renderers.
+    chartstack.renderers = renderers = {};
 
     // Array of instantiated charts.
     chartstack.charts = charts = [];
@@ -107,7 +122,8 @@
 		each : each,
 		extend : extend,
         getJSON : getJSON,
-        addAdapter: addAdapter
+        addAdapter : addAdapter,
+        addRenderer : addRenderer 
 	});
 
     // Defaults accessible from outside in case user wants to change them.
@@ -204,71 +220,17 @@
         }
 
         setup();
-        fetch(function(o){
-            if (self.chartType == 'piechart'){
-                // Regular pie chart example
-                nv.addGraph(function() {
-                    var chart = nv.models.pieChart()
-                        .x(function(d) { return d.label })
-                        .y(function(d) { return d.value })
-                        .showLabels(self.labels);
-
-                    d3.select(self.svg)
-                        .datum(o)
-                        .transition().duration(350)
-                        .call(chart);
-
-                    return chart;
-                });
-            }else if (self.chartType == 'barchart'){
-                nv.addGraph(function() {
-                    var chart = nv.models.multiBarChart();
-
-                    // Required to set the height once more or it's too small.
-                    chart.width(self.width).height(self.height);
-
-                    chart.xAxis
-                        //.tickFormat(d3.format(',f'));
-                        .tickFormat(function(d) { return d3.time.format('%b %d')(new Date(d)); });
-
-                    chart.yAxis
-                        .axisLabel('Count')
-                        .tickFormat(d3.format(',.1f'));
-
-                    d3.select(self.svg)
-                        .datum(o)
-                        .transition().duration(500)
-                        .call(chart);
-
-                    nv.utils.windowResize(chart.update);
-                });
-
-            }else if (self.chartType == 'linechart'){
-                var chart = nv.models.cumulativeLineChart()
-                    .x(function(d) { return d[0] })
-                    .y(function(d) { return d[1] }) //adjusting, 100% is 1.00, not 100 as it is in the data
-                    .color(d3.scale.category10().range())
-                    .useInteractiveGuideline(true);
-
-                chart.width(self.width).height(self.height);
-
-                chart.xAxis
-//                    .tickValues([1078030800000,1122782400000,1167541200000,1251691200000])
-                    .tickFormat(function(d) {
-                        return d3.time.format('%x')(new Date(d))
-                    });
-
-                chart.yAxis
-                    .tickFormat(d3.format('1g'));
-//                    .tickFormat(d3.format(',.1%'));
-
-                d3.select(self.svg)
-                    .datum(o)
-                    .call(chart);
-
-                nv.utils.windowResize(chart.update);
-                return chart;
+        fetch(function(data){
+            var provider = 'nvd3';
+            var renderer = chartstack.renderers[provider]
+            if (!renderer){
+                throw('Renderer for ' + provider + ' is missing.');
+                return;
+            }else if(!renderer[self.chartType]){
+                throw('Renderer for ' + provider + ':' + self.chartType + ' is missing.');
+                return;
             }
+            renderer[self.chartType](self, data);
         });
 
 		// Public methods
