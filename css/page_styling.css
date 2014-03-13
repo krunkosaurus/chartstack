@@ -12,3 +12,8 @@ section{
     border: solid 1px: black;
     padding-right: 10px;
 }
+
+
+.nv-legend{
+    fill: blue;
+}
