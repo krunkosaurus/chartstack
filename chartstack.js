@@ -167,10 +167,10 @@
 
             el.appendChild(self.svg);
 
-            // Check dataSource starts with { assum it's JSON or else assume
-            // it's a URL to fetch.  We do not check for http anymore as it
-            // can be a local/relative file.
-            if (self.dataSource.match('^{')){
+            // Check dataSource starts with { or [ assume it's JSON or else
+            // assume it's a URL to fetch.  We do not check for http anymore
+            // as it can be a local/relative file.
+            if (self.dataSource.match(/^({|\[)/)){
                 self.dataSource = JSON.parse(self.dataSource);
             }else{
                 domain = self.dataSource.match(/\/\/(.*?)\//);
