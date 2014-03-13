@@ -154,7 +154,6 @@
 	chartstack.Chart = Chart = function(el) {
         var self = this;
 
-		// TODO should extend Default settings here.
 		function setup() {
             var domain;
 
@@ -168,8 +167,16 @@
             });
 
             // Find properties on dom element to override defaults.
-            each(['domain', 'labels'], function(attr){
-                var test = el.getAttribute(attr);
+            // Support arrays here so we can store the data under a different name.
+            each([['provider', 'domain'], 'labels'], function(attr){
+                var test, newKey;
+
+                if (is(attr, 'object')){
+                    newKey = attr[1];
+                    attr = attr[0];
+                }
+                test = el.getAttribute(attr);
+                // If property exists in the DOM, save it.
                 if (test){
                     // Support for real booleans.
                     if (test == 'false' || test == '0' || test == 'off'){
@@ -177,7 +184,14 @@
                     }else if (test == 'true' || test == '1' || test == "on"){
                         test = true;
                     }
-                    self[attr] = test;
+
+                    if (newKey){
+                        console.log('1setting', attr, 'on this to', newKey);
+                        self[newKey] = test;
+                    }else{
+                        console.log('2setting', attr, 'on this to', test);
+                        self[attr] = test;
+                    }
                 }
             });
 
