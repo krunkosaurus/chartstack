@@ -84,6 +84,23 @@
         xhr.send()
 	}
 
+    // Returns a chartstack object by html element id or element comparison.
+    function get(strOrEl){
+        var el = strOrEl.nodeName ? strOrEl : document.querySelector(strOrEl);
+        var matchedChart;
+
+        if (el){
+            each(chartstack.charts, function(chart){
+                if (el == chart.el){
+                    matchedChart = chart;
+                    return false;
+                }
+            });
+            return matchedChart;
+        }
+        throw("That element doesn't exist on the page.");
+    }
+
     // Adapters that normalize 3rd party api to a standard format.
     function addAdapter(domain, configObj){
         each(configObj, function(func, type){
@@ -122,6 +139,7 @@
 		each : each,
 		extend : extend,
         getJSON : getJSON,
+        get: get,
         addAdapter : addAdapter,
         addRenderer : addRenderer 
 	});
@@ -221,6 +239,7 @@
 
         setup();
         fetch(function(data){
+            // TODO: Hardcoded provider for now. Later we check window globals.
             var provider = 'nvd3';
             var renderer = chartstack.renderers[provider]
             if (!renderer){
@@ -236,15 +255,22 @@
 		// Public methods
 		extend(this, {
 			show : function() {
+                this.el.style.display = 'none';
 			},
 
 			hide : function() {
+                this.el.style.display = 'block';
 			},
 
-			refresh : function() {
-			},
+            render : function(){
+                // TODO
+                // chartstack.renderer[this.chartType](this, this.fetch());
+            },
 
-            fetch : fetch
+            fetch : function(cb){
+                cb || (cb = function(){});
+                fetch(cb);
+            }
 		});
 	};
 
