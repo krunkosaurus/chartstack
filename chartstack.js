@@ -50,7 +50,7 @@
 
     function bootstrap (){
         // TODO: Here we decide which graph library we are using.
-        var chartNodes = document.querySelectorAll('piechart,barchart');
+        var chartNodes = document.querySelectorAll('piechart,barchart,linechart');
         each(chartNodes, function(el){
             charts.push(new Chart(el));
         });
@@ -242,6 +242,32 @@
 
                     nv.utils.windowResize(chart.update);
                 });
+
+            }else if (self.chartType == 'linechart'){
+                var chart = nv.models.cumulativeLineChart()
+                    .x(function(d) { return d[0] })
+                    .y(function(d) { return d[1] }) //adjusting, 100% is 1.00, not 100 as it is in the data
+                    .color(d3.scale.category10().range())
+                    .useInteractiveGuideline(true);
+
+                chart.width(self.width).height(self.height);
+
+                chart.xAxis
+//                    .tickValues([1078030800000,1122782400000,1167541200000,1251691200000])
+                    .tickFormat(function(d) {
+                        return d3.time.format('%x')(new Date(d))
+                    });
+
+                chart.yAxis
+                    .tickFormat(d3.format('1g'));
+//                    .tickFormat(d3.format(',.1%'));
+
+                d3.select(self.svg)
+                    .datum(o)
+                    .call(chart);
+
+                nv.utils.windowResize(chart.update);
+                return chart;
             }
         });
 
