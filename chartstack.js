@@ -160,7 +160,9 @@
             self.svg = document.createElementNS ('http://www.w3.org/2000/svg', 'svg');
             // Set height and width of SVG to it's parent's container.
             each(['width', 'height'], function(m){
-                self.svg.setAttributeNS(null, m, parseInt(el.getAttribute(m)));
+                var v = parseInt(el.getAttribute(m))
+                self[m] = v;
+                self.svg.setAttributeNS(null, m, v);
             });
 
             el.appendChild(self.svg);
@@ -217,6 +219,26 @@
                         .call(chart);
 
                     return chart;
+                });
+            }else if (self.chartType == 'barchart'){
+                nv.addGraph(function() {
+                    var chart = nv.models.multiBarChart();
+
+                    // Required to set the height once more or it's too small.
+                    chart.width(self.width).height(self.height);
+
+                    chart.xAxis
+                        .tickFormat(d3.format(',f'));
+
+                    chart.yAxis
+                        .tickFormat(d3.format(',.1f'));
+
+                    d3.select(self.svg)
+                        .datum(o)
+                        .transition().duration(500)
+                        .call(chart);
+
+                    nv.utils.windowResize(chart.update);
                 });
             }
         });
