@@ -1,0 +1,6 @@
+To do list:
+- Event support (onload, onDataRecieve)
+- JavaScript init charts method and object construction
+- two way event handlings,
+- polling support to update data
+- click on chart and go back 30 min in time.
