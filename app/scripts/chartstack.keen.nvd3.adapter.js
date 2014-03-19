@@ -9,7 +9,7 @@ chartstack.addAdapter('api.keen.io', {
                 label: a[keys[0]],
                 value: a[keys[1]]
             };
-            ar.push(entry)
+            ar.push(entry);
         });
         return ar;
     },
@@ -72,4 +72,4 @@ chartstack.addAdapter('api.keen.io', {
 
         return ar;
     }
-})
+});

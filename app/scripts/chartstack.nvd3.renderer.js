@@ -3,8 +3,8 @@ chartstack.addRenderer('nvd3', {
         // Regular pie chart example
         nv.addGraph(function() {
             var chart = nv.models.pieChart()
-                .x(function(d) { return d.label })
-                .y(function(d) { return d.value })
+                .x(function(d) { return d.label; })
+                .y(function(d) { return d.value; })
                 .showLabels($chart.labels);
 
             d3.select($chart.svg)
@@ -42,8 +42,8 @@ chartstack.addRenderer('nvd3', {
 
     linechart: function($chart, data){
         var chart = nv.models.cumulativeLineChart()
-            .x(function(d) { return d[0] })
-            .y(function(d) { return d[1] }) //adjusting, 100% is 1.00, not 100 as it is in the data
+            .x(function(d) { return d[0]; })
+            .y(function(d) { return d[1]; }) //adjusting, 100% is 1.00, not 100 as it is in the data
             .color(d3.scale.category10().range())
             .useInteractiveGuideline(true);
 
@@ -51,7 +51,7 @@ chartstack.addRenderer('nvd3', {
 
         chart.xAxis
             .tickFormat(function(d) {
-                return d3.time.format('%x')(new Date(d))
+                return d3.time.format('%x')(new Date(d));
             });
 
         chart.yAxis

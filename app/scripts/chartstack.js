@@ -9,7 +9,7 @@
 			return o != 'undefined';
 
 		return o == t;
-	};
+	}
 
 	function each(o, cb, s) {
 		var n;
@@ -38,7 +38,7 @@
 		}
 
 		return 1;
-	};
+	}
 
 	function extend(o, e) {
 		each(e, function(v, n) {
@@ -46,7 +46,7 @@
 		});
 
 		return o;
-	};
+	}
 
     function bootstrap (){
         // TODO: Here we decide which graph library we are using.
@@ -57,7 +57,7 @@
     }
 
     function getJSON(url, cb) {
-        var createXHR, xhr;
+        var xhr;
         var createXHR = function(){
             var xhr;
             if (window.ActiveXObject){
@@ -71,17 +71,17 @@
                 xhr = new XMLHttpRequest();
             }
             return xhr;
-        }
+        };
 
         xhr = createXHR();
         xhr.onreadystatechange = function(){
             if (xhr.readyState === 4){
                 cb(JSON.parse(xhr.responseText));
             }
-        }
-        xhr.open('GET', url, true)
+        };
+        xhr.open('GET', url, true);
         xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        xhr.send()
+        xhr.send();
 	}
 
     // Returns a chartstack object by html element id or element comparison.
@@ -186,10 +186,8 @@
                     }
 
                     if (newKey){
-                        console.log('1setting', attr, 'on this to', newKey);
                         self[newKey] = test;
                     }else{
-                        console.log('2setting', attr, 'on this to', test);
                         self[attr] = test;
                     }
                 }
@@ -208,7 +206,7 @@
             self.svg = document.createElementNS ('http://www.w3.org/2000/svg', 'svg');
             // Set height and width of SVG to it's parent's container.
             each(['width', 'height'], function(m){
-                var v = parseInt(el.getAttribute(m))
+                var v = parseInt(el.getAttribute(m));
                 self[m] = v;
                 self.svg.setAttributeNS(null, m, v);
             });
@@ -226,7 +224,7 @@
                     self.domain = domain[1];
                 }
             }
-		};
+		}
 
         // Fetches and normalizes data with a callback to pass data to.
         function fetch(cb){
@@ -234,7 +232,7 @@
                 // Check if we have adapters for this domain and that we also
                 // have a chart adapter for this chart from this domain.
                 if (adapters[self.domain] && adapters[self.domain][self.chartType]){
-                    var data = adapters[self.domain][self.chartType](data);
+                    data = adapters[self.domain][self.chartType](data);
                     cb(data);
                     // Else just return un-normalized results.
                 }else{
@@ -255,13 +253,11 @@
         fetch(function(data){
             // TODO: Hardcoded provider for now. Later we check window globals.
             var provider = 'nvd3';
-            var renderer = chartstack.renderers[provider]
+            var renderer = chartstack.renderers[provider];
             if (!renderer){
                 throw('Renderer for ' + provider + ' is missing.');
-                return;
             }else if(!renderer[self.chartType]){
                 throw('Renderer for ' + provider + ':' + self.chartType + ' is missing.');
-                return;
             }
             renderer[self.chartType](self, data);
         });
