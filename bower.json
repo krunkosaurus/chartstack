@@ -1,0 +1,26 @@
+{
+  "name": "startupiq",
+  "version": "0.0.1",
+  "authors": [
+    "Mauvis Ledford <mauvis@brainswap.me>"
+  ],
+  "description": "Rosetta stone for JavaScript charting libraries! By Keen IO (http://keen.io/)",
+  "keywords": [
+    "chart",
+    "charting",
+    "graph",
+    "d3",
+    "nvd3",
+    "highcharts",
+    "Google Charts",
+    "chart.js",
+    "nvd3",
+    "javascript"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "nvd3": "~1.1.15-beta",
+    "highcharts": "~3.0.7"
+  }
+}
