@@ -1,5 +1,18 @@
 /* global chartstack, nv, d3 */
 chartstack.addRenderer('nvd3', {
+  prerender: function($chart){
+    // Create the SVG element that D3 needs.
+    $chart.svg = document.createElementNS ('http://www.w3.org/2000/svg', 'svg');
+    // Set height and width of SVG to it's parent's container.
+    chartstack.each(['width', 'height'], function(m){
+      var v = parseInt($chart.el.getAttribute(m));
+      $chart[m] = v;
+      $chart.svg.setAttributeNS(null, m, v);
+    });
+
+    $chart.el.appendChild($chart.svg);
+  },
+
   piechart: function($chart, data){
     // Regular pie chart example
     nv.addGraph(function() {

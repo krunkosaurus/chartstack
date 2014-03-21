@@ -1,6 +1,9 @@
 To do list:
-- Event support (onload, onDataRecieve)
-- JavaScript init charts method and object construction
+- Add support for Google Charts
+- Support for more chart configuration options - currently we only support labels on/off as an example.
+- Adding in event hook support (onload, onDataRecieve) to support future things like polling, graph drill-down, etc.
+- Adding support for pure JavaScript init charts methods for advanced use cases
+- Start of Documentation
 - two way event handlings,
 - polling support to update data
-- click on chart and go back 30 min in time.
+

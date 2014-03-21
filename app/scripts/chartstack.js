@@ -1,5 +1,5 @@
 (function(chartstack) {
-  var adapters, renderers, charts, Chart;
+  var adapters, provider, renderers, charts, Chart;
 
   // These three functions taken from https://github.com/spocke/punymce
   function is(o, t) {
@@ -51,6 +51,10 @@
   }
 
   function bootstrap (){
+    // TODO: Better system for detecting which charting lib is loaded.
+    if (window.nv){
+      provider = 'nvd3';
+    }
     // TODO: Here we decide which graph library we are using.
     var chartNodes = document.querySelectorAll('piechart,barchart,linechart');
     each(chartNodes, function(el){
@@ -154,7 +158,7 @@
 
   // Main Chart class.
   chartstack.Chart = Chart = function(el) {
-    var self = this;
+    var self = this, renderer;
 
     function setup() {
       var domain;
@@ -202,18 +206,9 @@
       // them block;
       el.style.display = "inline-block";
 
-      // Setup SVG
-      // =========
-      // Create the SVG element that D3 needs.
-      self.svg = document.createElementNS ('http://www.w3.org/2000/svg', 'svg');
-      // Set height and width of SVG to it's parent's container.
-      each(['width', 'height'], function(m){
-        var v = parseInt(el.getAttribute(m));
-        self[m] = v;
-        self.svg.setAttributeNS(null, m, v);
-      });
-
-      el.appendChild(self.svg);
+      if (renderers[provider] && renderers[provider]['prerender']){
+        renderers[provider]['prerender'](self);
+      }
 
       // Check dataSource starts with { or [ assume it's JSON or else
       // assume it's a URL to fetch.  We do not check for http anymore
@@ -254,7 +249,6 @@
     setup();
     fetch(function(data){
       // TODO: Hardcoded provider for now. Later we check window globals.
-      var provider = 'nvd3';
       var renderer = chartstack.renderers[provider];
       if (!renderer){
         throw('Renderer for ' + provider + ' is missing.');

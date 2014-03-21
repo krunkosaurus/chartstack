@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Chartstack test page</title>
+        <link href="css/page_styling.css" rel="stylesheet">
+        <link href="bower_components/nvd3/nv.d3.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <h1>Chartstack Demo Page</h1>
+
+        <section>
+            <piechart width="300px" height="300px" labels="off" datasource="api/nvd3/piechart.json"></piechart>
+            <h3>1. Top 5 Populations</h3>
+        </section>
+
+        <section>
+            <piechart width="300px" height="300px" provider="api.keen.io" datasource="api/keen/piechart.json"></piechart>
+            <h3>2. Web Traffic by Platform</h3>
+        </section>
+
+        <section>
+            <piechart width="300px" height="300px" datasource="https://api.keen.io/3.0/projects/531a54e136bf5a0f8e000002/queries/count?api_key=597cdee063701414f5a10650f70de48d1e5f50e7e87630b7bf4511fe6c0c1d4e982bff79e4b1fb0594a38b5d98481d5fbc2a2512fe67916b8d573c4f1242f853ac65a8881211388f85e7884eab291530d3632a3c35e30483646a3dc59b0ec949b0e5d41d3917528c77771d06ad782231&event_collection=signups&timezone=-25200&group_by=platform"></piechart>
+            <h3>3. Web Traffic by Platform</h3>
+        </section>
+
+        <section>
+            <piechart width="300px" height="300px" datasource="https://api.keen.io/3.0/projects/531a54e136bf5a0f8e000002/queries/count?api_key=597cdee063701414f5a10650f70de48d1e5f50e7e87630b7bf4511fe6c0c1d4e982bff79e4b1fb0594a38b5d98481d5fbc2a2512fe67916b8d573c4f1242f853ac65a8881211388f85e7884eab291530d3632a3c35e30483646a3dc59b0ec949b0e5d41d3917528c77771d06ad782231&event_collection=purchase&timezone=-25200&target_property=item&group_by=item"></piechart>
+            <h3>4. Widget Sales by Item</h3>
+        </section>
+
+        <section>
+            <barchart width="600px" height="300px" datasource='[{"key":"Cat","values":[{"x":1,"y":1},{"x":2,"y":1},{"x":3,"y":3},{"x":4,"y":4},{"x":5,"y":6},{"x":6,"y":10}]},{"key":"Dog","values":[{"x":1,"y":10},{"x":2,"y":8},{"x":3,"y":5},{"x":4,"y":3},{"x":5,"y":1},{"x":6,"y":20}]},{"key":"Mouse","values":[{"x":1,"y":2},{"x":2,"y":3},{"x":3,"y":5},{"x":4,"y":6},{"x":5,"y":10},{"x":6,"y":9}]}]'></barchart>
+            <h3>5. Animal Escapes</h3>
+        </section>
+
+        <section>
+            <barchart width="600px" height="300px" datasource="https://api.keen.io/3.0/projects/531a54e136bf5a0f8e000002/queries/count?api_key=597cdee063701414f5a10650f70de48d1e5f50e7e87630b7bf4511fe6c0c1d4e982bff79e4b1fb0594a38b5d98481d5fbc2a2512fe67916b8d573c4f1242f853ac65a8881211388f85e7884eab291530d3632a3c35e30483646a3dc59b0ec949b0e5d41d3917528c77771d06ad782231&event_collection=signups&timeframe=last_14_days&timezone=-25200&target_property=platform&group_by=platform&interval=daily"></barchart>
+            <h3>6. Daily Signups Last 14 days</h3>
+        </section>
+
+        <section>
+            <linechart id="chart7" width="600px" height="300px" datasource="https://api.keen.io/3.0/projects/531a54e136bf5a0f8e000002/queries/count?api_key=597cdee063701414f5a10650f70de48d1e5f50e7e87630b7bf4511fe6c0c1d4e982bff79e4b1fb0594a38b5d98481d5fbc2a2512fe67916b8d573c4f1242f853ac65a8881211388f85e7884eab291530d3632a3c35e30483646a3dc59b0ec949b0e5d41d3917528c77771d06ad782231&event_collection=signups&timeframe=last_14_days&timezone=-25200&target_property=platform&group_by=platform&interval=daily"></linechart>
+            <h3>7. Daily Signups Last 14 days</h3>
+        </section>
+
+        <script src="bower_components/highcharts/highcharts-all.js"></script>
+        <script src="scripts/chartstack.js"></script>
+<!--
+        <script src="scripts/chartstack.nvd3.renderer.js"></script>
+        <script src="scripts/chartstack.keen.nvd3.adapter.js"></script>
+-->
+    </body>
+</html>
