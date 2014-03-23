@@ -51,12 +51,23 @@
   }
 
   function bootstrap (){
-    // TODO: Better system for detecting which charting lib is loaded.
-    if (window.nv){
-      provider = 'nvd3';
+    var chartNodes
+
+    // If graph library isn't set in defaults, match provider to the first graph
+    // lib found on the page that we have an adapter for.
+    // TODO: If no chart lib found load Google Charts.
+    if (chartstack.defaults.provider){
+      provider = chartstack.defaults.provider;
+    }else{
+      each(Object.keys(chartstack.renderers), function(ns){
+        if (ns in window){
+          provider = ns;
+          return false;
+        }
+      });
     }
-    // TODO: Here we decide which graph library we are using.
-    var chartNodes = document.querySelectorAll('piechart,barchart,linechart');
+
+    chartNodes = document.querySelectorAll('piechart,barchart,linechart');
     each(chartNodes, function(el){
       charts.push(new Chart(el));
     });
@@ -248,7 +259,6 @@
 
     setup();
     fetch(function(data){
-      // TODO: Hardcoded provider for now. Later we check window globals.
       var renderer = chartstack.renderers[provider];
       if (!renderer){
         throw('Renderer for ' + provider + ' is missing.');
