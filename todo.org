@@ -1,9 +1,439 @@
-To do list:
-- Add support for Google Charts
-- Support for more chart configuration options - currently we only support labels on/off as an example.
-- Adding in event hook support (onload, onDataRecieve) to support future things like polling, graph drill-down, etc.
-- Adding support for pure JavaScript init charts methods for advanced use cases
-- Start of Documentation
-- two way event handlings,
-- polling support to update data
+* To do list:
+- [ ] Adding support for pure JavaScript init method.
+- [ ] Add support for Google Charts.
+- [ ] Adding in event hook support (onload, onDataRecieve) to support future things like polling, graph drill-down, etc.
+- [ ] Sample wrapper around chartstack.
+- [ ] Support for more chart configuration options - currently we only support labels on/off as an example.
+- [ ] Start of Documentation.
+- [ ] two way event handling.
+- [ ] polling support to update data.
 
+Misc to do:
+- Setup http://jsfiddle.net/ examples
+
+* We support:
+  - Pie chart
+  - Cumulative line chart
+  - Bar chart
+* How to install page:
+- git clone git@github.com:krunkosaurus/chartstack.git
+- npm install
+- bower install
+- Then start the web dev web server by running: grunt connect
+
+* Chart lib major differences:
+** NVD3:
+   - Create various charts via nv.models.chartType().tooltips(false)...
+   - Data is bounded via d3's .datum(data) or .data()
+   Missing:
+   - Does not seem to include support for graph title.
+   - For bar and pie charts, labels are included in the data payload.
+   - For line charts x and y axis label are outside data payload
+** Highcharts
+- Support for both title and subtitle
+- Support for optional x and y axis title
+- In bar (column) bar charts xAxis labels are out of the data payload (see http://jsfiddle.net/gh/get/jquery/1.9.1/highslide-software/highcharts.com/tree/master/samples/highcharts/demo/column-basic/)
+- Tooltips has templating support
+- Puts data in an object called "series" in each call.
+* Chart libs sample JS
+** NVD3
+*** Pie chart
+//Regular pie chart example
+nv.addGraph(function() {
+  var chart = nv.models.pieChart()
+      .x(function(d) { return d.label })
+      .y(function(d) { return d.value })
+      .showLabels(true);
+
+    d3.select("#chart svg")
+        .datum(exampleData())
+        .transition().duration(350)
+        .call(chart);
+
+  return chart;
+});
+
+//Donut chart example
+nv.addGraph(function() {
+  var chart = nv.models.pieChart()
+      .x(function(d) { return d.label })
+      .y(function(d) { return d.value })
+      .showLabels(true)     //Display pie labels
+      .labelThreshold(.05)  //Configure the minimum slice size for labels to show up
+      .labelType("percent") //Configure what type of data to show in the label. Can be "key", "value" or "percent"
+      .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
+      .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
+      ;
+
+    d3.select("#chart2 svg")
+        .datum(exampleData())
+        .transition().duration(350)
+        .call(chart);
+
+  return chart;
+});
+
+//Pie chart example data. Note how there is only a single array of key-value pairs.
+function exampleData() {
+  return  [
+      {
+        "label": "One",
+        "value" : 29.765957771107
+      } ,
+      {
+        "label": "Two",
+        "value" : 0
+      } ,
+      {
+        "label": "Three",
+        "value" : 32.807804682612
+      } ,
+      {
+        "label": "Four",
+        "value" : 196.45946739256
+      } ,
+      {
+        "label": "Five",
+        "value" : 0.19434030906893
+      } ,
+      {
+        "label": "Six",
+        "value" : 98.079782601442
+      } ,
+      {
+        "label": "Seven",
+        "value" : 13.925743130903
+      } ,
+      {
+        "label": "Eight",
+        "value" : 5.1387322875705
+      }
+    ];
+}
+*** Discrete bar chart
+nv.addGraph(function() {
+  var chart = nv.models.discreteBarChart()
+      .x(function(d) { return d.label })    //Specify the data accessors.
+      .y(function(d) { return d.value })
+      .staggerLabels(true)    //Too many bars and not enough room? Try staggering labels.
+      .tooltips(false)        //Don't show tooltips
+      .showValues(true)       //...instead, show the bar value right on top of each bar.
+      .transitionDuration(350)
+      ;
+
+  d3.select('#chart svg')
+      .datum(exampleData())
+      .call(chart);
+
+  nv.utils.windowResize(chart.update);
+
+  return chart;
+});
+
+//Each bar represents a single discrete quantity.
+function exampleData() {
+ return  [
+    {
+      key: "Cumulative Return",
+      values: [
+        {
+          "label" : "A Label" ,
+          "value" : -29.765957771107
+        } ,
+        {
+          "label" : "B Label" ,
+          "value" : 0
+        } ,
+        {
+          "label" : "C Label" ,
+          "value" : 32.807804682612
+        } ,
+        {
+          "label" : "D Label" ,
+          "value" : 196.45946739256
+        } ,
+        {
+          "label" : "E Label" ,
+          "value" : 0.19434030906893
+        } ,
+        {
+          "label" : "F Label" ,
+          "value" : -98.079782601442
+        } ,
+        {
+          "label" : "G Label" ,
+          "value" : -13.925743130903
+        } ,
+        {
+          "label" : "H Label" ,
+          "value" : -5.1387322875705
+        }
+      ]
+    }
+  ]
+
+}
+
+*** Cumulative line chart
+d3.json('cumulativeLineData.json', function(data) {
+  nv.addGraph(function() {
+    var chart = nv.models.cumulativeLineChart()
+                  .x(function(d) { return d[0] })
+                  .y(function(d) { return d[1]/100 }) //adjusting, 100% is 1.00, not 100 as it is in the data
+                  .color(d3.scale.category10().range())
+                  .useInteractiveGuideline(true)
+                  ;
+
+     chart.xAxis
+        .tickValues([1078030800000,1122782400000,1167541200000,1251691200000])
+        .tickFormat(function(d) {
+            return d3.time.format('%x')(new Date(d))
+          });
+
+    chart.yAxis
+        .tickFormat(d3.format(',.1%'));
+
+    d3.select('#chart svg')
+        .datum(data)
+        .call(chart);
+
+    //TODO: Figure out a good way to do this automatically
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+});
+** Highcharts
+*** bar chart (single items)
+$('#container').highcharts({
+  chart: {
+      type: 'column',
+      margin: [ 50, 50, 100, 80]
+  },
+  title: {
+      text: 'World\'s largest cities per 2008'
+  },
+  xAxis: {
+      categories: [
+          'Tokyo',
+          'Jakarta',
+          'New York',
+          'Seoul',
+          'Manila',
+          'Mumbai',
+          'Sao Paulo',
+          'Mexico City',
+          'Dehli',
+          'Osaka',
+          'Cairo',
+          'Kolkata',
+          'Los Angeles',
+          'Shanghai',
+          'Moscow',
+          'Beijing',
+          'Buenos Aires',
+          'Guangzhou',
+          'Shenzhen',
+          'Istanbul'
+      ],
+      labels: {
+          rotation: -45,
+          align: 'right',
+          style: {
+              fontSize: '13px',
+              fontFamily: 'Verdana, sans-serif'
+          }
+      }
+  },
+  yAxis: {
+      min: 0,
+      title: {
+          text: 'Population (millions)'
+      }
+  },
+  legend: {
+      enabled: false
+  },
+  tooltip: {
+      pointFormat: 'Population in 2008: <b>{point.y:.1f} millions</b>',
+  },
+  series: [{
+      name: 'Population',
+      data: [34.4, 21.8, 20.1, 20, 19.6, 19.5, 19.1, 18.4, 18,
+          17.3, 16.8, 15, 14.7, 14.5, 13.3, 12.8, 12.4, 11.8,
+          11.7, 11.2],
+      dataLabels: {
+          enabled: true,
+          rotation: -90,
+          color: '#FFFFFF',
+          align: 'right',
+          x: 4,
+          y: 10,
+          style: {
+              fontSize: '13px',
+              fontFamily: 'Verdana, sans-serif',
+              textShadow: '0 0 3px black'
+          }
+      }
+  }]
+});
+*** bar chart (series)
+$('container').highcharts({
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Monthly Average Rainfall'
+    },
+    subtitle: {
+        text: 'Source: WorldClimate.com'
+    },
+    xAxis: {
+        categories: [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec'
+        ]
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Rainfall (mm)'
+        }
+    },
+    tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: [{
+        name: 'Tokyo',
+        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+
+    }, {
+        name: 'New York',
+        data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+
+    }, {
+        name: 'London',
+        data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
+
+    }, {
+        name: 'Berlin',
+        data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+
+    }]
+});
+***
+
+*** Pie chart
+$('#container').highcharts({
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false
+    },
+    title: {
+        text: 'Browser market shares at a specific website, 2010'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                color: '#000000',
+                connectorColor: '#000000',
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+        }
+    },
+    series: [{
+        type: 'pie',
+        name: 'Browser share',
+        data: [
+            ['Firefox',   45.0],
+            ['IE',       26.8],
+            ['Chrome',    12.8],
+            ['Safari',    8.5],
+            ['Opera',     6.2],
+            ['Others',   0.7]
+        ]
+    }]
+});
+*** Line chart
+$('#container').highcharts({
+    title: {
+        text: 'Monthly Average Temperature',
+        x: -20 //center
+    },
+    subtitle: {
+        text: 'Source: WorldClimate.com',
+        x: -20
+    },
+    xAxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    },
+    yAxis: {
+        title: {
+            text: 'Temperature (°C)'
+        },
+        plotLines: [{
+            value: 0,
+            width: 1,
+            color: '#808080'
+        }]
+    },
+    tooltip: {
+        valueSuffix: '°C'
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle',
+        borderWidth: 0
+    },
+    series: [{
+        name: 'Tokyo',
+        data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+    }, {
+        name: 'New York',
+        data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
+    }, {
+        name: 'Berlin',
+        data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
+    }, {
+        name: 'London',
+        data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+    }]
+})
+* Things to consider
+- Not all these libraries support things like title. Should we handle
+that ourselves?
+- Not all of these libraries support drilldown.  Highcharts supports
+it beautifully: http://www.highcharts.com/demo/column-drilldown
+http://www.highcharts.com/demo/pie-drilldown
+- We need an easy way to set preferences like date/time formatting.
+We don't always know enough to assume.
