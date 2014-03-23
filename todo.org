@@ -1,5 +1,6 @@
 * To do list:
 - [ ] Adding support for pure JavaScript init method.
+- [ ] Integrate chartstack into keen viz in a experimental branch.
 - [ ] Add support for Google Charts.
 - [ ] Adding in event hook support (onload, onDataRecieve) to support future things like polling, graph drill-down, etc.
 - [ ] Sample wrapper around chartstack.
@@ -383,6 +384,27 @@ $('#container').highcharts({
     }]
 });
 *** Line chart
+**** Example 1
+$('#container').highcharts({
+    title: {
+    text: 'Step line types, with null values in the series'
+    },
+    xAxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    },
+    series: [{
+        data: [1,2,3,4,6,7,9],
+        name: 'Right'
+    }, {
+        data: [5,6,7,8,10,11,13],
+        name: 'Center'
+    }, {
+        data: [9,10,11,12,14,15,17],
+        name: 'Left'
+    }]
+
+});
+**** Example 2
 $('#container').highcharts({
     title: {
         text: 'Monthly Average Temperature',
@@ -429,9 +451,42 @@ $('#container').highcharts({
         data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
     }]
 })
+** Current Keen
+*** pie chart
+from: https://keen.io/docs/clients/javascript/reference/#javascript-keen-piechart
+Keen.onChartsReady(function(){
+
+    //Find the total money made from purchases for the last 7 days
+    //group the results by the mobile device of the purchaser.
+    //only count the users that that are over 21 years old.
+    var myMetric = new Keen.Metric("purchases", {
+        analysisType: "sum",
+        targetProperty: "total_price",
+        timeframe: "previous_7_days",
+        groupBy: "device"
+    });
+    myMetric.addFilter("user.age", "gt", 21);
+
+    //Draw a pie chart in a <div/> with an ID of "purchases"
+    var myPieChart = new Keen.PieChart(myMetric, {
+        height: 300,
+        width: 600,
+        minimumSlicePercentage: 5,
+        colors: ["orange", "green", "#fef584"],
+        backgroundColor: "transparent",
+        title: "Total Purchases Previous 7 Days By Device",
+    });
+    myPieChart.draw(document.getElementById("purchases"));
+});
 * Things to consider
+- On universal charting data - where do we seperate logic for
+  - label colors
+  - whether to show legend
+  - x+y labels,
+  - x+y description
+  - date/time formatting
 - Not all these libraries support things like title. Should we handle
-that ourselves?
+that ourselves over the charting library to have consistent dom/markup?
 - Not all of these libraries support drilldown.  Highcharts supports
 it beautifully: http://www.highcharts.com/demo/column-drilldown
 http://www.highcharts.com/demo/pie-drilldown

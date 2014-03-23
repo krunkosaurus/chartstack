@@ -4,18 +4,6 @@ chartstack.addRenderer('Highcharts', {
   },
 
   piechart: function($chart, data){
-console.log('data', data);
-    // Radialize the colors
-    Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function(color) {
-      return {
-        radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
-        stops: [
-          [0, color],
-          [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
-        ]
-      };
-    });
-
     var chart1 = new Highcharts.Chart({
       chart: {
         renderTo: $chart.el,
@@ -25,11 +13,11 @@ console.log('data', data);
         plotShadow: false
       },
       title: {
-        text: 'Browser market shares at a specific website, 2010'
+        text: $chart.title || ''
       },
-      tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-      },
+      //tooltip: {
+      //  pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      //},
       plotOptions: {
         pie: {
           allowPointSelect: true,
@@ -47,23 +35,16 @@ console.log('data', data);
 
       series: [{
         type: 'pie',
-        name: 'Browser share',
-        data: [
-          ['Firefox',   45.0],
-          ['IE',       26.8],
-          ['Chrome', 12.8],
-          ['Safari',    8.5],
-          ['Opera',     6.2],
-          ['Others',   0.7]
-        ]
+        // name: 'Browser share',
+        data: data
       }]
     });
   },
 
-  barchart: function($chart, data){
+  linechart: function($chart, data){
   },
 
-  linechart: function($chart, data){
+  barchart: function($chart, data){
   }
 
 });

@@ -169,23 +169,24 @@
 
   // Main Chart class.
   chartstack.Chart = Chart = function(el) {
-    var self = this, renderer;
+    var $chart = this, renderer;
 
     function setup() {
       var domain;
 
-      self.el = el;
+      $chart.el = el;
       // Type of chart.
-      self.chartType = el.nodeName.toLocaleLowerCase();
+      $chart.chartType = el.nodeName.toLocaleLowerCase();
 
       // Copy global defaults on to this chart.
       each(chartstack.defaults, function(k, v){
-        self[v] = k;
+        $chart[v] = k;
       });
 
       // Find properties on dom element to override defaults.
       // Support arrays here so we can store the data under a different name.
-      each([['provider', 'domain'], 'labels'], function(attr){
+      // TODO: This stuff should not stored in main namespace of $chart.
+      each([['provider', 'domain'], 'labels', 'title'], function(attr){
         var test, newKey;
 
         if (is(attr, 'object')){
@@ -203,33 +204,33 @@
           }
 
           if (newKey){
-            self[newKey] = test;
+            $chart[newKey] = test;
           }else{
-            self[attr] = test;
+            $chart[attr] = test;
           }
         }
       });
 
       // Data source is required.
-      self.dataSource = el.getAttribute('datasource');
+      $chart.dataSource = el.getAttribute('datasource');
 
       // Our made up HTML nodes are display: inline so we need to make
       // them block;
       el.style.display = "inline-block";
 
       if (renderers[provider] && renderers[provider]['prerender']){
-        renderers[provider]['prerender'](self);
+        renderers[provider]['prerender']($chart);
       }
 
       // Check dataSource starts with { or [ assume it's JSON or else
       // assume it's a URL to fetch.  We do not check for http anymore
       // as it can be a local/relative file.
-      if (self.dataSource.match(/^({|\[)/)){
-        self.dataSource = JSON.parse(self.dataSource);
+      if ($chart.dataSource.match(/^({|\[)/)){
+        $chart.dataSource = JSON.parse($chart.dataSource);
       }else{
-        domain = self.dataSource.match(/\/\/(.*?)\//);
+        domain = $chart.dataSource.match(/\/\/(.*?)\//);
         if (domain){
-          self.domain = domain[1];
+          $chart.domain = domain[1];
         }
       }
     }
@@ -239,8 +240,8 @@
       function finish(data){
         // Check if we have adapters for this domain and that we also
         // have a chart adapter for this chart from this domain.
-        if (adapters[self.domain] && adapters[self.domain][self.chartType]){
-          data = adapters[self.domain][self.chartType](data);
+        if (adapters[$chart.domain] && adapters[$chart.domain][$chart.chartType]){
+          data = adapters[$chart.domain][$chart.chartType](data);
           cb(data);
           // Else just return un-normalized results.
         }else{
@@ -249,11 +250,11 @@
       }
 
       // If this is a URL fetch data.
-      if (typeof self.dataSource == "string"){
-        chartstack.getJSON(self.dataSource, finish);
+      if (typeof $chart.dataSource == "string"){
+        chartstack.getJSON($chart.dataSource, finish);
         // The data is local.
       }else{
-        finish(self.dataSource);
+        finish($chart.dataSource);
       }
     }
 
@@ -262,10 +263,10 @@
       var renderer = chartstack.renderers[provider];
       if (!renderer){
         throw('Renderer for ' + provider + ' is missing.');
-      }else if(!renderer[self.chartType]){
-        throw('Renderer for ' + provider + ':' + self.chartType + ' is missing.');
+      }else if(!renderer[$chart.chartType]){
+        throw('Renderer for ' + provider + ':' + $chart.chartType + ' is missing.');
       }
-      renderer[self.chartType](self, data);
+      renderer[$chart.chartType]($chart, data);
     });
 
     // Public methods
