@@ -1,7 +1,7 @@
 /* global chartstack, nv, d3 */
 chartstack.addRenderer('nv', {
 
-  prerender: function($chart){
+  init: function($chart){
     // Create the SVG element that D3 needs.
     $chart.svg = document.createElementNS ('http://www.w3.org/2000/svg', 'svg');
     // Set height and width of SVG to it's parent's container.

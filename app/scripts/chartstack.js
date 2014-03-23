@@ -218,8 +218,8 @@
       // them block;
       el.style.display = "inline-block";
 
-      if (renderers[provider] && renderers[provider]['prerender']){
-        renderers[provider]['prerender']($chart);
+      if (renderers[provider] && renderers[provider].init){
+        renderers[provider].init($chart);
       }
 
       // Check dataSource starts with { or [ assume it's JSON or else

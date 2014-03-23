@@ -1,6 +1,6 @@
 /* global chartstack */
 chartstack.addRenderer('Highcharts', {
-  prerender: function($chart){
+  init: function($chart){
   },
 
   piechart: function($chart, data){
