@@ -51,8 +51,6 @@
   }
 
   function bootstrap (){
-    var chartNodes
-
     // If graph library isn't set in defaults, match provider to the first graph
     // lib found on the page that we have an adapter for.
     // TODO: If no chart lib found load Google Charts.
@@ -65,7 +63,14 @@
           return false;
         }
       });
+
+      // Parse the dom.
+      chartstack.parse()
     }
+  }
+
+  function parse(){
+    var chartNodes
 
     chartNodes = document.querySelectorAll('piechart,barchart,linechart');
     each(chartNodes, function(el){
@@ -152,6 +157,7 @@
 
   // Store them in API as well for plugin use.
   extend(chartstack, {
+    parse : parse,
     is : is,
     each : each,
     extend : extend,
@@ -186,7 +192,7 @@
       // Find properties on dom element to override defaults.
       // Support arrays here so we can store the data under a different name.
       // TODO: This stuff should not stored in main namespace of $chart.
-      each([['provider', 'domain'], 'labels', 'title'], function(attr){
+      each([['provider', 'domain'], 'labels', 'width', 'height', 'title'], function(attr){
         var test, newKey;
 
         if (is(attr, 'object')){
@@ -291,7 +297,13 @@
     });
   };
 
-  document.addEventListener("DOMContentLoaded", bootstrap);
+  // Hack to support google charts.
+  if (window.google){
+    google.load('visualization', '1.0', {'packages':['corechart']});
+    google.setOnLoadCallback(bootstrap);
+  }else{
+    document.addEventListener("DOMContentLoaded", bootstrap);
+  }
 
   // Expose chartstack
   window.chartstack = chartstack;
