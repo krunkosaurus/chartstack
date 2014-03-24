@@ -11,9 +11,19 @@
             <li><a href="/">Go back</a></
         </ul>
 
+        <div>
         <section>
-            <piechart width="300px" label="false" height="300px" title="Browser market shares at a specific website, 2010" datasource="/api/universal/piechart.json"></piechart>
+            <piechart title="Yay browsers!" width="400px" height="400px" datasource="/api/universal/piechart.json"></piechart>
         </section>
+
+        <section>
+            <barchart width="400px" height="400px" datasource="/api/universal/barchart.json"></barchart>
+        </section>
+
+        <section>
+            <linechart width="600px" height="300px" datasource="/api/universal/linechart.json"></linechart>
+        </section>
+        </div>
 
         <!-- By default highcharts uses jQuery but we use the standalone version. -->
         <script src="/bower_components/highcharts/adapters/standalone-framework.src.js"></script>
@@ -21,6 +31,6 @@
         <script src="/bower_components/highcharts/highcharts-all.js"></script>
         <script src="/scripts/chartstack.js"></script>
         <script src="/scripts/chartstack.highcharts.renderer.js"></script>
-        <script src="/scripts/chartstack.keen.universal.adapter.js"></script>
+        <script src="/scripts/chartstack.universal.highcharts.adapter.js"></script>
     </body>
 </html>
