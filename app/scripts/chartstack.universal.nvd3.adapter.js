@@ -4,6 +4,9 @@ chartstack.addAdapter('nv', {
   piechart: function(data){
     var ar = [];
 
+    // Pop off unused header array.
+    data.shift();
+
     chartstack.each(data, function(item){
       var entry = {
         label: item[0],
@@ -16,43 +19,51 @@ chartstack.addAdapter('nv', {
 
   barchart: function(data){
     var each = chartstack.each;
-    var ar = [];
+    var section = [];
+    var colomnKeys = data.shift();
+    var rowDescription = colomnKeys.shift();
 
-    each(data, function(item){
-      var o = {
-        key: item.name,
+    // Prep rows
+    each(colomnKeys, function(name){
+      section.push({
+        key: name,
         values: []
-      }
-
-      each(item.data, function(v, i){
-        o.values.push({
-          x: i,
-          y: v
-        });
-      });
-
-      ar.push(o);
+      })
     });
 
-    return ar;
+    each(data, function(selection, i){
+      var rowDesc = selection.shift();
+      each(selection, function(y, a){
+        section[a].values.push({
+          x: rowDesc,
+          y: y
+        });
+      });
+    });
+    return section;
   },
 
   linechart: function(data){
     var each = chartstack.each;
-    var ar = [];
-    each(data, function(item){
-      var o = {
-        key: item.name,
+    var section = [];
+    var colomnKeys = data.shift();
+    var rowDescription = colomnKeys.shift();
+
+    // Prep rows
+    each(colomnKeys, function(name){
+      section.push({
+        key: name,
         values: []
-      }
-
-      each(item.data, function(v, i){
-        o.values.push([i, v]);
-      });
-
-      ar.push(o);
+      })
     });
 
-    return ar;
+    each(data, function(selection, i){
+      var rowDesc = selection.shift();
+      each(selection, function(y, a){
+        section[a].values.push([rowDesc, y]);
+      });
+    });
+    console.log('section', section);
+    return section;
   }
 });

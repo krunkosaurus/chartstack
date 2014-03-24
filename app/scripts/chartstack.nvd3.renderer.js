@@ -39,12 +39,12 @@ chartstack.addRenderer('nv', {
       chart.width($chart.width).height($chart.height);
 
       chart.xAxis
-        .tickFormat(d3.format(',f'));
+        .tickFormat(d3.format('f'));
       //  .tickFormat(function(d) { return d3.time.format('%b %d')(new Date(d)); });
 
       chart.yAxis
         //.axisLabel('Count')
-        .tickFormat(d3.format(',.1f'));
+        .tickFormat(d3.format(',f'));
 
       d3.select($chart.svg)
         .datum(data)
@@ -56,9 +56,9 @@ chartstack.addRenderer('nv', {
   },
 
   linechart: function($chart, data){
-    var chart = nv.models.cumulativeLineChart()
+    var chart = nv.models.lineChart()
       .x(function(d) { return d[0]; })
-      .y(function(d) { return d[1]; }) //adjusting, 100% is 1.00, not 100 as it is in the data
+      .y(function(d) { return d[1]; })
       .color(d3.scale.category10().range())
       .useInteractiveGuideline(true);
 
@@ -70,7 +70,7 @@ chartstack.addRenderer('nv', {
     //  });
 
     chart.yAxis
-      .tickFormat(d3.format('1g'));
+      .tickFormat(d3.format(',g'));
 
     d3.select($chart.svg)
       .datum(data)
