@@ -40,6 +40,7 @@ chartstack.addAdapter('nv', {
         });
       });
     });
+
     return section;
   },
 

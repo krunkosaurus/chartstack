@@ -1,363 +1,221 @@
 {
-    "result": [{
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-02-21T07:00:00.000Z",
-            "end": "2014-02-22T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-02-22T07:00:00.000Z",
-            "end": "2014-02-23T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-02-23T07:00:00.000Z",
-            "end": "2014-02-24T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-02-24T07:00:00.000Z",
-            "end": "2014-02-25T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-02-25T07:00:00.000Z",
-            "end": "2014-02-26T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-02-26T07:00:00.000Z",
-            "end": "2014-02-27T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-02-27T07:00:00.000Z",
-            "end": "2014-02-28T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-02-28T07:00:00.000Z",
-            "end": "2014-03-01T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 155
-        }, {
-            "platform": "Web",
-            "result": 27
-        }],
-        "timeframe": {
-            "start": "2014-03-01T07:00:00.000Z",
-            "end": "2014-03-02T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 132
-        }, {
-            "platform": "Web",
-            "result": 47
-        }],
-        "timeframe": {
-            "start": "2014-03-02T07:00:00.000Z",
-            "end": "2014-03-03T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 148
-        }, {
-            "platform": "Web",
-            "result": 35
-        }],
-        "timeframe": {
-            "start": "2014-03-03T07:00:00.000Z",
-            "end": "2014-03-04T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 156
-        }, {
-            "platform": "Web",
-            "result": 31
-        }],
-        "timeframe": {
-            "start": "2014-03-04T07:00:00.000Z",
-            "end": "2014-03-05T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 111
-        }, {
-            "platform": "Web",
-            "result": 22
-        }],
-        "timeframe": {
-            "start": "2014-03-05T07:00:00.000Z",
-            "end": "2014-03-06T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 92
-        }, {
-            "platform": "Web",
-            "result": 31
-        }],
-        "timeframe": {
-            "start": "2014-03-06T07:00:00.000Z",
-            "end": "2014-03-07T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 152
-        }, {
-            "platform": "Web",
-            "result": 36
-        }],
-        "timeframe": {
-            "start": "2014-03-07T07:00:00.000Z",
-            "end": "2014-03-08T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-03-08T07:00:00.000Z",
-            "end": "2014-03-09T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-03-09T07:00:00.000Z",
-            "end": "2014-03-10T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-03-10T07:00:00.000Z",
-            "end": "2014-03-11T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-03-11T07:00:00.000Z",
-            "end": "2014-03-12T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-03-12T07:00:00.000Z",
-            "end": "2014-03-13T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-03-13T07:00:00.000Z",
-            "end": "2014-03-14T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-03-14T07:00:00.000Z",
-            "end": "2014-03-15T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-03-15T07:00:00.000Z",
-            "end": "2014-03-16T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-03-16T07:00:00.000Z",
-            "end": "2014-03-17T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-03-17T07:00:00.000Z",
-            "end": "2014-03-18T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-03-18T07:00:00.000Z",
-            "end": "2014-03-19T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-03-19T07:00:00.000Z",
-            "end": "2014-03-20T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-03-20T07:00:00.000Z",
-            "end": "2014-03-21T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-03-21T07:00:00.000Z",
-            "end": "2014-03-22T07:00:00.000Z"
-        }
-    }, {
-        "value": [{
-            "platform": "Mobile",
-            "result": 0
-        }, {
-            "platform": "Web",
-            "result": 0
-        }],
-        "timeframe": {
-            "start": "2014-03-22T07:00:00.000Z",
-            "end": "2014-03-23T07:00:00.000Z"
-        }
-    }]
+  "result": [
+    {
+      "value": 372,
+      "timeframe": {
+        "start": "2014-03-01T07:00:00.000Z",
+        "end": "2014-03-02T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 624,
+      "timeframe": {
+        "start": "2014-03-02T07:00:00.000Z",
+        "end": "2014-03-03T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 846,
+      "timeframe": {
+        "start": "2014-03-03T07:00:00.000Z",
+        "end": "2014-03-04T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 988,
+      "timeframe": {
+        "start": "2014-03-04T07:00:00.000Z",
+        "end": "2014-03-05T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 1040,
+      "timeframe": {
+        "start": "2014-03-05T07:00:00.000Z",
+        "end": "2014-03-06T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 994,
+      "timeframe": {
+        "start": "2014-03-06T07:00:00.000Z",
+        "end": "2014-03-07T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 1127,
+      "timeframe": {
+        "start": "2014-03-07T07:00:00.000Z",
+        "end": "2014-03-08T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-08T07:00:00.000Z",
+        "end": "2014-03-09T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-09T07:00:00.000Z",
+        "end": "2014-03-10T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-10T07:00:00.000Z",
+        "end": "2014-03-11T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-11T07:00:00.000Z",
+        "end": "2014-03-12T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-12T07:00:00.000Z",
+        "end": "2014-03-13T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-13T07:00:00.000Z",
+        "end": "2014-03-14T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-14T07:00:00.000Z",
+        "end": "2014-03-15T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-15T07:00:00.000Z",
+        "end": "2014-03-16T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-16T07:00:00.000Z",
+        "end": "2014-03-17T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-17T07:00:00.000Z",
+        "end": "2014-03-18T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-18T07:00:00.000Z",
+        "end": "2014-03-19T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-19T07:00:00.000Z",
+        "end": "2014-03-20T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-20T07:00:00.000Z",
+        "end": "2014-03-21T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-21T07:00:00.000Z",
+        "end": "2014-03-22T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-22T07:00:00.000Z",
+        "end": "2014-03-23T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-23T07:00:00.000Z",
+        "end": "2014-03-24T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-24T07:00:00.000Z",
+        "end": "2014-03-25T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-25T07:00:00.000Z",
+        "end": "2014-03-26T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-26T07:00:00.000Z",
+        "end": "2014-03-27T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-27T07:00:00.000Z",
+        "end": "2014-03-28T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-28T07:00:00.000Z",
+        "end": "2014-03-29T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-29T07:00:00.000Z",
+        "end": "2014-03-30T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-30T07:00:00.000Z",
+        "end": "2014-03-31T07:00:00.000Z"
+      }
+    },
+    {
+      "value": 0,
+      "timeframe": {
+        "start": "2014-03-31T07:00:00.000Z",
+        "end": "2014-04-01T07:00:00.000Z"
+      }
+    }
+  ]
 }

@@ -38,9 +38,15 @@ chartstack.addRenderer('nv', {
       // Required to set the height once more or it's too small.
       chart.width($chart.width).height($chart.height);
 
-      chart.xAxis
+      if (data[0].values[0].x instanceof Date){
+        chart.xAxis
+          .tickFormat(function(d) {
+            return d3.time.format('%b %d')(new Date(d));
+          });
+      }else{
+        chart.xAxis
         .tickFormat(d3.format('f'));
-      //  .tickFormat(function(d) { return d3.time.format('%b %d')(new Date(d)); });
+      }
 
       chart.yAxis
         //.axisLabel('Count')
