@@ -2,17 +2,14 @@
 
 chartstack.addAdapter('google', {
   piechart: function(data){
-    var gdata = new google.visualization.DataTable();
-    gdata.addColumn('string', 'Category');
-    gdata.addColumn('number', 'Amount');
-    gdata.addRows(data);
-
-    return gdata;
+    return new google.visualization.arrayToDataTable(data);
   },
 
   barchart: function(data){
+    return google.visualization.arrayToDataTable(data);
   },
 
   linechart: function(data){
+    return google.visualization.arrayToDataTable(data);
   }
 });

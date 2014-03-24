@@ -2,45 +2,34 @@
 <html>
     <head>
         <title>Chartstack Google Charts Test Page</title>
-        <link href="css/page_styling.css" rel="stylesheet">
-        <link href="css/nv.d3.css" rel="stylesheet">
+        <link href="/css/page_styling.css" rel="stylesheet">
     </head>
     <body>
         <h1>Chartstack Google Charts Test Page (in progress)</h1>
+        <ul class="menu">
+            <li><a href="/">Go back</a></
+        </ul>
 
+        <div>
         <section>
-            <piechart width="300px" height="300px" datasource="https://api.keen.io/3.0/projects/531a54e136bf5a0f8e000002/queries/count?api_key=597cdee063701414f5a10650f70de48d1e5f50e7e87630b7bf4511fe6c0c1d4e982bff79e4b1fb0594a38b5d98481d5fbc2a2512fe67916b8d573c4f1242f853ac65a8881211388f85e7884eab291530d3632a3c35e30483646a3dc59b0ec949b0e5d41d3917528c77771d06ad782231&event_collection=signups&timezone=-25200&group_by=platform"></piechart>
-            <h3>Web Traffic by Platform</h3>
+            <piechart title="Yay browsers!" width="400px" height="400px" datasource="/api/universal/piechart.json"></piechart>
         </section>
 
         <section>
-            <piechart width="300px" height="300px" datasource="https://api.keen.io/3.0/projects/531a54e136bf5a0f8e000002/queries/count?api_key=597cdee063701414f5a10650f70de48d1e5f50e7e87630b7bf4511fe6c0c1d4e982bff79e4b1fb0594a38b5d98481d5fbc2a2512fe67916b8d573c4f1242f853ac65a8881211388f85e7884eab291530d3632a3c35e30483646a3dc59b0ec949b0e5d41d3917528c77771d06ad782231&event_collection=purchases&timezone=-25200&target_property=item&group_by=item
-"></piechart>
-            <h3>Widget Sales by Item</h3>
+            <barchart width="400px" height="400px" datasource="/api/universal/barchart.json"></barchart>
         </section>
-
 
         <section>
-            <piechart width="300px" height="300px" labels="off" domain="api.keen.io" datasource='{"result":[{"platform":"Mobile","result":258},{"platform":"Web","result":61},{"platform":null,"result":94}]}'></piechart>
-            <h3>Purchases by Platform</h3>
+            <linechart width="600px" height="300px" datasource="/api/universal/linechart.json"></linechart>
         </section>
-
+        </div>
 
         <script src="https://www.google.com/jsapi"></script>
+        <script src="/scripts/chartstack.js"></script>
+        <script src="/scripts/chartstack.universal.googlecharts.adapter.js"></script>
+        <script src="/scripts/chartstack.googlecharts.renderer.js"></script>
         <script>
-            // Load the Visualization API and the piechart package.
-            google.load('visualization', '1.0', {'packages':['corechart']});
 
-            // Set a callback to run when the Google Visualization API is loaded.
-            google.setOnLoadCallback(function(){
-            console.log('google loaded');
-            });
         </script>
-
-        <script src="js/d3.min.js"></script>
-        <script src="js/nv.d3.min.js"></script>
-        <script src="chartstack.js"></script>
-        <script src="chartstack.nvd3.renderer.js"></script>
-        <script src="chartstack.keen.adapter.js"></script>
     </body>
 </html>

@@ -19,6 +19,25 @@ chartstack.addRenderer('google', {
   },
 
   barchart: function($chart, data){
+    var chart, options;
+
+    options = {
+      title: $chart.title || '',
+    };
+
+    chart = new google.visualization.BarChart($chart.el);
+    chart.draw(data, options);
+  },
+
+  linechart: function($chart, data){
+    var chart, options;
+
+    options = {
+      title: $chart.title || '',
+    };
+
+    chart = new google.visualization.LineChart($chart.el);
+    chart.draw(data, options);
   }
 
 });
