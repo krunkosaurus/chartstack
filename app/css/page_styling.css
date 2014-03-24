@@ -18,6 +18,7 @@ ul.menu li{
 #start h3{text-align: left;}
 
 section{
+    float: left;
     border: solid 1px: black;
     padding-right: 10px;
     text-align: center;

@@ -1,5 +1,5 @@
 (function(chartstack) {
-  var adapters, provider, renderers, charts, Chart;
+  var adapters, renderers, charts, Chart;
 
   // These three functions taken from https://github.com/spocke/punymce
   function is(o, t) {
@@ -57,11 +57,11 @@
     // lib found on the page that we have an adapter for.
     // TODO: If no chart lib found load Google Charts.
     if (chartstack.defaults.provider){
-      provider = chartstack.defaults.provider;
+      chartstack.provider = chartstack.defaults.provider;
     }else{
       each(Object.keys(chartstack.renderers), function(ns){
         if (ns in window){
-          provider = ns;
+          chartstack.provider = ns;
           return false;
         }
       });
@@ -218,8 +218,8 @@
       // them block;
       el.style.display = "inline-block";
 
-      if (renderers[provider] && renderers[provider].init){
-        renderers[provider].init($chart);
+      if (renderers[chartstack.provider] && renderers[chartstack.provider].init){
+        renderers[chartstack.provider].init($chart);
       }
 
       // Check dataSource starts with { or [ assume it's JSON or else
@@ -242,11 +242,11 @@
         // have a chart adapter for this chart from this domain.
         if (adapters[$chart.domain] && adapters[$chart.domain][$chart.chartType]){
           data = adapters[$chart.domain][$chart.chartType](data);
-          cb(data);
-          // Else just return un-normalized results.
-        }else{
-          cb(data);
         }
+
+        // Transform data into graph libs format.
+        data = adapters[chartstack.provider][$chart.chartType](data);
+        cb(data);
       }
 
       // If this is a URL fetch data.
@@ -260,11 +260,11 @@
 
     setup();
     fetch(function(data){
-      var renderer = chartstack.renderers[provider];
+      var renderer = chartstack.renderers[chartstack.provider];
       if (!renderer){
-        throw('Renderer for ' + provider + ' is missing.');
+        throw('Renderer for ' + chartstack.provider + ' is missing.');
       }else if(!renderer[$chart.chartType]){
-        throw('Renderer for ' + provider + ':' + $chart.chartType + ' is missing.');
+        throw('Renderer for ' + chartstack.provider + ':' + $chart.chartType + ' is missing.');
       }
       renderer[$chart.chartType]($chart, data);
     });

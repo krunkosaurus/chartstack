@@ -39,11 +39,11 @@ chartstack.addRenderer('nv', {
       chart.width($chart.width).height($chart.height);
 
       chart.xAxis
-      //.tickFormat(d3.format(',f'));
-        .tickFormat(function(d) { return d3.time.format('%b %d')(new Date(d)); });
+        .tickFormat(d3.format(',f'));
+      //  .tickFormat(function(d) { return d3.time.format('%b %d')(new Date(d)); });
 
       chart.yAxis
-        .axisLabel('Count')
+        //.axisLabel('Count')
         .tickFormat(d3.format(',.1f'));
 
       d3.select($chart.svg)
@@ -64,10 +64,10 @@ chartstack.addRenderer('nv', {
 
     chart.width($chart.width).height($chart.height);
 
-    chart.xAxis
-      .tickFormat(function(d) {
-        return d3.time.format('%x')(new Date(d));
-      });
+    //chart.xAxis
+    //  .tickFormat(function(d) {
+    //    return d3.time.format('%x')(new Date(d));
+    //  });
 
     chart.yAxis
       .tickFormat(d3.format('1g'));

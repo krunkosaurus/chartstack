@@ -11,8 +11,9 @@
             <li><a href="/">Go back</a></
         </ul>
 
+        <div>
         <section>
-            <piechart width="300px" height="300px" labels="off" datasource="/api/nvd3/piechart.json"></piechart>
+            <piechart width="300px" height="300px" labels="off" datasource="/api/universal/piechart.json"></piechart>
             <h3>1. Top 5 Populations</h3>
         </section>
 
@@ -40,6 +41,7 @@
             <barchart width="600px" height="300px" provider="api.keen.io" datasource="/api/keen/barchart.json"></barchart>
             <h3>6. Daily Signups Last 14 days</h3>
         </section>
+        </div>
 
         <script src="/bower_components/d3/d3.min.js"></script>
         <script src="/bower_components/nvd3/nv.d3.min.js"></script>
