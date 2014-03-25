@@ -64,7 +64,6 @@ chartstack.addAdapter('nv', {
         section[a].values.push([rowDesc, y]);
       });
     });
-    console.log('section', section);
     return section;
   }
 });

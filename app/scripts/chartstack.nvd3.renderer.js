@@ -69,6 +69,15 @@ chartstack.addRenderer('nv', {
       .useInteractiveGuideline(true);
 
     chart.width($chart.width).height($chart.height);
+    if (data[0].values[0][0] instanceof Date){
+      chart.xAxis
+        .tickFormat(function(d) {
+          return d3.time.format('%b %d')(new Date(d));
+        });
+    }else{
+      chart.xAxis
+        .tickFormat(d3.format('f'));
+    }
 
     //chart.xAxis
     //  .tickFormat(function(d) {
