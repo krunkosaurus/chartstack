@@ -103,4 +103,4 @@ Need a hand with something? Join us in [HipChat](http://users.keen.io/), [IRC](h
 
 ## Copyright and license
 
-Code and documentation copyright 2014 KEEN IO, Inc. Code released under [the MIT license](LICENSE). Docs released under [Creative Commons](docs/LICENSE).
+Code and documentation copyright 2014 Keen IO, Inc. Code released under [the MIT license](LICENSE). Docs released under [Creative Commons](docs/LICENSE).
