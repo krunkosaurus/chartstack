@@ -7,7 +7,7 @@ module.exports = function(grunt) {
     chartstack: {
       // configurable paths
       appPath: 'demo',
-      scriptPath: 'demo/scripts',
+      scriptPath: 'src',
       distPath: 'dist'
     },
 
@@ -44,8 +44,9 @@ module.exports = function(grunt) {
       server: {
         options: {
           port: 9001,
-          base: '<%= chartstack.appPath %>/',
-          keepalive: true
+          base: './',
+          keepalive: true,
+          open: 'http://localhost:9001/demo/index.html'
         }
       }
     }

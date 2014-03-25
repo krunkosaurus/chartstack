@@ -2,8 +2,8 @@
 <html>
     <head>
         <title>Chartstack Keen<>Highcharts demo page</title>
-        <link href="/css/page_styling.css" rel="stylesheet">
-        <link href="/bower_components/nvd3/nv.d3.min.css" rel="stylesheet">
+        <link href="../css/page_styling.css" rel="stylesheet">
+        <link href="../bower_components/nvd3/nv.d3.min.css" rel="stylesheet">
     </head>
     <body>
         <h1>Chartstack Keen<>Highcharts Demo Page</h1>
@@ -13,29 +13,29 @@
 
         <div>
         <section>
-            <piechart width="300px" height="300px" provider="api.keen.io" datasource="/api/keen/piechart.json"></piechart>
+            <piechart width="300px" height="300px" provider="api.keen.io" datasource="../api/keen/piechart.json"></piechart>
         </section>
 
         <section>
-            <barchart width="600px" height="300px" provider="api.keen.io" datasource="/api/keen/barchart.json"></barchart>
+            <barchart width="600px" height="300px" provider="api.keen.io" datasource="../api/keen/barchart.json"></barchart>
         </section>
 
         <section>
-            <linechart width="600px" height="300px" provider="api.keen.io" datasource="/api/keen/linechart.json"></linechart>
+            <linechart width="600px" height="300px" provider="api.keen.io" datasource="../api/keen/linechart.json"></linechart>
         </section>
 
         <section>
-            <linechart width="600px" height="300px" provider="api.keen.io" datasource="/api/keen/multilinechart.json"></linechart>
+            <linechart width="600px" height="300px" provider="api.keen.io" datasource="../api/keen/multilinechart.json"></linechart>
         </section>
         </div>
 
         <!-- By default highcharts uses jQuery but we use the standalone version. -->
-        <script src="/bower_components/highcharts/adapters/standalone-framework.src.js"></script>
+        <script src="../bower_components/highcharts/adapters/standalone-framework.src.js"></script>
         <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>-->
-        <script src="/bower_components/highcharts/highcharts-all.js"></script>
-        <script src="/scripts/chartstack.js"></script>
-        <script src="/scripts/chartstack.keen.universal.adapter.js"></script>
-        <script src="/scripts/chartstack.highcharts.renderer.js"></script>
-        <script src="/scripts/chartstack.universal.highcharts.adapter.js"></script>
+        <script src="../bower_components/highcharts/highcharts-all.js"></script>
+        <script src="../../src/chartstack.js"></script>
+        <script src="../../src/chartstack.keen.universal.adapter.js"></script>
+        <script src="../../src/chartstack.highcharts.renderer.js"></script>
+        <script src="../../src/chartstack.universal.highcharts.adapter.js"></script>
     </body>
 </html>
