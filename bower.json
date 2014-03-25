@@ -18,7 +18,7 @@
     "javascript"
   ],
   "license": "MIT",
-  "private": true,
+  "private": false,
   "dependencies": {
     "nvd3": "~1.1.15-beta",
     "highcharts": "~3.0.7"
