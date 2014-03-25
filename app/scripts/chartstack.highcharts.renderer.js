@@ -52,6 +52,9 @@ chartstack.addRenderer('Highcharts', {
         text: $chart.title || ''
       },
       xAxis: {
+        labels: {
+//          format: '{value:%m-%d}'
+        },
         categories: data.options.categories,
         title: {
           text: null
