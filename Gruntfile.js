@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     // Project settings
     chartstack: {
       // configurable paths
-      appPath: 'app',
+      appPath: 'demo',
       scriptPath: 'app/scripts',
       distPath: 'dist'
     },
@@ -21,10 +21,15 @@ module.exports = function(grunt) {
       build: {
         src: [
             '<%= chartstack.scriptPath %>/chartstack.js',
-            '<%= chartstack.scriptPath %>/chartstack.keen.nvd3.adapter.js',
-            '<%= chartstack.scriptPath %>/chartstack.nvd3.renderer.js'
+            '<%= chartstack.scriptPath %>/chartstack.keen.universal.adapter.js',
+            '<%= chartstack.scriptPath %>/chartstack.universal.nvd3.adapter.js',
+            '<%= chartstack.scriptPath %>/chartstack.nvd3.renderer.js',
+            '<%= chartstack.scriptPath %>/chartstack.universal.googlecharts.adapter.js',
+            '<%= chartstack.scriptPath %>/chartstack.googlecharts.renderer.js',
+            '<%= chartstack.scriptPath %>/chartstack.universal.highcharts.adapter.js',
+            '<%= chartstack.scriptPath %>/chartstack.highcharts.renderer.js'
         ],
-        dest: '<%= chartstack.distPath %>/chartstack.nvd3.min.js'
+        dest: '<%= chartstack.distPath %>/chartstack.min.js'
       }
     },
 

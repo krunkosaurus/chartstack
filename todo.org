@@ -14,7 +14,7 @@ Misc to do:
 
 * We support:
   - Pie chart
-  - Cumulative line chart
+  - Line chart
   - Bar chart
 * How to install page:
 - git clone git@github.com:krunkosaurus/chartstack.git
@@ -451,6 +451,66 @@ $('#container').highcharts({
         data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
     }]
 })
+** Googlecharts
+*** pie
+google.load("visualization", "1", {packages:["corechart"]});
+google.setOnLoadCallback(drawChart);
+function drawChart() {
+  var data = google.visualization.arrayToDataTable([
+    ['Task', 'Hours per Day'],
+    ['Work',     11],
+    ['Eat',      2],
+    ['Commute',  2],
+    ['Watch TV', 2],
+    ['Sleep',    7]
+  ]);
+
+  var options = {
+    title: 'My Daily Activities'
+  };
+
+  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+  chart.draw(data, options);
+}
+*** bar
+google.load("visualization", "1", {packages:["corechart"]});
+google.setOnLoadCallback(drawChart);
+function drawChart() {
+  var data = google.visualization.arrayToDataTable([
+    ['Year', 'Sales', 'Expenses'],
+    ['2004',  1000,      400],
+    ['2005',  1170,      460],
+    ['2006',  660,       1120],
+    ['2007',  1030,      540]
+  ]);
+
+  var options = {
+    title: 'Company Performance',
+    vAxis: {title: 'Year',  titleTextStyle: {color: 'red'}}
+  };
+
+  var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+  chart.draw(data, options);
+}
+*** line
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses'],
+          ['2004',  1000,      400],
+          ['2005',  1170,      460],
+          ['2006',  660,       1120],
+          ['2007',  1030,      540]
+        ]);
+
+        var options = {
+          title: 'Company Performance'
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
 ** Current Keen
 *** pie chart
 from: https://keen.io/docs/clients/javascript/reference/#javascript-keen-piechart
