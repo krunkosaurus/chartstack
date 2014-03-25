@@ -3,9 +3,9 @@
 Chartstack is JavaScript charting library and abstraction layer that enables a user to visualize their data using any of many popular charting libraries that Chartstack supports using one unified JavaScript API. Chartstack's goal is to allow any data format to work with any charting library, including your own custom data formats.  Chartstack also includes an optional dom-centric "easy embed" feature.  Chartstack is open-source and made by the guys and gals at [KEEN IO](https://keen.io/).
 
 Key features:
-- A unified JavaScript charting API that works across many popular charting libraries.
+- A unified JavaScript charting API that works across a growing list of popular charting libraries.
 - A plugin architecture to transform data into a unified format charting libraries can understand.
-- An optional "easy embed" API extends HTML with new simple, yet powerful, charting elements like <piechart> and <barchart>.
+- An optional "easy embed" API that extends HTML with new simple, yet powerful, charting elements like &lt;piechart> and &lt;barchart>.
 
 
 ## Table of contents
@@ -29,11 +29,14 @@ We recognize that everybody collects data in different ways and every charting l
 
 ## How to install
 
-- [Download the latest release](https://github.com/twbs/bootstrap/archive/v3.1.1.zip).
-- Clone the repo: `git clone https://github.com/twbs/bootstrap.git`.
-- Install with [Bower](http://bower.io): `bower install bootstrap`.
+There are three ways to install:
 
-Read the [Getting started page](http://getbootstrap.com/getting-started/) for information on the framework contents, templates and examples, and more.
+1. [Download the latest release](https://github.com/krunkosaurus/chartstack/archive/v0.0.1.zip). NOT READY
+2. Clone the repo: `git clone https://github.com/krunkosaruus/chartstack.git`.
+	- Run `npm install` to setup Grunt tasks
+	- Run `bower install` to install 3rd party JS libraries
+	- Run `grunt connect` to launch the webserver and view the demos at [http://localhost:9001/](http://localhost:9001/].
+3. Install with [Bower](http://bower.io): `bower install chartstack`. NOT READY
 
 ### Project architecture
 
@@ -82,7 +85,10 @@ When completed, you'll be able to run the various Grunt commands provided from t
 Run `grunt` to minify all Chartstack JavaScript files to chartstack.min.js in `/dist`. **Uses [UglifyJS](http://lisperator.net/uglifyjs/).**
 
 #### Launch test server - `grunt connect`
-Run `grunt connect` to start a test server locally accessible in your web browser at http://localhost:9001/.  This is useful for running the demos which require ajax.
+Run `grunt connect` to start a test server locally accessible in your web browser at [http://localhost:9001/](http://localhost:9001/).  This is useful for running the demos which require ajax.
+
+#### Lint JavaScript files - `grunt jshint`
+Run `grunt jshint` to check all chartstack.* JavaScript files for errors and warnings.
 
 ### Troubleshooting dependencies
 

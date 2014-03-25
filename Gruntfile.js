@@ -7,7 +7,7 @@ module.exports = function(grunt) {
     chartstack: {
       // configurable paths
       appPath: 'demo',
-      scriptPath: 'app/scripts',
+      scriptPath: 'demo/scripts',
       distPath: 'dist'
     },
 
