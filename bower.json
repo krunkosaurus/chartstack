@@ -4,9 +4,12 @@
   "authors": [
     "Mauvis Ledford <mauvis@brainswap.me>"
   ],
-  "description": "Rosetta stone for JavaScript charting libraries! By Keen IO (http://keen.io/)",
+  "description": "Charting library and abstraction layer that enables a user to visualize their data on top of many popular charting libraries using one unified JavaScript API. Chartstack's goal is to allow any data format to work with any charting library, including your own custom data formats. By Keen IO (http://keen.io/)",
   "ignore": [
-    "todo.org"
+    ".*",
+    "todo.org",
+    "Gruntfile.js",
+    "*.json"
   ],
   "main": "dist/chartstack.min.js",
   "keywords": [
