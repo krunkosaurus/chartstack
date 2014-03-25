@@ -5,6 +5,10 @@
     "Mauvis Ledford <mauvis@brainswap.me>"
   ],
   "description": "Rosetta stone for JavaScript charting libraries! By Keen IO (http://keen.io/)",
+  "ignore": [
+    "todo.org"
+  ],
+  "main": "dist/chartstack.min.js",
   "keywords": [
     "chart",
     "charting",

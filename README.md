@@ -31,12 +31,12 @@ We recognize that everybody collects data in different ways and every charting l
 
 There are three ways to install:
 
-1. [Download the latest release](https://github.com/krunkosaurus/chartstack/archive/v0.0.1.zip). NOT READY
+1. [Download the latest release](https://github.com/krunkosaurus/chartstack/releases/download/v0.0.1/chartstack.min.js).
 2. Clone the repo: `git clone https://github.com/krunkosaruus/chartstack.git`.
 	- Run `npm install` to setup Grunt tasks
 	- Run `bower install` to install 3rd party JS libraries
-	- Run `grunt connect` to launch the webserver and view the demos at [http://localhost:9001/](http://localhost:9001/].
-3. Install with [Bower](http://bower.io): `bower install chartstack`. NOT READY
+	- Run `grunt connect` to launch the web server and view the demos at [http://localhost:9001/](http://localhost:9001/].
+3. Install with [Bower](http://bower.io): `bower install chartstack`.
 
 ### Project architecture
 
