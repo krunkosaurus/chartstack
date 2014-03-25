@@ -1,11 +1,12 @@
 # Chartstack
 
-Chartstack is JavaScript charting library and abstraction layer that enables a user to visualize their data using any of many popular charting libraries that Chartstack supports. Chartstack's goal is to allow any data format to work with any charting library, including your own custom data formats.  Chartstack is made to be easy to use and in addition to a unified JavaScript charting API also includes a dom-centric "easy embed" feature.  Chartstack is open-source and made by the guys and gals at [KEEN IO](https://keen.io/).
+Chartstack is JavaScript charting library and abstraction layer that enables a user to visualize their data using any of many popular charting libraries that Chartstack supports using one unified JavaScript API. Chartstack's goal is to allow any data format to work with any charting library, including your own custom data formats.  Chartstack also includes an optional dom-centric "easy embed" feature.  Chartstack is open-source and made by the guys and gals at [KEEN IO](https://keen.io/).
 
 Key features:
-- A unified JavaScript charting API that works across many popular charting libraries. Lean more here.
-- A plugin adapter architecture to transform data into a unified format charting libraries can understand. Lean more here.
-- An optional "easy embed" API extends HTML with new simple, yet powerful, charting elements like <piechart> and <barchart>. Lean more here.
+- A unified JavaScript charting API that works across many popular charting libraries.
+- A plugin architecture to transform data into a unified format charting libraries can understand.
+- An optional "easy embed" API extends HTML with new simple, yet powerful, charting elements like <piechart> and <barchart>.
+
 
 ## Table of contents
 
@@ -34,49 +35,42 @@ We recognize that everybody collects data in different ways and every charting l
 
 Read the [Getting started page](http://getbootstrap.com/getting-started/) for information on the framework contents, templates and examples, and more.
 
-### What's included
+### Project architecture
 
-Within the download you'll find the following directories and files, logically grouping common assets and providing both compiled and minified variations. You'll see something like this:
+If you're checked out this repo on Github. You'll see something like this. Here's an explanation of what everything is:
 
 ```
-bootstrap/
-â”œâ”€â”€ css/
-â”‚   â”œâ”€â”€ bootstrap.css
-â”‚   â”œâ”€â”€ bootstrap.min.css
-â”‚   â”œâ”€â”€ bootstrap-theme.css
-â”‚   â””â”€â”€ bootstrap-theme.min.css
-â”œâ”€â”€ js/
-â”‚   â”œâ”€â”€ bootstrap.js
-â”‚   â””â”€â”€ bootstrap.min.js
-â””â”€â”€ fonts/
-    â”œâ”€â”€ glyphicons-halflings-regular.eot
-    â”œâ”€â”€ glyphicons-halflings-regular.svg
-    â”œâ”€â”€ glyphicons-halflings-regular.ttf
-    â””â”€â”€ glyphicons-halflings-regular.woff
+.
+├── Gruntfile.js	# Grunt tasks used to minify JS and start test server.
+├── README.md		# This document.
+├── demo			# When you run `grunt connect` this is the demo folder you are accessing.
+│   ├── api
+│   ├── bower_components
+│   ├── css
+│   ├── index.html
+│   ├── keen-googlecharts
+│   ├── keen-highcharts
+│   ├── keen-nvd3
+│   ├── scripts
+│   ├── universal-googlecharts
+│   ├── universal-highcharts
+│   └── universal-nvd3
+├── bower.json		# Tells Bower which 3rd party apps to install to demo/bower_components
+├── dist			# Where the final compressed Chartstack file goes.
+│   ├── chartstack.min.js
+├── node_modules	# Various node modules used by Grunt tasks
+├── package.json	# Tells Npm which node packages to install
+└── todo.org		# Just a todo list
+
+
 ```
-
-We provide compiled CSS and JS (`bootstrap.*`), as well as compiled and minified CSS and JS (`bootstrap.min.*`). Fonts from Glyphicons are included, as is the optional Bootstrap theme.
-
-
-
-## Bugs and feature requests
-
-Have a bug or a feature request? Please first read the [issue guidelines](https://github.com/twbs/bootstrap/blob/master/CONTRIBUTING.md#using-the-issue-tracker) and search for existing and closed issues. If your problem or idea is not addressed yet, [please open a new issue](https://github.com/twbs/bootstrap/issues/new).
-
-## Documentation
-
-Bootstrap's documentation, included in this repo in the root directory, is built with [Jekyll](http://jekyllrb.com) and publicly hosted on GitHub Pages at <http://getbootstrap.com>. The docs may also be run locally.
-
-## Compiling CSS and JavaScript
-
-Bootstrap uses [Grunt](http://gruntjs.com/) with convenient methods for working with the framework. It's how we compile our code, run tests, and more. To use it, install the required dependencies as directed and then run some Grunt commands.
 
 ### Install Grunt
 
 From the command line:
 
 1. Install `grunt-cli` globally with `npm install -g grunt-cli`.
-2. Navigate to the root `/bootstrap` directory, then run `npm install`. npm will look at [package.json](https://github.com/twbs/bootstrap/blob/master/package.json) and automatically install the necessary local dependencies listed there.
+2. Then run `npm install` in the root of this project. npm will look at [package.json](https://github.com/krunkosaurus/chartstack/blob/master/package.json) and automatically install the necessary local dependencies listed there.
 
 When completed, you'll be able to run the various Grunt commands provided from the command line.
 
@@ -93,6 +87,10 @@ Run `grunt connect` to start a test server locally accessible in your web browse
 ### Troubleshooting dependencies
 
 Should you encounter problems with installing dependencies or running Grunt commands, uninstall all previous dependency versions (global and local). Then, rerun `npm install`.
+
+## Bugs and feature requests
+
+Have a bug or a feature request? If your problem or idea is not addressed yet, [please open a new issue](https://github.com/krunkosaurus/chartstack/issues/new).
 
 ## Support
 
