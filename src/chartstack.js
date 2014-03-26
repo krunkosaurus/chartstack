@@ -195,7 +195,7 @@
       // Find properties on dom element to override defaults.
       // Support arrays here so we can store the data under a different name.
       // TODO: This stuff should not stored in main namespace of $chart.
-      each([['provider', 'domain'], 'labels', 'width', 'height', 'title'], function(attr){
+      each([['provider', 'domain'], 'datasource', 'library', 'labels', 'width', 'height', 'title'], function(attr){
         var test, newKey;
 
         if (is(attr, 'object')){
@@ -220,9 +220,6 @@
         }
       });
 
-      // Data source is required.
-      $chart.dataSource = el.getAttribute('datasource');
-
       // Our made up HTML nodes are display: inline so we need to make
       // them block;
       el.style.display = "inline-block";
@@ -231,13 +228,13 @@
         renderers[chartstack.library].init($chart);
       }
 
-      // Check dataSource starts with { or [ assume it's JSON or else
+      // Check datasource starts with { or [ assume it's JSON or else
       // assume it's a URL to fetch.  We do not check for http anymore
       // as it can be a local/relative file.
-      if ($chart.dataSource.match(/^({|\[)/)){
-        $chart.dataSource = JSON.parse($chart.dataSource);
+      if ($chart.datasource.match(/^({|\[)/)){
+        $chart.datasource = JSON.parse($chart.datasource);
       }else{
-        domain = $chart.dataSource.match(/\/\/(.*?)\//);
+        domain = $chart.datasource.match(/\/\/(.*?)\//);
         if (domain){
           $chart.domain = domain[1];
         }
@@ -259,11 +256,11 @@
       }
 
       // If this is a URL fetch data.
-      if (typeof $chart.dataSource == "string"){
-        chartstack.getJSON($chart.dataSource, finish);
+      if (typeof $chart.datasource == "string"){
+        chartstack.getJSON($chart.datasource, finish);
         // The data is local.
       }else{
-        finish($chart.dataSource);
+        finish($chart.datasource);
       }
     }
 

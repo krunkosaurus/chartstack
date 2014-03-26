@@ -2,7 +2,7 @@
 
 chartstack.addAdapter('google', {
   piechart: function(data){
-    return new google.visualization.arrayToDataTable(data);
+    return google.visualization.arrayToDataTable(data);
   },
 
   barchart: function(data){
