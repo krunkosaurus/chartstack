@@ -63,7 +63,7 @@
         }
       });
 
-      if (chartstack.library){
+      if (!chartstack.library){
         throw Error('No charting library located.');
       }
       // Parse the dom.
