@@ -1,6 +1,6 @@
 # Chartstack
 
-Chartstack is a charting library and abstraction layer that enables a user to visualize their data on top of many popular charting libraries using one unified JavaScript API. Chartstack's goal is to allow any data format to work with any charting library, including your own custom data formats. By Keen IO (http://keen.io/)
+Chartstack is a charting library and abstraction layer that enables a user to visualize their data on top of many popular charting libraries using one unified JavaScript API. Chartstack's goal is to allow any data format to work with any charting library, including your own custom data formats. Charstack is created and maintained by [Keen IO](http://keen.io/).
 
 Key features:
 - A unified JavaScript charting API that works across a growing list of popular charting libraries.
