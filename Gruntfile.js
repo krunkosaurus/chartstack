@@ -21,13 +21,13 @@ module.exports = function(grunt) {
       build: {
         src: [
             '<%= chartstack.scriptPath %>/chartstack.js',
-            '<%= chartstack.scriptPath %>/chartstack.keen.universal.adapter.js',
-            '<%= chartstack.scriptPath %>/chartstack.universal.nvd3.adapter.js',
-            '<%= chartstack.scriptPath %>/chartstack.nvd3.renderer.js',
-            '<%= chartstack.scriptPath %>/chartstack.universal.googlecharts.adapter.js',
-            '<%= chartstack.scriptPath %>/chartstack.googlecharts.renderer.js',
-            '<%= chartstack.scriptPath %>/chartstack.universal.highcharts.adapter.js',
-            '<%= chartstack.scriptPath %>/chartstack.highcharts.renderer.js'
+            '<%= chartstack.scriptPath %>/adapter/chartstack.keen.universal.adapter.js',
+            '<%= chartstack.scriptPath %>/adapter/chartstack.universal.nvd3.adapter.js',
+            '<%= chartstack.scriptPath %>/renderer/chartstack.nvd3.renderer.js',
+            '<%= chartstack.scriptPath %>/adapter/chartstack.universal.googlecharts.adapter.js',
+            '<%= chartstack.scriptPath %>/renderer/chartstack.googlecharts.renderer.js',
+            '<%= chartstack.scriptPath %>/adapter/chartstack.universal.highcharts.adapter.js',
+            '<%= chartstack.scriptPath %>/renderer/chartstack.highcharts.renderer.js'
         ],
         dest: '<%= chartstack.distPath %>/chartstack.min.js'
       }
@@ -60,6 +60,6 @@ module.exports = function(grunt) {
   // Default task(s).
   grunt.registerTask('default', ['connect']);
   grunt.registerTask('lint', ['jshint']);
-  grunt.registerTask('build', ['uglify']);
+  grunt.registerTask('min', ['uglify']);
 
 };

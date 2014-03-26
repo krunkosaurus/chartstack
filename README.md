@@ -84,8 +84,8 @@ When completed, you'll be able to run the various Grunt commands provided from t
 #### Launch web server - `grunt`
 Run `grunt` to start a test server locally accessible in your web browser at [http://localhost:9001/demo](http://localhost:9001/demo/).  This is useful for running the demos which require ajax.
 
-#### Compress files - `grunt build`
-Run `grunt build` to minify all Chartstack JavaScript files to chartstack.min.js in `/dist`. **Uses [UglifyJS](http://lisperator.net/uglifyjs/).**
+#### Compress files - `grunt min`
+Run `grunt min` to minify all Chartstack JavaScript files to chartstack.min.js in `/dist`. **Uses [UglifyJS](http://lisperator.net/uglifyjs/).**
 
 #### Lint JavaScript files - `grunt jshint`
 Run `grunt lint` to check all chartstack.* JavaScript files for errors and warnings.  The file `.jshintrc` contains the linting rules. **Uses [jshint](http://www.jshint.com/).**
