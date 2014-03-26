@@ -70,11 +70,12 @@
   }
 
   function parse(){
-    var chartNodes
-
-    chartNodes = document.querySelectorAll('piechart,barchart,linechart');
+    var chartNodes = document.querySelectorAll('piechart,barchart,linechart');
     each(chartNodes, function(el){
-      charts.push(new Chart(el));
+      // Ensure data attribute exists.
+      if (el.getAttribute('datasource')){
+        charts.push(new Chart(el));
+      }
     });
   }
 
