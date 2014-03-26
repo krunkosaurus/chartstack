@@ -53,7 +53,6 @@
   function bootstrap (){
     // If graph library isn't set in defaults, match provider to the first graph
     // lib found on the page that we have an adapter for.
-    // TODO: If no chart lib found load Google Charts.
     if (chartstack.defaults.provider){
       chartstack.library = chartstack.defaults.library;
     }else{
@@ -64,6 +63,9 @@
         }
       });
 
+      if (chartstack.library){
+        throw Error('No charting library located.');
+      }
       // Parse the dom.
       chartstack.parse()
     }
@@ -163,7 +165,6 @@
     each : each,
     extend : extend,
     getJSON : getJSON,
-    loadScript : loadScript,
     get: get,
     addAdapter : addAdapter,
     addRenderer : addRenderer
