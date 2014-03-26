@@ -9,16 +9,16 @@ Key features:
 
 ## Table of contents
 
+ - [Demos](#demos)
  - [Introduction and architecture](#introduction-and-architecture)
  - [How to install](#introduction-and-architecture)
- - [Bugs and feature requests](#bugs-and-feature-requests)
  - [Documentation](#documentation)
- - [Compiling CSS and JavaScript](#compiling-css-and-javascript)
- - [Contributing](#contributing)
- - [Community](#community)
- - [Versioning](#versioning)
- - [Authors](#authors)
+ - [Bugs and feature requests](#bugs-and-feature-requests)
  - [Copyright and license](#copyright-and-license)
+
+## Demos
+
+Visit [http://krunkosaurus.github.io/chartstack](http://krunkosaurus.github.io/chartstack) to see the demos. (Coming soon)
 
 ## Introduction and architecture
 
@@ -29,6 +29,10 @@ We recognize that everybody collects data in different ways and every charting l
 ## How to install
 
 There are three ways to install.
+
+## Documentation
+
+Chartstack wiki coming soon!
 
 #### Developer version with demos and test suite:
 
