@@ -1,6 +1,6 @@
 # Chartstack
 
-Charting library and abstraction layer that enables a user to visualize their data on top of many popular charting libraries using one unified JavaScript API. Chartstack's goal is to allow any data format to work with any charting library, including your own custom data formats. By Keen IO (http://keen.io/)
+Chartstack is a charting library and abstraction layer that enables a user to visualize their data on top of many popular charting libraries using one unified JavaScript API. Chartstack's goal is to allow any data format to work with any charting library, including your own custom data formats. By Keen IO (http://keen.io/)
 
 Key features:
 - A unified JavaScript charting API that works across a growing list of popular charting libraries.
@@ -28,20 +28,27 @@ We recognize that everybody collects data in different ways and every charting l
 
 ## How to install
 
-There are three ways to install:
+There are three ways to install.
 
-1. [Download the latest release](https://github.com/krunkosaurus/chartstack/releases/download/v0.0.1/chartstack.min.js) (1.58kB gzipped).
-	- You must script src your fav charting library above chartstack.min.js and it will autodetect it.
-2. Clone the repo: `git clone https://github.com/krunkosaruus/chartstack.git`.
-	- Run `npm install` to setup Grunt and node packages it uses in tasks.
-	- Run `bower install` to install 3rd party JS libraries.
-	- Run `grunt` to launch the web server and view the demos. [http://localhost:9001/demo/](http://localhost:9001/demo/].
-3. Install directly into your project with [Bower](http://bower.io): `bower install chartstack`.
-	- This will install Chartstack in your `bower_components` folder.  You can use the uncompressed files (in /src) or compressed file (in /dist).
+#### Developer version with demos and test suite:
+
+- Clone the repo: `git clone https://github.com/krunkosaruus/chartstack.git`.
+- Run `npm install` to setup Grunt and node packages it uses in tasks.
+- Run `bower install` to install 3rd party JS libraries.
+- Run `grunt` to launch the web server and view the demos. [http://localhost:9001/demo/](http://localhost:9001/demo/).
+
+#### Grab just the minified Chartstack file:	
+- [Download the latest release](https://github.com/krunkosaurus/chartstack/releases/download/v0.0.1/chartstack.min.js) (1.58 kB gzipped)
+- You must include your favorite charting library above chartstack.min.js and it will be autodetected.
+
+#### Install directly into your project with [Bower](http://bower.io):
+- `bower install chartstack` in your project folder will download Chartstack and all supported charting libraries in to your `bower_components` folder.
+- Feel free to delete the charting libraries you do not want to use.
+- You can reference the uncompressed chartstack files (in `chartstack/src`) or just the compressed file (in `chartstack/dist`).
 
 ### Project architecture
 
-If you're checked out this repo on Github. You'll see something like this. Here's an explanation of what everything is:
+If you checked out this repo on Github you'll see a folder structure like this. Here's an explanation of what everything is:
 
 ```
 .
