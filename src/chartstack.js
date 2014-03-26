@@ -1,3 +1,4 @@
+/* global google */
 (function(chartstack) {
   var adapters, renderers, charts, Chart;
 
@@ -64,10 +65,10 @@
       });
 
       if (!chartstack.library){
-        throw Error('No charting library located.');
+        throw new Error('No charting library located.');
       }
       // Parse the dom.
-      chartstack.parse()
+      chartstack.parse();
     }
   }
 
@@ -178,8 +179,9 @@
 
   // Main Chart class.
   chartstack.Chart = Chart = function(el) {
-    var $chart = this, renderer;
+    var $chart = this;
 
+    // Collects properties off DOM element and inspects data source.
     function setup() {
       var domain;
 
@@ -194,7 +196,6 @@
 
       // Find properties on dom element to override defaults.
       // Support arrays here so we can store the data under a different name.
-      // TODO: This stuff should not stored in main namespace of $chart.
       each([['provider', 'domain'], 'datasource', 'library', 'labels', 'width', 'height', 'title'], function(attr){
         var test, newKey;
 
@@ -220,12 +221,19 @@
         }
       });
 
+      // If we don't have a localized library set on this chart then set the
+      // global one.
+      if (!$chart.library){
+        $chart.library = chartstack.library;
+      }
+
       // Our made up HTML nodes are display: inline so we need to make
       // them block;
       el.style.display = "inline-block";
+      // Run library renderer's init if the lib needs to do some setup.
 
-      if (renderers[chartstack.library] && renderers[chartstack.library].init){
-        renderers[chartstack.library].init($chart);
+      if (renderers[$chart.library] && renderers[$chart.library].init){
+        renderers[$chart.library].init($chart);
       }
 
       // Check datasource starts with { or [ assume it's JSON or else
@@ -251,7 +259,7 @@
         }
 
         // Transform data into graph libs format.
-        data = adapters[chartstack.library][$chart.chartType](data);
+        data = adapters[$chart.library][$chart.chartType](data);
         cb(data);
       }
 

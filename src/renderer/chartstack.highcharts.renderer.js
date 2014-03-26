@@ -1,10 +1,8 @@
-/* global chartstack */
+/* global chartstack, Highcharts */
 chartstack.addRenderer('Highcharts', {
-  init: function($chart){
-  },
 
   piechart: function($chart, data){
-    var chart = new Highcharts.Chart({
+    return new Highcharts.Chart({
       chart: {
         renderTo: $chart.el,
         type: 'pie',
@@ -40,7 +38,7 @@ chartstack.addRenderer('Highcharts', {
   },
 
   barchart: function($chart, data){
-    var chart = new Highcharts.Chart({
+    return new Highcharts.Chart({
       chart: {
         renderTo: $chart.el,
         type: 'bar',
@@ -53,7 +51,7 @@ chartstack.addRenderer('Highcharts', {
       },
       xAxis: {
         labels: {
-//          format: '{value:%m-%d}'
+          // format: '{value:%m-%d}'
         },
         categories: data.options.categories,
         title: {
@@ -99,7 +97,7 @@ chartstack.addRenderer('Highcharts', {
   },
 
   linechart: function($chart, data){
-    var chart = new Highcharts.Chart({
+    return new Highcharts.Chart({
       chart: {
         renderTo: $chart.el,
         type: 'line',

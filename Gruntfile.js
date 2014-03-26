@@ -37,7 +37,7 @@ module.exports = function(grunt) {
       options: {
           jshintrc: true
       },
-      all: '<%= chartstack.scriptPath %>/*.js'
+      all: ['<%= chartstack.scriptPath %>/*.js', '<%= chartstack.scriptPath %>/**/*.js']
     },
 
     connect: {

@@ -7,7 +7,7 @@ chartstack.addAdapter('Highcharts', {
       type: 'pie',
       name: headers.join(' '),
       data: data
-    }
+    };
   },
 
   barchart: function(data){
@@ -22,10 +22,10 @@ chartstack.addAdapter('Highcharts', {
       section.push({
         name: name,
         data: []
-      })
+      });
     });
 
-    each(data, function(selection, i){
+    each(data, function(selection){
       categories.push(selection.shift());
       each(selection, function(y, a){
         section[a].data.push(y);
@@ -35,9 +35,10 @@ chartstack.addAdapter('Highcharts', {
     return {
       result: section,
       options: {
-        categories: categories
+        categories: categories,
+        rowDescription: rowDescription
       }
-    }
+    };
   },
 
   linechart: function(data){
@@ -52,10 +53,10 @@ chartstack.addAdapter('Highcharts', {
       section.push({
         name: name,
         data: []
-      })
+      });
     });
 
-    each(data, function(selection, i){
+    each(data, function(selection){
       categories.push(selection.shift());
       each(selection, function(y, a){
         section[a].data.push(y);
@@ -64,8 +65,9 @@ chartstack.addAdapter('Highcharts', {
     return {
       result: section,
       options: {
-        categories: categories
+        categories: categories,
+        rowDescription: rowDescription
       }
-    }
+    };
   }
 });

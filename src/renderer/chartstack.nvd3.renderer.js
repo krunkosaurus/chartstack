@@ -38,7 +38,7 @@ chartstack.addRenderer('nv', {
       // Required to set the height once more or it's too small.
       chart.width($chart.width).height($chart.height);
 
-      if (data[0].values[0].x instanceof Date){
+      if (data.result[0].values[0].x instanceof Date){
         chart.xAxis
           .tickFormat(function(d) {
             return d3.time.format('%b %d')(new Date(d));
@@ -53,7 +53,7 @@ chartstack.addRenderer('nv', {
         .tickFormat(d3.format(',f'));
 
       d3.select($chart.svg)
-        .datum(data)
+        .datum(data.result)
         .transition().duration(500)
         .call(chart);
 
@@ -69,7 +69,7 @@ chartstack.addRenderer('nv', {
       .useInteractiveGuideline(true);
 
     chart.width($chart.width).height($chart.height);
-    if (data[0].values[0][0] instanceof Date){
+    if (data.result[0].values[0][0] instanceof Date){
       chart.xAxis
         .tickFormat(function(d) {
           return d3.time.format('%b %d')(new Date(d));
@@ -88,7 +88,7 @@ chartstack.addRenderer('nv', {
       .tickFormat(d3.format(',g'));
 
     d3.select($chart.svg)
-      .datum(data)
+      .datum(data.result)
       .call(chart);
 
     nv.utils.windowResize(chart.update);

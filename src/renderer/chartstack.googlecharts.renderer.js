@@ -1,8 +1,5 @@
-/* global chartstack, nv, d3 */
+/* global google, chartstack */
 chartstack.addRenderer('google', {
-
-  init: function($chart){
-  },
 
   piechart: function($chart, data){
     var chart, options;

@@ -1,4 +1,4 @@
-/* global chartstack */
+/* global google, chartstack */
 
 chartstack.addAdapter('google', {
   piechart: function(data){

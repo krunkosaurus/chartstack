@@ -28,10 +28,10 @@ chartstack.addAdapter('nv', {
       section.push({
         key: name,
         values: []
-      })
+      });
     });
 
-    each(data, function(selection, i){
+    each(data, function(selection){
       var rowDesc = selection.shift();
       each(selection, function(y, a){
         section[a].values.push({
@@ -41,7 +41,12 @@ chartstack.addAdapter('nv', {
       });
     });
 
-    return section;
+    return {
+      result: section,
+      options: {
+        rowDescription: rowDescription
+      }
+    };
   },
 
   linechart: function(data){
@@ -55,15 +60,21 @@ chartstack.addAdapter('nv', {
       section.push({
         key: name,
         values: []
-      })
+      });
     });
 
-    each(data, function(selection, i){
+    each(data, function(selection){
       var rowDesc = selection.shift();
       each(selection, function(y, a){
         section[a].values.push([rowDesc, y]);
       });
     });
-    return section;
+
+    return {
+      result: section,
+      options: {
+        rowDescription: rowDescription
+      }
+    };
   }
 });
