@@ -55,11 +55,11 @@
     // lib found on the page that we have an adapter for.
     // TODO: If no chart lib found load Google Charts.
     if (chartstack.defaults.provider){
-      chartstack.provider = chartstack.defaults.provider;
+      chartstack.library = chartstack.defaults.library;
     }else{
       each(Object.keys(chartstack.renderers), function(ns){
         if (ns in window){
-          chartstack.provider = ns;
+          chartstack.library = ns;
           return false;
         }
       });
@@ -162,6 +162,7 @@
     each : each,
     extend : extend,
     getJSON : getJSON,
+    loadScript : loadScript,
     get: get,
     addAdapter : addAdapter,
     addRenderer : addRenderer
@@ -224,8 +225,8 @@
       // them block;
       el.style.display = "inline-block";
 
-      if (renderers[chartstack.provider] && renderers[chartstack.provider].init){
-        renderers[chartstack.provider].init($chart);
+      if (renderers[chartstack.library] && renderers[chartstack.library].init){
+        renderers[chartstack.library].init($chart);
       }
 
       // Check dataSource starts with { or [ assume it's JSON or else
@@ -251,7 +252,7 @@
         }
 
         // Transform data into graph libs format.
-        data = adapters[chartstack.provider][$chart.chartType](data);
+        data = adapters[chartstack.library][$chart.chartType](data);
         cb(data);
       }
 
@@ -266,11 +267,11 @@
 
     setup();
     fetch(function(data){
-      var renderer = chartstack.renderers[chartstack.provider];
+      var renderer = chartstack.renderers[chartstack.library];
       if (!renderer){
-        throw('Renderer for ' + chartstack.provider + ' is missing.');
+        throw('Renderer for ' + chartstack.library + ' is missing.');
       }else if(!renderer[$chart.chartType]){
-        throw('Renderer for ' + chartstack.provider + ':' + $chart.chartType + ' is missing.');
+        throw('Renderer for ' + chartstack.library + ':' + $chart.chartType + ' is missing.');
       }
       renderer[$chart.chartType]($chart, data);
     });
