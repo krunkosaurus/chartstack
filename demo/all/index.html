@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Chartstack Misc tests</title>
+        <link href="../css/page_styling.css" rel="stylesheet">
+        <link href="../bower_components/nvd3/nv.d3.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <h1>Chartstack Google Charts Test Page</h1>
+        <ul class="menu">
+            <li><a href="/">Go back</a></
+        </ul>
+
+        <div>
+
+        <section>
+            <!-- These should not throw errors and be safely ignored. -->
+            <piechart></piechart>
+            <barchart></barchart>
+            <linechart></linechart>
+        </section>
+
+        <section>
+            <piechart library="google" title="Yay browsers!" width="400px" height="400px" datasource="../api/universal/piechart.json"></piechart>
+        </section>
+
+        <section>
+            <piechart library="nv" title="Yay browsers!" width="400px" height="400px" datasource="../api/universal/piechart.json"></piechart>
+        </section>
+
+        <section>
+            <piechart library="Highcharts" title="Yay browsers!" width="400px" height="400px" datasource="../api/universal/piechart.json"></piechart>
+
+        </section>
+
+        <section>
+            <barchart library="google" width="400px" height="400px" datasource="../api/universal/barchart.json"></barchart>
+        </section>
+
+        <section>
+            <barchart library="nv" width="400px" height="400px" datasource="../api/universal/barchart.json"></barchart>
+        </section>
+
+        <section>
+            <barchart library="Highcharts" width="400px" height="400px" datasource="../api/universal/barchart.json"></barchart>
+        </section>
+
+        <section>
+            <linechart library="google" width="600px" height="300px" datasource="../api/universal/linechart.json"></linechart>
+        </section>
+
+        <section>
+            <linechart library="nv" width="600px" height="300px" datasource="../api/universal/linechart.json"></linechart>
+        </section>
+
+        <section>
+            <linechart library="Highcharts" width="600px" height="300px" datasource="../api/universal/linechart.json"></linechart>
+        </section>
+
+        </div>
+
+        <!-- Load all charting libraries and all renderers and adapters to ensure they work well together. -->
+        <!-- Google Charts -->
+        <script src="https://www.google.com/jsapi"></script>
+        <!-- NVD3 -->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.3/d3.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.14-beta/nv.d3.min.js"></script>
+        <!-- Highcharts -->
+        <script src="../bower_components/highcharts/adapters/standalone-framework.src.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.9/highcharts.js"></script>
+        <!-- Chartstack + all renderers + all adapters -->
+        <script src="../../src/chartstack.js"></script>
+        <script src="../../src/adapter/chartstack.universal.nvd3.adapter.js"></script>
+        <script src="../../src/renderer/chartstack.nvd3.renderer.js"></script>
+        <script src="../../src/adapter/chartstack.universal.googlecharts.adapter.js"></script>
+        <script src="../../src/renderer/chartstack.googlecharts.renderer.js"></script>
+        <script src="../../src/adapter/chartstack.universal.highcharts.adapter.js"></script>
+        <script src="../../src/renderer/chartstack.highcharts.renderer.js"></script>
+        <script>
+
+        </script>
+    </body>
+</html>

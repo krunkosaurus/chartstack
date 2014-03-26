@@ -274,11 +274,11 @@
 
     setup();
     fetch(function(data){
-      var renderer = chartstack.renderers[chartstack.library];
+      var renderer = chartstack.renderers[$chart.library];
       if (!renderer){
-        throw('Renderer for ' + chartstack.library + ' is missing.');
+        throw('Renderer for ' + $chart.library + ' is missing.');
       }else if(!renderer[$chart.chartType]){
-        throw('Renderer for ' + chartstack.library + ':' + $chart.chartType + ' is missing.');
+        throw('Renderer for ' + $chart.library + ':' + $chart.chartType + ' is missing.');
       }
       renderer[$chart.chartType]($chart, data);
     });

@@ -50,6 +50,9 @@ chartstack.addRenderer('Highcharts', {
         text: $chart.title || ''
       },
       xAxis: {
+        title: {
+          text: data.options.rowDescription
+        },
         labels: {
           // format: '{value:%m-%d}'
         },
@@ -60,10 +63,9 @@ chartstack.addRenderer('Highcharts', {
       },
       yAxis: {
         min: 0,
-        //title: {
-        //  text: 'Population (millions)',
-        //  align: 'high'
-        //},
+        title: {
+          align: 'high'
+        },
         labels: {
           overflow: 'justify'
         }
@@ -110,11 +112,14 @@ chartstack.addRenderer('Highcharts', {
         x: -20 //center
       },
       xAxis: {
-        categories: data.options.categories
+        categories: data.options.categories,
+        title: {
+          text: data.options.rowDescription
+        }
       },
       yAxis: {
         title: {
-          text: 'Temperature (°C)'
+          // text: 'Temperature (°C)'
         },
         plotLines: [{
           value: 0,
