@@ -30,12 +30,14 @@ We recognize that everybody collects data in different ways and every charting l
 
 There are three ways to install:
 
-1. [Download the latest release](https://github.com/krunkosaurus/chartstack/releases/download/v0.0.1/chartstack.min.js).
+1. [Download the latest release](https://github.com/krunkosaurus/chartstack/releases/download/v0.0.1/chartstack.min.js) (1.58kB gzipped).
+	- You must script src your fav charting library above chartstack.min.js and it will autodetect it.
 2. Clone the repo: `git clone https://github.com/krunkosaruus/chartstack.git`.
-	- Run `npm install` to setup Grunt tasks
-	- Run `bower install` to install 3rd party JS libraries
-	- Run `grunt connect` to launch the web server and view the demos at [http://localhost:9001/](http://localhost:9001/].
-3. Install with [Bower](http://bower.io): `bower install chartstack`.
+	- Run `npm install` to setup Grunt and node packages it uses in tasks.
+	- Run `bower install` to install 3rd party JS libraries.
+	- Run `grunt` to launch the web server and view the demos. [http://localhost:9001/demo/](http://localhost:9001/demo/].
+3. Install directly into your project with [Bower](http://bower.io): `bower install chartstack`.
+	- This will install Chartstack in your `bower_components` folder.  You can use the uncompressed files (in /src) or compressed file (in /dist).
 
 ### Project architecture
 
@@ -46,28 +48,27 @@ If you're checked out this repo on Github. You'll see something like this. Here'
 ├── Gruntfile.js	# Grunt tasks used to minify JS and start test server.
 ├── README.md		# This document.
 ├── demo			# When you run `grunt connect` this is the demo folder you are accessing.
-│   ├── api
-│   ├── bower_components
-│   ├── css
-│   ├── index.html
-│   ├── keen-googlecharts
-│   ├── keen-highcharts
-│   ├── keen-nvd3
-│   ├── scripts
-│   ├── universal-googlecharts
-│   ├── universal-highcharts
-│   └── universal-nvd3
+│   ├── api					# Sample API calls JSON.
+│   ├── bower_components	# The location of 3rd Party charting libraries.
+│   ├── css					# Unimportant CSS styles for this demo.
+│   ├── index.html			# Demo start page.
+│   ├── keen-googlecharts	# Demo: http://keen.io data interacting with Google Charts.
+│   ├── keen-highcharts		# Demo: http://keen.io data interacting with Highcharts.
+│   ├── keen-nvd3			# Demo: http://keen.io data interacting with NVD3 Charts.
+│   ├── universal-googlecharts	# Demo: Universal data interacting with Google Charts
+│   ├── universal-highcharts	# Demo: Universal data interacting with Highcharts.
+│   └── universal-nvd3			# Demo: Universal data interacting with NVD3 Charts.
 ├── bower.json		# Tells Bower which 3rd party apps to install to demo/bower_components
-├── dist			# Where the final compressed Chartstack file goes.
-│   ├── chartstack.min.js
-├── node_modules	# Various node modules used by Grunt tasks
-├── package.json	# Tells Npm which node packages to install
-└── todo.org		# Just a todo list
+├── dist			# Where the final compressed Chartstack bundle goes.
+│   ├── chartstack.min.js	# Currently bundles all adapters and renderers due to small size.
+├── node_modules	# Various node modules used by Grunt tasks.
+├── package.json	# Tells Npm which node packages to install.
+└── todo.org		# Just a todo list.
 
 
 ```
 
-### Install Grunt
+### How to install Grunt
 
 From the command line:
 
@@ -80,14 +81,14 @@ When completed, you'll be able to run the various Grunt commands provided from t
 
 ### Available Grunt commands
 
-#### Build - `grunt`
-Run `grunt` to minify all Chartstack JavaScript files to chartstack.min.js in `/dist`. **Uses [UglifyJS](http://lisperator.net/uglifyjs/).**
+#### Launch web server - `grunt`
+Run `grunt` to start a test server locally accessible in your web browser at [http://localhost:9001/demo](http://localhost:9001/demo/).  This is useful for running the demos which require ajax.
 
-#### Launch test server - `grunt connect`
-Run `grunt connect` to start a test server locally accessible in your web browser at [http://localhost:9001/](http://localhost:9001/).  This is useful for running the demos which require ajax.
+#### Compress files - `grunt build`
+Run `grunt build` to minify all Chartstack JavaScript files to chartstack.min.js in `/dist`. **Uses [UglifyJS](http://lisperator.net/uglifyjs/).**
 
 #### Lint JavaScript files - `grunt jshint`
-Run `grunt jshint` to check all chartstack.* JavaScript files for errors and warnings.
+Run `grunt lint` to check all chartstack.* JavaScript files for errors and warnings.  The file `.jshintrc` contains the linting rules. **Uses [jshint](http://www.jshint.com/).**
 
 ### Troubleshooting dependencies
 

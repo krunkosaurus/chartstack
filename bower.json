@@ -8,6 +8,7 @@
   "description": "Charting library and abstraction layer that enables a user to visualize their data on top of many popular charting libraries using one unified JavaScript API. Chartstack's goal is to allow any data format to work with any charting library, including your own custom data formats. By Keen IO (http://keen.io/)",
   "ignore": [
     ".*",
+    "demo",
     "todo.org",
     "Gruntfile.js",
     "*.json"

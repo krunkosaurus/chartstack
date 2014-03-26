@@ -58,6 +58,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
 
   // Default task(s).
-  grunt.registerTask('default', ['uglify']);
+  grunt.registerTask('default', ['connect']);
+  grunt.registerTask('lint', ['jshint']);
+  grunt.registerTask('build', ['uglify']);
 
 };
