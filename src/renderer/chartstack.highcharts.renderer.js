@@ -56,10 +56,7 @@ chartstack.addRenderer('Highcharts', {
         labels: {
           // format: '{value:%m-%d}'
         },
-        categories: data.options.categories,
-        title: {
-          text: null
-        }
+        categories: data.options.categories
       },
       yAxis: {
         min: 0,
