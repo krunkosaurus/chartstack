@@ -1,30 +1,29 @@
 # Chartstack
 
-Chartstack is a charting library and abstraction layer that enables a user to visualize their data on top of many popular charting libraries using one unified JavaScript API. Chartstack's goal is to allow any data format to work with any charting library, including your own custom data formats. Charstack is created and maintained by [Keen IO](http://keen.io/).
+**Chartstack** is a charting library and abstraction layer that enables a user to visualize their data on top of many popular charting libraries using one unified JavaScript API. Chartstack's goal is to allow any data format to work with any charting library, including an easy way to support your own custom data formats. Charstack is created and maintained by [Keen IO](http://keen.io/).
 
 Key features:
-- A unified JavaScript charting API that works across a growing list of popular charting libraries.
-- A plugin architecture to transform data into a unified format charting libraries can understand.
-- An optional "easy embed" API that extends HTML with new simple, yet powerful, charting elements like &lt;piechart> and &lt;barchart>.
-
-## Table of contents
-
- - [Demos](#demos)
- - [Introduction and architecture](#introduction-and-architecture)
- - [How to install](#introduction-and-architecture)
- - [Documentation](#documentation)
- - [Bugs and feature requests](#bugs-and-feature-requests)
- - [Copyright and license](#copyright-and-license)
+- A unified JavaScript charting API that works across a growing list of popular charting libraries. (Currently [NVD3](http://nvd3.org/) and [Google Charts](https://developers.google.com/chart/))
+- A plugin architecture to transform data into a unified format and a rendering plugin system so that charting libraries understand it.
+- An optional "easy embed" API that extends HTML with new simple yet powerful charting elements like &lt;piechart> and &lt;barchart>.
 
 ## Demos
 
-Visit [http://krunkosaurus.github.io/chartstack](http://krunkosaurus.github.io/chartstack) to see the demos. (Coming soon)
+Coming soon. For now check out the progress at [http://krunkosaurus.github.io/chartstack/demo/](http://krunkosaurus.github.io/chartstack/demo/).
 
-## Introduction and architecture
+## How does Chartstack work?
 
-We recognize that everybody collects data in different ways and every charting library has it's own arbitrary data format for displaying that data, that's why ChartStack comes with easy methods to normalize incoming data to one unified format. Though there is no real standard for displaying data in charts, once you've setup the normalization plugin for your data source, all charts just work.  We've already included a normalization plugin for Keen IO data sources and the community is invited to add theirs in the ChartStack Github repo.
+**The Unified Chart Data Format**
 
-[Insert diagram here if how adapters and renderers and universal data works.]
+Chartstack is built around the concept that all data APIs are arbitrary and all charting libraries require data formatted in different ways to work. There is no standard in either one of these areas.  If we could make even one of these unified the other problem would be a lot easier to solve. Since we can't get all the charting frameworks to agree on the same data API we've create the **Unified Chart Data Standard Format** to serve as a portable transformation layer.  The **UCDS** format is based on the [Google Charts API](https://developers.google.com/chart/interactive/docs/reference) and describes what data should look like for various chart types (Pie, Bar, Line, etc) in a clean and easy to understand way.     
+
+For most users of Chartstack, understanding the **DOM embed API** or the **JavaScript API** and the **UCDS** format is all one needs to know to get started rendering charts. For small data sets or one off charts, simply hand rewrite your data in **UCDS** and passing it to Chartstack will allow your data to be rendered in any supported charting library.  For those that want Chartstack to understand your own unique data format / API or for getting Chartstack to understand support a new charting library, understanding the layers beneath DOM and JS API is relevant.
+
+**The three layers of Chartstack**
+
+1. **Adapters:** Adapters normalize data into **UCDS** format.  A [Keen adapter](src/adapter/chartstack.keen.universal.adapter.js) for all data coming from http://api.keen.io is included in this repo.
+2. **Renderers:** Renderer plugins understands how to render to each supported charting library using the **UCDS** format.
+2. The Chartstack core which holds and controls the flow of both *1.* and *2.* and supplies convenience methods useable in each plugin type.
 
 ## How to install
 
@@ -124,4 +123,4 @@ Need a hand with something? Join us in [HipChat](http://users.keen.io/), [IRC](h
 
 ## Copyright and license
 
-Code and documentation copyright 2014 Keen IO, Inc. Code released under [the MIT license](LICENSE). Docs released under [Creative Commons](docs/LICENSE).
+Code and documentation copyright 2014 Keen IO, Inc. Code released under [the MIT license](LICENSE). Docs released under [Creative Commons](LICENSE).
