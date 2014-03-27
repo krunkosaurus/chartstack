@@ -16,6 +16,10 @@
             <div id="piechart"></div>
         </section>
 
+        <section>
+            <div id="barchart"></div>
+        </section>
+
 <!--
         <section>
             <piechart width="300px" height="300px" provider="api.keen.io" datasource="../api/keen/piechart.json"></piechart>
@@ -46,13 +50,22 @@
         <script src="../../src/renderer/chartstack.nvd3.renderer.js"></script>
         <script>
             chartstack.ready(function(){
-              var myChart = new chartstack.Chart({
+              var piechart = new chartstack.Chart({
                 el: document.getElementById('piechart'),
                 chartType: 'piechart',
                 datasource: '../api/keen/piechart.json',
                 provider: 'api.keen.io',
                 width: '500',
                 height: '500'
+              });
+
+              var barchart = new chartstack.Chart({
+                el: document.getElementById('barchart'),
+                chartType: 'barchart',
+                datasource: '../api/keen/barchart.json',
+                provider: 'api.keen.io',
+                width: '500',
+                height: '300'
               });
             });
         </script>
