@@ -6,7 +6,7 @@ chartstack.addRenderer('nv', {
     $chart.svg = document.createElementNS ('http://www.w3.org/2000/svg', 'svg');
     // Set height and width of SVG to it's parent's container.
     chartstack.each(['width', 'height'], function(m){
-      var v = parseInt($chart.el.getAttribute(m));
+      var v = parseInt($chart[m]);
       $chart[m] = v;
       $chart.svg.setAttributeNS(null, m, v);
     });

@@ -1,9 +1,9 @@
 /* global google */
 (function(chartstack) {
-  var adapters, renderers, charts, Chart;
+  var adapters, renderers, charts, Chart, isDomReady, readyCallbacks = [];
 
   // These three functions taken from https://github.com/spocke/punymce
-  function is(o, t) {
+  function is(o, t){
     o = typeof(o);
 
     if (!t){
@@ -13,7 +13,7 @@
     return o == t;
   }
 
-  function each(o, cb, s) {
+  function each(o, cb, s){
     var n;
 
     if (!o){
@@ -22,7 +22,7 @@
 
     s = !s ? o : s;
 
-    if (is(o.length)) {
+    if (is(o.length)){
       // Indexed arrays, needed for Safari
       for (n=0; n<o.length; n++) {
         if (cb.call(s, o[n], n, o) === false){
@@ -31,7 +31,7 @@
       }
     } else {
       // Hashtables
-      for (n in o) {
+      for (n in o){
         if (o.hasOwnProperty(n)) {
           if (cb.call(s, o[n], n, o) === false){
             return 0;
@@ -43,18 +43,28 @@
     return 1;
   }
 
-  function extend(o, e) {
-    each(e, function(v, n) {
+  function extend(o, e){
+    each(e, function(v, n){
       o[n] = v;
     });
 
     return o;
   }
 
+  // DOM-ready queue method.
+  function ready(cb){
+    if (!isDomReady){
+      readyCallbacks.push(cb);
+    }else{
+      cb();
+    }
+  }
+
+  // Called when DOM and chart libs are loaded and ready.
   function bootstrap (){
     // If graph library isn't set in defaults, match provider to the first graph
     // lib found on the page that we have an adapter for.
-    if (chartstack.defaults.provider){
+    if (chartstack.defaults.library){
       chartstack.library = chartstack.defaults.library;
     }else{
       each(Object.keys(chartstack.renderers), function(ns){
@@ -67,8 +77,14 @@
       if (!chartstack.library){
         throw new Error('No charting library located.');
       }
+
       // Parse the dom.
       chartstack.parse();
+
+      isDomReady = true;
+      each(readyCallbacks, function(cb){
+        cb();
+      });
     }
   }
 
@@ -77,7 +93,7 @@
     each(chartNodes, function(el){
       // Ensure data attribute exists.
       if (el.getAttribute('datasource')){
-        charts.push(new Chart(el));
+        new Chart(el);
       }
     });
   }
@@ -166,6 +182,7 @@
     each : each,
     extend : extend,
     getJSON : getJSON,
+    ready: ready,
     get: get,
     addAdapter : addAdapter,
     addRenderer : addRenderer
@@ -178,21 +195,44 @@
   };
 
   // Main Chart class.
-  chartstack.Chart = Chart = function(el) {
+  chartstack.Chart = Chart = function(args) {
     var $chart = this;
+    // Add to internal array.
+    chartstack.charts.push(this);
 
     // Collects properties off DOM element and inspects data source.
-    function setup() {
-      var domain;
 
-      $chart.el = el;
-      // Type of chart.
-      $chart.chartType = el.nodeName.toLocaleLowerCase();
+    function setup(){
+      var setupDom, setupJS, domain;
+
+      setupDom = function(){
+        $chart.el = args;
+
+        // Type of chart.
+        $chart.chartType = $chart.el.nodeName.toLocaleLowerCase();
+
+        // Our made up HTML nodes are display: inline so we need to make
+        // them block;
+        $chart.el.style.display = "inline-block";
+      };
+
+      setupJS = function(){
+        $chart.el = args.el;
+
+        // Type of chart.
+        $chart.chartType = args.chartType;
+      }
 
       // Copy global defaults on to this chart.
       each(chartstack.defaults, function(k, v){
         $chart[v] = k;
       });
+
+      if ('nodeType' in args){
+        setupDom();
+      }else{
+        setupJS();
+      }
 
       // Find properties on dom element to override defaults.
       // Support arrays here so we can store the data under a different name.
@@ -203,8 +243,8 @@
           newKey = attr[1];
           attr = attr[0];
         }
-        test = el.getAttribute(attr);
-        // If property exists in the DOM, save it.
+        test = args.nodeType ? args.getAttribute(attr) : args[attr];
+        // If property exists, save it.
         if (test){
           // Support for real booleans.
           if (test == 'false' || test == '0' || test == 'off'){
@@ -227,11 +267,7 @@
         $chart.library = chartstack.library;
       }
 
-      // Our made up HTML nodes are display: inline so we need to make
-      // them block;
-      el.style.display = "inline-block";
       // Run library renderer's init if the lib needs to do some setup.
-
       if (renderers[$chart.library] && renderers[$chart.library].init){
         renderers[$chart.library].init($chart);
       }
@@ -248,6 +284,7 @@
         }
       }
     }
+
 
     // Fetches and normalizes data with a callback to pass data to.
     function fetch(cb){
@@ -285,11 +322,11 @@
 
     // Public methods
     extend(this, {
-      show : function() {
+      show : function(){
         this.el.style.display = 'none';
       },
 
-      hide : function() {
+      hide : function(){
         this.el.style.display = 'block';
       },
 
