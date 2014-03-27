@@ -22,7 +22,7 @@ For most users of Chartstack, understanding the **DOM embed API** or the **JavaS
 **The three layers of Chartstack**
 
 1. **Adapters:** Adapters normalize data into **UCDS** format.  A [Keen adapter](src/adapter/chartstack.keen.universal.adapter.js) for all data coming from http://api.keen.io is included in this repo.
-2. **Renderers:** Renderer plugins understands how to render to each supported charting library using the **UCDS** format.
+2. **Renderers:** Renderer plugins understands how to render to each supported charting library using the **UCDS** format. Here is an example of the [NVD3 renderer](src/renderer/chartstack.nvd3.renderer.js).
 2. The Chartstack core which holds and controls the flow of both *1.* and *2.* and supplies convenience methods useable in each plugin type.
 
 ## How to install
