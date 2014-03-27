@@ -16,7 +16,9 @@ module.exports = function(grunt) {
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
-        report: 'gzip'
+        report: 'gzip',
+        sourceMap: true,
+        sourceMapIncludeSources: true
       },
       build: {
         src: [
