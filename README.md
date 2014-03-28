@@ -18,9 +18,9 @@ These demos are non-fancy for now but demonstrate pulling in standard and non-st
 
 **The Unified Chart Data Format**
 
-Chartstack is built around the concept that all data APIs are arbitrary and all charting libraries require data formatted in different ways to work. There is no standard in either one of these areas.  If we could make even one of these unified the other problem would be a lot easier to solve. Since we can't get all the charting frameworks to agree on the same data API we've create the [**Unified Chart Data Standard Format**](https://github.com/krunkosaurus/chartstack/wiki/Unified-Chart-Data-Format) to serve as a portable transformation layer.  The **UCDS** format is based on the [Google Charts API](https://developers.google.com/chart/interactive/docs/reference) and describes what data should look like for various chart types (Pie, Bar, Line, etc) in a clean and easy to understand way.     
+Chartstack is built around the concept that all data APIs are arbitrary and all charting libraries require data formatted in different ways to work. There is no standard in either one of these areas.  If we could make even one of these unified the other problem would be a lot easier to solve. Since we can't get all charting frameworks to agree on the same data API we've create the [**Unified Chart Data Standard Format**](https://github.com/krunkosaurus/chartstack/wiki/Unified-Chart-Data-Format) to serve as a portable transformation layer.  The **UCDS** format is based on the [Google Charts API](https://developers.google.com/chart/interactive/docs/reference) and describes what data should look like for various chart types (Pie, Bar, Line, etc) in a clean and easy to understand way.     
 
-For most users of Chartstack, understanding the **DOM embed API** or the **JavaScript API** and the **UCDS** format is all one needs to know to get started rendering charts. For small data sets or one off charts, simply hand rewrite your data in **UCDS** and passing it to Chartstack will allow your data to be rendered in any supported charting library.  For those that want Chartstack to understand your own unique data format / API or for getting Chartstack to understand support a new charting library, understanding the layers beneath DOM and JS API is relevant.
+For most users of Chartstack, understanding the **DOM embed API** or the **JavaScript API** and the **UCDS** format is all one needs to know to get started rendering charts.  For those that want Chartstack to understand your own unique data format / API or for getting Chartstack to understand support a new charting library, understanding the layers beneath DOM and JS API is relevant.
 
 **The three layers of Chartstack**
 
@@ -31,19 +31,6 @@ For most users of Chartstack, understanding the **DOM embed API** or the **JavaS
 ## How to install
 
 There are three ways to install.
-
-1. [Download the latest release](https://github.com/krunkosaurus/chartstack/releases/download/v0.0.1/chartstack.min.js) (1.58kB gzipped).
-       - You must script src your fav charting library above chartstack.min.js and it will autodetect it.
-2. Clone the repo: `git clone https://github.com/krunkosaruus/chartstack.git`.
-       - Run `npm install` to setup Grunt and node packages it uses in tasks.
-       - Run `bower install` to install 3rd party JS libraries.
-       - Run `grunt` to launch the web server and view the demos. [http://localhost:9001/demo/](http://localhost:9001/demo/].
-3. Install directly into your project with [Bower](http://bower.io): `bower install chartstack`.
-       - This will install Chartstack in your `bower_components` folder.  You can use the uncompressed files (in /src) or compressed file (in /dist).
-
-## Documentation
-
-Chartstack wiki coming soon!
 
 #### Developer version with demos and test suite:
 
@@ -60,6 +47,10 @@ Chartstack wiki coming soon!
 - `bower install chartstack` in your project folder will download Chartstack and all supported charting libraries in to your `bower_components` folder.
 - Feel free to delete the charting libraries you do not want to use.
 - You can reference the uncompressed chartstack files (in `chartstack/src`) or just the compressed file (in `chartstack/dist`).
+
+## Documentation
+
+Chartstack wiki coming soon!
 
 ### Project architecture
 
