@@ -10,8 +10,9 @@ Key features:
 ## Demos
 
 These demos are non-fancy for now but demonstrate pulling in standard and non-standard data against all supported charting libraries:
-* [JS API Demo](http://krunkosaurus.github.io/chartstack/js-api-demo/)
-* [DOM API Demo](http://krunkosaurus.github.io/chartstack/dom-api-demo/)
+* [Chartstack Official Demo Page](http://krunkosaurus.github.io/chartstack/)
+* [Additional JS API Demos](http://krunkosaurus.github.io/chartstack/js-api-demo/)
+* [Additional DOM API Demos](http://krunkosaurus.github.io/chartstack/dom-api-demo/)
 
 ## How does Chartstack work?
 
