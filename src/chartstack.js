@@ -299,12 +299,14 @@
       // Check datasource starts with { or [ assume it's JSON or else
       // assume it's a URL to fetch.  We do not check for http anymore
       // as it can be a local/relative file.
-      if ($chart.datasource.match(/^({|\[)/)){
-        $chart.datasource = JSON.parse($chart.datasource);
-      }else{
-        domain = $chart.datasource.match(/\/\/(.*?)\//);
-        if (domain){
-          $chart.domain = domain[1];
+      if (typeof $chart.datasource == 'string'){
+        if ($chart.datasource.match(/^({|\[)/)){
+          $chart.datasource = JSON.parse($chart.datasource);
+        }else{
+          domain = $chart.datasource.match(/\/\/(.*?)\//);
+          if (domain){
+            $chart.domain = domain[1];
+          }
         }
       }
     }
