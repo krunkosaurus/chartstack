@@ -184,7 +184,11 @@
   // Placeholder for transform data adapters.
   chartstack.transformers = transformers = {
     json : function(data){
-      return JSON.parse(data);
+      if (typeof data == 'string'){
+        return JSON.parse(data);
+      }else{
+        return data;
+      }
     }
   };
 
