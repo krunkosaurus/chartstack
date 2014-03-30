@@ -68,7 +68,6 @@ chartstack.addRenderer('nv', {
       .color(d3.scale.category10().range())
       .useInteractiveGuideline(true);
 
-    chart.width($chart.width).height($chart.height);
     if (data.result[0].values[0][0] instanceof Date){
       chart.xAxis
         .tickFormat(function(d) {
@@ -91,6 +90,7 @@ chartstack.addRenderer('nv', {
       .datum(data.result)
       .call(chart);
 
+    chart.width($chart.width).height($chart.height).update();
     nv.utils.windowResize(chart.update);
     return chart;
   }

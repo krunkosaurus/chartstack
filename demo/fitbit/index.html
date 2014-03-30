@@ -28,6 +28,11 @@
             <div id="fitbit1"></div>
         </section>
 
+        <section>
+            <h1>Steps in April vs March</h1>
+            <div id="fitbit2"></div>
+        </section>
+
         </div>
 
         <script src="../bower_components/d3/d3.min.js"></script>
@@ -84,6 +89,9 @@ fetchFormat('../api/fitbit/data.csv', function(d1){
       d1.data[i][0] = i;
     });
 
+    // We make a copy of the data since NVD3 mangles it after first use.
+    var d1copy = JSON.stringify(d1);
+
     chartstack.ready(function(){
       var barchart = new chartstack.Chart({
         el: document.getElementById('fitbit1'),
@@ -92,6 +100,15 @@ fetchFormat('../api/fitbit/data.csv', function(d1){
         width: '600',
         height: '300'
       });
+
+      var linechart = new chartstack.Chart({
+        el: document.getElementById('fitbit2'),
+        chartType: 'linechart',
+        datasource: d1copy,
+        width: '600',
+        height: '300'
+      });
+
     });
   });
 });
