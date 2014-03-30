@@ -1,6 +1,6 @@
 /* global google */
 (function(chartstack) {
-  var adapters, renderers, charts, Chart, isDomReady, readyCallbacks = [];
+  var adapters, renderers, charts, Chart, transformers, isDomReady, readyCallbacks = [];
 
   // These three functions taken from https://github.com/spocke/punymce
   function is(o, t){
@@ -88,6 +88,7 @@
     }
   }
 
+  // Parse the DOM and search for valid charting elements to turn to classes.
   function parse(){
     var chartNodes = document.querySelectorAll('piechart,barchart,linechart');
     each(chartNodes, function(el){
@@ -98,7 +99,7 @@
     });
   }
 
-  function getJSON(url, cb) {
+  function getAjax(url, cb){
     var xhr;
     var createXHR = function(){
       var xhr;
@@ -118,7 +119,7 @@
     xhr = createXHR();
     xhr.onreadystatechange = function(){
       if (xhr.readyState === 4){
-        cb(JSON.parse(xhr.responseText));
+        cb(xhr.responseText);
       }
     };
     xhr.open('GET', url, true);
@@ -166,6 +167,11 @@
     });
   }
 
+  // Methods that transform non-JSON data to JSON.
+  function addTransformer(name, func){
+    transformers[name] = func;
+  }
+
   // Placeholder for chartstack data adapters.
   chartstack.adapters = adapters = {};
 
@@ -175,17 +181,25 @@
   // Array of instantiated charts.
   chartstack.charts = charts = [];
 
+  // Placeholder for transform data adapters.
+  chartstack.transformers = transformers = {
+    json : function(data){
+      return JSON.parse(data);
+    }
+  };
+
   // Store them in API as well for plugin use.
   extend(chartstack, {
     parse : parse,
     is : is,
     each : each,
     extend : extend,
-    getJSON : getJSON,
+    getAjax : getAjax,
     ready: ready,
     get: get,
     addAdapter : addAdapter,
-    addRenderer : addRenderer
+    addRenderer : addRenderer,
+    addtransformer : addTransformer
   });
 
   // Defaults accessible from outside in case user wants to change them.
@@ -236,7 +250,8 @@
 
       // Find properties on dom element to override defaults.
       // Support arrays here so we can store the data under a different name.
-      each([['provider', 'domain'], 'datasource', 'library', 'labels', 'width', 'height', 'title'], function(attr){
+      // TODO: These strings should be objects with support for defaults and other options.
+      each([['provider', 'domain'], 'datasource', 'dataformat', 'library', 'labels', 'width', 'height', 'title'], function(attr){
         var test, newKey;
 
         if (is(attr, 'object')){
@@ -267,6 +282,11 @@
         $chart.library = chartstack.library;
       }
 
+      // Used to transform response if needed to JSON.
+      if (!$chart.dataformat){
+        $chart.dataformat = 'json';
+      }
+
       // Run library renderer's init if the lib needs to do some setup.
       if (renderers[$chart.library] && renderers[$chart.library].init){
         renderers[$chart.library].init($chart);
@@ -289,8 +309,16 @@
     // Fetches and normalizes data with a callback to pass data to.
     function fetch(cb){
       function finish(data){
-        // Check if we have adapters for this domain and that we also
-        // have a chart adapter for this chart from this domain.
+
+        // Transform data.
+        if ($chart.dataformat in transformers){
+          data = transformers[$chart.dataformat](data);
+        }else{
+          throw Error('Transformer for datatype missing: ' + $chart.dataformat);
+        }
+
+        // If domain specified, check if we have adapters for this domain and
+        // that we also have a chart adapter for this chart from this domain.
         if (adapters[$chart.domain] && adapters[$chart.domain][$chart.chartType]){
           data = adapters[$chart.domain][$chart.chartType](data);
         }
@@ -302,7 +330,8 @@
 
       // If this is a URL fetch data.
       if (typeof $chart.datasource == "string"){
-        chartstack.getJSON($chart.datasource, finish);
+        chartstack.getAjax($chart.datasource, finish);
+
         // The data is local.
       }else{
         finish($chart.datasource);

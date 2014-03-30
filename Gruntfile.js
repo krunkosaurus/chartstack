@@ -63,5 +63,6 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['connect']);
   grunt.registerTask('lint', ['jshint']);
   grunt.registerTask('min', ['uglify']);
+  grunt.registerTask('serve', ['connect']);
 
 };

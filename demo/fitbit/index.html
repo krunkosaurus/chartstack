@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Chartstack Fitbit>Universal>NVD3 Demo Page</title>
+        <link href="../css/page_styling.css" rel="stylesheet">
+        <link href="../bower_components/nvd3/nv.d3.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <h1>Chartstack Fitbit>Universal>NVD3 Demo page</h1>
+        <ul class="menu">
+            <li><a href="../index.html">Go back</a></
+        </ul>
+
+        <div>
+
+        <section>
+            <h1>Steps in April vs March</h1>
+            <div id="fitbit1"></div>
+        </section>
+
+        <section>
+            <h1>Steps in March</h1>
+            <linechart library="nv" width="600px" height="300px" dataformat="csv" provider="fitbit" datasource="../api/fitbit/data.csv"></linechart>
+        </section>
+
+        </div>
+
+        <script src="../bower_components/d3/d3.min.js"></script>
+        <script src="../bower_components/nvd3/nv.d3.min.js"></script>
+        <script src="../../src/chartstack.js"></script>
+        <!-- Adapts univseral data to nvd3 data -->
+        <script src="../../src/adapter/chartstack.universal.nvd3.adapter.js"></script>
+        <!-- Render engine for Chartstack to render NVd3-->
+        <script src="../../src/renderer/chartstack.nvd3.renderer.js"></script>
+        <!-- Fitbit to universal data adapter -->
+        <script src="../../src/adapter/chartstack.fitbit.universal.adapter.js"></script>
+        <!-- CSV to JSON transform adapter -->
+        <script src="../../src/transform/chartstack.cvs.transform.js"></script>
+
+        <script>
+            chartstack.ready(function(){
+              var barchart = new chartstack.Chart({
+                el: document.getElementById('fitbit1'),
+                chartType: 'barchart',
+                datasource: '../api/fitbit/data.csv',
+                dataformat: 'csv',
+                provider: 'fitbit',
+                width: '600',
+                height: '300'
+              });
+            });
+        </script>
+    </body>
+</html>
