@@ -2,7 +2,9 @@
 
 chartstack.addAdapter('Highcharts', {
   piechart: function(data){
+    data = data.data;
     var headers = data.shift();
+
     return {
       type: 'pie',
       name: headers.join(' '),
@@ -11,6 +13,8 @@ chartstack.addAdapter('Highcharts', {
   },
 
   barchart: function(data){
+    data = data.data;
+
     var each = chartstack.each;
     var section = [];
     var colomnKeys = data.shift();
@@ -42,6 +46,8 @@ chartstack.addAdapter('Highcharts', {
   },
 
   linechart: function(data){
+    data = data.data;
+
     var each = chartstack.each;
     var section = [];
     var colomnKeys = data.shift();

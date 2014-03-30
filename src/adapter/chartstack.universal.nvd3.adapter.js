@@ -2,6 +2,8 @@
 
 chartstack.addAdapter('nv', {
   piechart: function(data){
+    data = data.data;
+
     var ar = [];
 
     // Pop off unused header array.
@@ -18,6 +20,8 @@ chartstack.addAdapter('nv', {
   },
 
   barchart: function(data){
+    data = data.data;
+
     var each = chartstack.each;
     var section = [];
     var colomnKeys = data.shift();
@@ -50,6 +54,8 @@ chartstack.addAdapter('nv', {
   },
 
   linechart: function(data){
+    data = data.data;
+
     var each = chartstack.each;
     var section = [];
     var colomnKeys = data.shift();

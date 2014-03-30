@@ -53,15 +53,24 @@
 
   chartstack.addAdapter('api.keen.io', {
     piechart: function(data){
-      return normalize(data);
+      return {
+        data: normalize(data),
+        extras: {}
+      }
     },
 
     barchart: function(data){
-      return normalize(data);
+      return {
+        data: normalize(data),
+        extras: {}
+      }
     },
 
     linechart: function(data){
-      return normalize(data);
+      return {
+        data: normalize(data),
+        extras: {}
+      }
     }
   });
 
