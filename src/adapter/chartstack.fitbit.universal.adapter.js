@@ -1,4 +1,4 @@
-/* global google, chartstack */
+/* global chartstack */
 
 (function(){
 
@@ -17,17 +17,17 @@
       ar.push(val);
     });
     return ar;
-  };
+  }
 
   // Reduce columns to just colName.
   function reduce(colName, ar){
     var index = ar[0].indexOf(colName);
 
     if (index == -1){
-      throw Error('"' + colName + '" not found in data headers.');
+      throw new Error('"' + colName + '" not found in data headers.');
     }
 
-    chartstack.each(ar, function(row, i, ar){
+    chartstack.each(ar, function(row){
       var len = row.length;
       while (len--){
         if (len !== 0 && len !== index){
@@ -37,7 +37,7 @@
 
     });
     return ar;
-  };
+  }
 
   function adapter(data){
 
@@ -51,7 +51,7 @@
     return {
       data : ar,
       extras: {}
-    }
+    };
   }
 
   chartstack.addAdapter('fitbit', {

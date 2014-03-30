@@ -239,7 +239,7 @@
 
         // Type of chart.
         $chart.chartType = args.chartType;
-      }
+      };
 
       // Copy global defaults on to this chart.
       each(chartstack.defaults, function(k, v){
@@ -320,7 +320,7 @@
         if ($chart.dataformat in transformers){
           data = transformers[$chart.dataformat](data);
         }else{
-          throw Error('Transformer for datatype missing: ' + $chart.dataformat);
+          throw new Error('Transformer for datatype missing: ' + $chart.dataformat);
         }
 
         // If domain specified, check if we have adapters for this domain and

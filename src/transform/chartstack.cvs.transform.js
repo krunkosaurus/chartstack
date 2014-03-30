@@ -1,8 +1,10 @@
-/* global google, chartstack */
+/* global chartstack */
 // Taken from: https://github.com/aaronsnoswell/csvjson.js/blob/master/csvjson.js
 chartstack.addtransformer('csv', function(data){
   function isdef(ob) {
-    if(typeof(ob) == "undefined") return false;
+    if(typeof(ob) == "undefined"){
+      return false;
+    }
     return true;
   }
 
@@ -17,10 +19,15 @@ chartstack.addtransformer('csv', function(data){
           foo[x] = foo[x].replace(/^\s*"|"\s*$/g, '').replace(/""/g, '"');
         } else if (x) {
           foo.splice(x - 1, 2, [foo[x - 1], foo[x]].join(sep));
-        } else foo = foo.shift().split(sep).concat(foo);
-      } else foo[x].replace(/""/g, '"');
-    } return foo;
-  };
+        } else {
+          foo = foo.shift().split(sep).concat(foo);
+        }
+      } else {
+        foo[x].replace(/""/g, '"');
+      }
+    }
+    return foo;
+  }
 
   /**
    * Converts from CSV formatted data (as a string) to JSON returning
@@ -51,7 +58,9 @@ chartstack.addtransformer('csv', function(data){
         var rowitems = splitCSV(row, delim);
 
         // Break if we're at the end of the file
-        if(row.length == 0) break;
+        if(row.length === 0){
+          break;
+        }
 
         var rowob = {};
         for(var i in rowitems) {

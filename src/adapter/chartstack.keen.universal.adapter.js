@@ -56,21 +56,21 @@
       return {
         data: normalize(data),
         extras: {}
-      }
+      };
     },
 
     barchart: function(data){
       return {
         data: normalize(data),
         extras: {}
-      }
+      };
     },
 
     linechart: function(data){
       return {
         data: normalize(data),
         extras: {}
-      }
+      };
     }
   });
 
