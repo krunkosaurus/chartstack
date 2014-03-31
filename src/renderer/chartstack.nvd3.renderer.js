@@ -15,12 +15,17 @@ chartstack.addRenderer('nv', {
   },
 
   piechart: function($chart, data){
+
     // Regular pie chart example
     nv.addGraph(function() {
       var chart = nv.models.pieChart()
         .x(function(d) { return d.label; })
         .y(function(d) { return d.value; })
         .showLabels($chart.labels);
+
+      if ('colors' in $chart){
+        chart.color($chart.colors);
+      }
 
       d3.select($chart.svg)
         .datum(data)
@@ -46,6 +51,10 @@ chartstack.addRenderer('nv', {
       }else{
         chart.xAxis
         .tickFormat(d3.format('f'));
+      }
+
+      if ('colors' in $chart){
+        chart.color($chart.colors);
       }
 
       chart.yAxis
@@ -76,6 +85,10 @@ chartstack.addRenderer('nv', {
     }else{
       chart.xAxis
         .tickFormat(d3.format('f'));
+    }
+
+    if ('colors' in $chart){
+      chart.color($chart.colors);
     }
 
     //chart.xAxis

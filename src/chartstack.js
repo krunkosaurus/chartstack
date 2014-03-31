@@ -265,12 +265,12 @@
         'width',
         'height',
         'title',
-        'titleTextColor', // Custom, currently supported on Google
-        'legendColor', // Custom, currently supported on Google
-        'colors', // item colors.
-        'pieSliceBorderColor', // TODO: Pie only
-        'pieSliceTextColor', // TODO: Pie only
-        'backgroundColor', // Bg color of chart.
+        'titleTextColor', // Custom, currently supported on Google  TODO: NVD3
+        'legendColor', // Custom, currently supported on Google TODO: NVD3
+        'colors', // item colors - Supported for all chart types for Google and NVD3.
+        'pieSliceBorderColor', // TODO: Pie only  TODO: NVD3
+        'pieSliceTextColor', // TODO: Pie only  TODO: NVD3
+        'backgroundColor', // Bg color of chart.  TODO: NVD3
         'customOptions'
       ], function(attr){
         var test, newKey;
