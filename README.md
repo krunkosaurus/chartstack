@@ -10,16 +10,16 @@ Key features:
 ## Demos
 
 These demos are non-fancy for now but demonstrate pulling in standard and non-standard data against all supported charting libraries:
-* [Chartstack Official Demo Page](http://krunkosaurus.github.io/chartstack/)
-* [Additional JS API Demos](http://krunkosaurus.github.io/chartstack/js-api-demo/)
-* [Additional DOM API Demos](http://krunkosaurus.github.io/chartstack/dom-api-demo/)
-* [Fitbit CSV data example page](http://krunkosaurus.github.io/chartstack/fitbit/)
+* [Chartstack Official Demo Page](http://keenlabs.github.io/chartstack/)
+* [Additional JS API Demos](http://keenlabs.github.io/chartstack/js-api-demo/)
+* [Additional DOM API Demos](http://keenlabs.github.io/chartstack/dom-api-demo/)
+* [Fitbit CSV data example page](http://keenlabs.github.io/chartstack/fitbit/)
 
 ## How does Chartstack work?
 
 **The Unified Chart Data Format**
 
-Chartstack is built around the concept that all data APIs are arbitrary and all charting libraries require data formatted in different ways to work. There is no standard in either one of these areas.  If we could make even one of these unified the other problem would be a lot easier to solve. Since we can't get all charting frameworks to agree on the same data API we've create the [**Unified Chart Data Standard Format**](https://github.com/krunkosaurus/chartstack/wiki/Unified-Chart-Data-Format) to serve as a portable transformation layer.  The **UCDS** format is based on the [Google Charts API](https://developers.google.com/chart/interactive/docs/reference) and describes what data should look like for various chart types (Pie, Bar, Line, etc) in a clean and easy to understand way.     
+Chartstack is built around the concept that all data APIs are arbitrary and all charting libraries require data formatted in different ways to work. There is no standard in either one of these areas.  If we could make even one of these unified the other problem would be a lot easier to solve. Since we can't get all charting frameworks to agree on the same data API we've create the [**Unified Chart Data Standard Format**](https://github.com/keenlabs/chartstack/wiki/Unified-Chart-Data-Format) to serve as a portable transformation layer.  The **UCDS** format is based on the [Google Charts API](https://developers.google.com/chart/interactive/docs/reference) and describes what data should look like for various chart types (Pie, Bar, Line, etc) in a clean and easy to understand way.
 
 For most users of Chartstack, understanding the **DOM embed API** or the **JavaScript API** and the **UCDS** format is all one needs to know to get started rendering charts.  For those that want Chartstack to understand your own unique data format / API or for getting Chartstack to understand support a new charting library, understanding the layers beneath DOM and JS API is relevant.
 
@@ -40,8 +40,8 @@ There are three ways to install.
 - Run `bower install` to install 3rd party JS libraries.
 - Run `grunt` to launch the web server and view the demos. [http://localhost:9001/demo/](http://localhost:9001/demo/).
 
-#### Grab just the minified Chartstack file:	
-- [Download the latest release](https://github.com/krunkosaurus/chartstack/releases/download/v0.0.1/chartstack.min.js) (1.58 kB gzipped)
+#### Grab just the minified Chartstack file:
+- [Download the latest release](https://github.com/keenlabs/chartstack/releases/download/v0.0.1/chartstack.min.js) (1.58 kB gzipped)
 - You must include your favorite charting library above chartstack.min.js and it will be autodetected.
 
 #### Install directly into your project with [Bower](http://bower.io):
