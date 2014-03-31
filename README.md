@@ -35,7 +35,7 @@ There are three ways to install.
 
 #### Developer version with demos and test suite:
 
-- Clone the repo: `git clone https://github.com/krunkosaruus/chartstack.git`.
+- Clone the repo: `git clone https://github.com/keenlabs/chartstack.git`.
 - Run `npm install` to setup Grunt and node packages it uses in tasks.
 - Run `bower install` to install 3rd party JS libraries.
 - Run `grunt` to launch the web server and view the demos. [http://localhost:9001/demo/](http://localhost:9001/demo/).
@@ -87,7 +87,7 @@ If you checked out this repo on Github you'll see a folder structure like this. 
 From the command line:
 
 1. Install `grunt-cli` globally with `npm install -g grunt-cli`.
-2. Then run `npm install` in the root of this project. npm will look at [package.json](https://github.com/krunkosaurus/chartstack/blob/master/package.json) and automatically install the necessary local dependencies listed there.
+2. Then run `npm install` in the root of this project. npm will look at [package.json](https://github.com/keenlabs/chartstack/blob/master/package.json) and automatically install the necessary local dependencies listed there.
 
 When completed, you'll be able to run the various Grunt commands provided from the command line.
 
@@ -110,7 +110,7 @@ Should you encounter problems with installing dependencies or running Grunt comm
 
 ## Bugs and feature requests
 
-Have a bug or a feature request? If your problem or idea is not addressed yet, [please open a new issue](https://github.com/krunkosaurus/chartstack/issues/new).
+Have a bug or a feature request? If your problem or idea is not addressed yet, [please open a new issue](https://github.com/keenlabs/chartstack/issues/new).
 
 ## Support
 
