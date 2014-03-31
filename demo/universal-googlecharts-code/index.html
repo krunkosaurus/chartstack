@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Chartstack Google Charts Test Page</title>
+        <link href="../css/page_styling.css" rel="stylesheet">
+    </head>
+    <body>
+        <h1>Chartstack Google Charts Test Page</h1>
+        <ul class="menu">
+            <li><a href="../">Go back</a></li>
+        </ul>
+
+        <div>
+
+        <section>
+            <div id="piechart"></div>
+        </section>
+
+        <section>
+            <div id="barchart"></div>
+        </section>
+
+        <section>
+            <div id="linechart"></div>
+        </section>
+
+        </div>
+
+        <script src="https://www.google.com/jsapi"></script>
+        <script src="../../src/chartstack.js"></script>
+        <script src="../../src/adapter/chartstack.universal.googlecharts.adapter.js"></script>
+        <script src="../../src/renderer/chartstack.googlecharts.renderer.js"></script>
+        <script>
+            chartstack.ready(function(){
+              var piechart = new chartstack.Chart({
+                title: 'Yay browsers!',
+                el: document.getElementById('piechart'),
+                chartType: 'piechart',
+                datasource: '../api/universal/piechart.json',
+                width: '400',
+                height: '400'
+              });
+
+              var barchart = new chartstack.Chart({
+                el: document.getElementById('barchart'),
+                chartType: 'barchart',
+                datasource: '../api/universal/barchart.json',
+                width: '600',
+                height: '300'
+              });
+
+              var linechart = new chartstack.Chart({
+                el: document.getElementById('linechart'),
+                chartType: 'linechart',
+                datasource: '../api/universal/linechart.json',
+                width: '600',
+                height: '300'
+              });
+            });
+        </script>
+    </body>
+</html>

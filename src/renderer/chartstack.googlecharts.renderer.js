@@ -20,6 +20,8 @@ chartstack.addRenderer('google', {
 
     options = {
       title: $chart.title || '',
+      'width': parseInt($chart.width),
+      'height': parseInt($chart.height)
     };
 
     chart = new google.visualization.BarChart($chart.el);
@@ -31,6 +33,8 @@ chartstack.addRenderer('google', {
 
     options = {
       title: $chart.title || '',
+      'width': parseInt($chart.width),
+      'height': parseInt($chart.height)
     };
 
     chart = new google.visualization.LineChart($chart.el);
