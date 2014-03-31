@@ -43,6 +43,7 @@
     return 1;
   }
 
+  // Extend object e on to o.
   function extend(o, e){
     each(e, function(v, n){
       o[n] = v;
@@ -255,7 +256,23 @@
       // Find properties on dom element to override defaults.
       // Support arrays here so we can store the data under a different name.
       // TODO: These strings should be objects with support for defaults and other options.
-      each([['provider', 'domain'], 'datasource', 'dataformat', 'library', 'labels', 'width', 'height', 'title'], function(attr){
+      each([
+        ['provider', 'domain'],
+        'datasource',
+        'dataformat',
+        'library',
+        'labels',
+        'width',
+        'height',
+        'title',
+        'titleTextColor', // Custom, currently supported on Google
+        'legendColor', // Custom, currently supported on Google
+        'colors', // item colors.
+        'pieSliceBorderColor', // TODO: Pie only
+        'pieSliceTextColor', // TODO: Pie only
+        'backgroundColor', // Bg color of chart.
+        'customOptions'
+      ], function(attr){
         var test, newKey;
 
         if (is(attr, 'object')){

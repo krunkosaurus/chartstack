@@ -5,7 +5,7 @@
         <link href="../css/page_styling.css" rel="stylesheet">
     </head>
     <body>
-        <h1>Chartstack Google Charts Test Page</h1>
+        <h1>Chartstack Google Charts JS Options Test Page</h1>
         <ul class="menu">
             <li><a href="../">Go back</a></li>
         </ul>
@@ -13,7 +13,23 @@
         <div>
 
         <section>
-            <div id="piechart" style="width: 400px; height: 400px; overflow: hidden;"></div>
+            <div id="piechart1" style="width: 400px; height: 400px; overflow: hidden;"></div>
+        </section>
+
+        <section>
+            <div id="piechart2" style="width: 400px; height: 400px; overflow: hidden;"></div>
+        </section>
+
+        <section>
+            <div id="piechart3" style="width: 400px; height: 400px; overflow: hidden;"></div>
+        </section>
+
+        <section>
+            <div id="piechart4" style="width: 400px; height: 400px; overflow: hidden;"></div>
+        </section>
+
+        <section>
+            <div id="piechart5" style="width: 400px; height: 400px; overflow: hidden;"></div>
         </section>
 
         <section>
@@ -32,29 +48,107 @@
         <script src="../../src/renderer/chartstack.googlecharts.renderer.js"></script>
         <script>
             chartstack.ready(function(){
-              var piechart = new chartstack.Chart({
+
+              // Google's Make 3D option.
+              var piechart1 = new chartstack.Chart({
                 title: 'Yay browsers!',
-                el: document.getElementById('piechart'),
+                el: document.getElementById('piechart1'),
                 chartType: 'piechart',
                 datasource: '../api/universal/piechart.json',
                 width: '400',
-                height: '400'
+                height: '400',
+                customOptions: {
+                  is3D: true,
+                }
+              });
+
+              // Google's Pie hole option.
+              var piechart2 = new chartstack.Chart({
+                title: 'Yay browsers!',
+                el: document.getElementById('piechart2'),
+                chartType: 'piechart',
+                datasource: '../api/universal/piechart.json',
+                width: '400',
+                height: '400',
+                customOptions: {
+                  pieHole: 0.4
+                }
+              });
+
+              // Google's slice offset option.
+              var piechart3 = new chartstack.Chart({
+                title: 'Yay browsers!',
+                el: document.getElementById('piechart3'),
+                chartType: 'piechart',
+                datasource: '../api/universal/piechart.json',
+                width: '400',
+                height: '400',
+                customOptions: {
+                  slices: {
+                    1: {offset: 0.2}
+                  }
+                }
+              });
+
+              // Google's legend option.
+              var piechart4 = new chartstack.Chart({
+                title: 'Yay browsers!',
+                el: document.getElementById('piechart4'),
+                chartType: 'piechart',
+                datasource: '../api/universal/piechart.json',
+                width: '400',
+                height: '400',
+                customOptions: {
+                  legend: {
+                    position: 'top',
+                    textStyle: {
+                      color: 'blue',
+                      fontSize: 16
+                    }
+                  }
+                }
+              });
+
+              // Google's color options
+              var piechart5 = new chartstack.Chart({
+                title: 'Yay browsers!',
+                el: document.getElementById('piechart5'),
+                chartType: 'piechart',
+                datasource: '../api/universal/piechart.json',
+                width: '400',
+                height: '400',
+                backgroundColor: 'green',
+                titleTextColor: 'orange',
+                legendColor: 'orange',
+                pieSliceBorderColor: 'black',
+                pieSliceTextColor: 'orange',
+                colors: ['red', 'yellow', 'blue', 'pink', 'purple', 'orange']
               });
 
               var barchart = new chartstack.Chart({
+                title: 'Expenses',
                 el: document.getElementById('barchart'),
                 chartType: 'barchart',
                 datasource: '../api/universal/barchart.json',
                 width: '600',
-                height: '300'
+                height: '300',
+                backgroundColor: 'green',
+                titleTextColor: 'orange',
+                legendColor: 'orange',
+                colors: ['red', 'yellow', 'blue', 'pink', 'purple', 'orange']
               });
 
               var linechart = new chartstack.Chart({
+                title: 'Expenses',
                 el: document.getElementById('linechart'),
                 chartType: 'linechart',
                 datasource: '../api/universal/linechart.json',
                 width: '600',
-                height: '300'
+                height: '300',
+                backgroundColor: 'green',
+                titleTextColor: 'orange',
+                legendColor: 'orange',
+                colors: ['red', 'yellow', 'blue', 'pink', 'purple', 'orange']
               });
             });
         </script>
