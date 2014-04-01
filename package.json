@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@brainswap:chartstack"
+    "url": "git@github.com:keenlabs/chartstack"
   },
   "keywords": [
     "charting",
