@@ -1,77 +1,96 @@
 /* global chartstack */
 // Data normalizing adaper for keen.io API.
-(function(){
 
-  function normalize(data){
-    data = data.result;
-    var hasTimeFrame = data[0].timeframe ? 1 : 0;
-    var hasSeries = data[0].value instanceof Array ? 1 : 0;
-    var newHeader;
-    var newBody = [];
-    var oldKey;
-    var each = chartstack.each;
+chartstack.addAdapter('api.keen.io', {
+  piechart: function(data){
 
-    if (hasTimeFrame){
-      newHeader = ['date'];
-      if (hasSeries){
-        oldKey = Object.keys(data[0].value[0])[0];
+    console.log('data', data);
 
-        each(data[0].value, function(item){
-          var newKey = item[oldKey];
-          newHeader.push(newKey);
-        });
+    var b = new chartstack.diver(data.result, {
+      cols: {
+        fixed: ['Browser', 'Share']
+      },
+      rows: {
+        index: 'platform',
+        cells: 'result'
+      }
+    });
 
-        each(data, function(item){
-          var row = [];
-          var startDate = new Date(item.timeframe.start);
-          row.push(startDate);
-          each(item.value, function(a){
-            row.push(a.result);
-          });
-          newBody.push(row);
-        });
-      }else{
-        newHeader.push('value');
-        each(data, function(item){
-          newBody.push([new Date(item.timeframe.start), item.value]);
-        });
+    return {
+      data: b.table,
+      extras: {}
+    };
+  },
+
+  barchart: function(data){
+    data = new chartstack.diver(data.result, {
+      cols: {
+        fixed: ['Date'],
+        cells: 'value -> platform'
+      },
+      rows: {
+        index: 'timeframe -> start',
+        cells: 'value -> result',
+        transform: {
+          0: function(value){
+            return new Date(value);
+          }
+        }
+      }
+    });
+
+    return {
+      data: data.table,
+      extras: {}
+    };
+  },
+
+  linechart: function(data){
+    console.log('data', data);
+    var diverFormat;
+
+    if(data.result[0].value instanceof Array){
+      diverFormat = {
+        cols: {
+          fixed: ['Date'],
+          cells: 'value -> platform'
+        },
+        rows: {
+          index: 'timeframe -> start',
+          cells: 'value -> result',
+          transform: {
+            0: function(value){
+              return new Date(value);
+            }
+          }
+        }
       }
     }else{
-      // Assuming pie chart data
-      // Set header
-      newHeader = Object.keys(data[0]);
-
-      each(data, function(a){
-        var entry = [a[newHeader[0]], a[newHeader[1]]];
-        newBody.push(entry);
-      });
+      diverFormat = {
+        cols: {
+          fixed: ['Date', 'Value']
+        },
+        rows: {
+          index: 'timeframe -> start',
+          cells: 'value',
+          transform: {
+            0: function(value){
+              return new Date(value);
+            }
+          }
+        }
+      }
     }
 
-    newBody.unshift(newHeader);
-    return newBody;
+
+    data = new chartstack.diver(data.result, diverFormat);
+
+    console.log('diver format data', data);
+
+    return {
+      data: data.table,
+      extras: {}
+    };
   }
+});
 
-  chartstack.addAdapter('api.keen.io', {
-    piechart: function(data){
-      return {
-        data: normalize(data),
-        extras: {}
-      };
-    },
-
-    barchart: function(data){
-      return {
-        data: normalize(data),
-        extras: {}
-      };
-    },
-
-    linechart: function(data){
-      return {
-        data: normalize(data),
-        extras: {}
-      };
-    }
-  });
-
-})();

@@ -1,6 +1,6 @@
 /* global google */
 (function(chartstack) {
-  var adapters, renderers, charts, Chart, transformers, isDomReady, readyCallbacks = [];
+  var adapters, renderers, charts, Chart, Adapter, transformers, isDomReady, readyCallbacks = [];
 
   // These three functions taken from https://github.com/spocke/punymce
   function is(o, t){
@@ -213,6 +213,9 @@
     labels: true
   };
 
+  chartstack.DataAdapter = Adapter = function(){
+  };
+
   // Main Chart class.
   chartstack.Chart = Chart = function(args) {
     var $chart = this;
@@ -343,11 +346,11 @@
         // If domain specified, check if we have adapters for this domain and
         // that we also have a chart adapter for this chart from this domain.
         if (adapters[$chart.domain] && adapters[$chart.domain][$chart.chartType]){
-          data = adapters[$chart.domain][$chart.chartType](data);
+          data = adapters[$chart.domain][$chart.chartType].call(new Adapter, data);
         }
 
         // Transform data into graph libs format.
-        data = adapters[$chart.library][$chart.chartType](data);
+        data = adapters[$chart.library][$chart.chartType].call(new Adapter, data);
         cb(data);
       }
 
