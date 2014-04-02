@@ -3,10 +3,7 @@
 
 chartstack.addAdapter('api.keen.io', {
   piechart: function(data){
-
-    console.log('data', data);
-
-    var b = new chartstack.diver(data.result, {
+    data = new chartstack.diver(data.result, {
       cols: {
         fixed: ['Browser', 'Share']
       },
@@ -17,7 +14,7 @@ chartstack.addAdapter('api.keen.io', {
     });
 
     return {
-      data: b.table,
+      data: data.table,
       extras: {}
     };
   },
@@ -46,7 +43,6 @@ chartstack.addAdapter('api.keen.io', {
   },
 
   linechart: function(data){
-    console.log('data', data);
     var diverFormat;
 
     if(data.result[0].value instanceof Array){
@@ -82,10 +78,7 @@ chartstack.addAdapter('api.keen.io', {
       }
     }
 
-
     data = new chartstack.diver(data.result, diverFormat);
-
-    console.log('diver format data', data);
 
     return {
       data: data.table,

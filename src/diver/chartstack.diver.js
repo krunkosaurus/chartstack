@@ -148,7 +148,6 @@
 
   proto.render = function(format){
     if (format == 'csv') {
-      console.log(this.table.join('\n'));
     }
     return this;
   };
@@ -159,7 +158,6 @@
       var root = arguments[0];
       var args = Array.prototype.slice.call(arguments, 1);
       var target = args.pop();
-      //console.log('DIVE ' + target + ':', root, args);
 
       if (args.length === 0) {
         if (root instanceof Array) {

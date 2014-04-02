@@ -43,7 +43,6 @@ chartstack.addRenderer('google', {
       };
     }
 
-    console.log('options', options);
     chart = new google.visualization.PieChart($chart.el);
     chart.draw(data, options);
   },
