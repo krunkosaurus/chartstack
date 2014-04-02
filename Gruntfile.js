@@ -24,6 +24,7 @@ module.exports = function(grunt) {
         src: [
             '<%= chartstack.scriptPath %>/chartstack.js',
             '<%= chartstack.scriptPath %>/diver/chartstack.diver.js',
+            '<%= chartstack.scriptPath %>/transform/chartstack.csv.js',
             '<%= chartstack.scriptPath %>/adapter/chartstack.keen.universal.adapter.js',
             '<%= chartstack.scriptPath %>/adapter/chartstack.universal.nvd3.adapter.js',
             '<%= chartstack.scriptPath %>/renderer/chartstack.nvd3.renderer.js',
