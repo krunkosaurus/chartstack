@@ -1,5 +1,7 @@
 /* global google */
-(function(chartstack) {
+(function(root) {
+  var previousChartstack = root.chartstack;
+  var chartstack = root.chartstack = {};
   var adapters, renderers, charts, Chart, Adapter, transformers, isDomReady, readyCallbacks = [];
 
   // These three functions taken from https://github.com/spocke/punymce
@@ -50,6 +52,12 @@
     });
 
     return o;
+  }
+
+
+  function noConflict(){
+    root.chartstack = previousChartstack;
+    return this;
   }
 
   // DOM-ready queue method.
@@ -195,6 +203,7 @@
 
   // Store them in API as well for plugin use.
   extend(chartstack, {
+    noConflict : noConflict,
     parse : parse,
     is : is,
     each : each,
@@ -404,7 +413,4 @@
   }else{
     document.addEventListener("DOMContentLoaded", bootstrap);
   }
-
-  // Expose chartstack
-  window.chartstack = chartstack;
-})({});
+})(this);

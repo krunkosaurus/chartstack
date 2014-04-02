@@ -1,13 +1,13 @@
 /* global chartstack */
-(function(ns){
+(function(cs){
   var proto;
   var each = chartstack.each;
 
-  ns.diver = function(root, setup) {
+  cs.diver = function(root, setup) {
     this.build(root, setup);
   };
 
-  proto = ns.diver.prototype;
+  proto = cs.diver.prototype;
 
   proto.build = function(root, setup) {
     var self = this;

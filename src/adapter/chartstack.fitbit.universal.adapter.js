@@ -1,10 +1,8 @@
 /* global chartstack */
-
-(function(){
-
+(function(cs){
   function obj2Array(obj){
     var ar = [];
-    chartstack.each(obj, function(val, key){
+    cs.each(obj, function(val, key){
 
       if (key == "Date"){
         val = new Date(val);
@@ -27,7 +25,7 @@
       throw new Error('"' + colName + '" not found in data headers.');
     }
 
-    chartstack.each(ar, function(row){
+    cs.each(ar, function(row){
       var len = row.length;
       while (len--){
         if (len !== 0 && len !== index){
@@ -43,7 +41,7 @@
 
     var ar = [data.headers];
 
-    chartstack.each(data.rows, function(row){
+    cs.each(data.rows, function(row){
       ar.push(obj2Array(row));
     });
 
@@ -54,9 +52,8 @@
     };
   }
 
-  chartstack.addAdapter('fitbit', {
+  cs.addAdapter('fitbit', {
     barchart: adapter,
     linechart: adapter
   });
-
-})();
+})(chartstack);
