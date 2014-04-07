@@ -51,7 +51,7 @@ There are three ways to install.
 
 ## Documentation
 
-Chartstack wiki coming soon!
+Visit the Chartstack wiki [here](https://github.com/keenlabs/chartstack/wiki).
 
 ### Project architecture
 
