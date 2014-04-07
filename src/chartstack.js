@@ -283,7 +283,9 @@
         'pieSliceBorderColor', // TODO: Pie only  TODO: NVD3
         'pieSliceTextColor', // TODO: Pie only  TODO: NVD3
         'backgroundColor', // Bg color of chart.  TODO: NVD3
-        'customOptions'
+        'customOptions',
+        // methods
+        'formatRowLabel' // Pie labels, xlabels on other charts.
       ], function(attr){
         var test, newKey;
 
@@ -345,7 +347,7 @@
     function fetch(cb){
       function finish(data){
 
-        // Transform data.
+        // Transform data from CSV, etc, to JSON.
         if ($chart.dataformat in transformers){
           data = transformers[$chart.dataformat](data);
         }else{
@@ -356,6 +358,14 @@
         // that we also have a chart adapter for this chart from this domain.
         if (adapters[$chart.domain] && adapters[$chart.domain][$chart.chartType]){
           data = adapters[$chart.domain][$chart.chartType].call(new Adapter, data);
+        }
+
+        // TODO: Put this in a modular place. Probably in adapter object post init.
+        if ($chart.formatRowLabel){
+          chartstack.each(data.data, function(key, i){
+            if (i == 0){ return;}
+            data.data[i][0] = $chart.formatRowLabel(key[0]);
+          });
         }
 
         // Transform data into graph libs format.

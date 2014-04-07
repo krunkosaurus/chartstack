@@ -53,6 +53,7 @@
   }
 
   cs.addAdapter('fitbit', {
+    piechart: adapter,
     barchart: adapter,
     linechart: adapter
   });

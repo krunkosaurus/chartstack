@@ -33,6 +33,11 @@
             <div id="fitbit2"></div>
         </section>
 
+        <section>
+            <h1>Most Stepped Days</h1>
+            <div id="fitbit3"></div>
+        </section>
+
         </div>
 
         <script src="../bower_components/d3/d3.min.js"></script>
@@ -48,22 +53,24 @@
         <script src="../../src/transform/chartstack.cvs.transform.js"></script>
 
         <script>
-// This was example #3. We are now doing a fancy example 3 with a mashup of 2 CSV files below.
+chartstack.ready(function(){
+  var piechart = new chartstack.Chart({
+    el: document.getElementById('fitbit3'),
+    chartType: 'piechart',
+    datasource: '../api/fitbit/one_week.csv',
+    dataformat: 'csv',
+    provider: 'fitbit',
+    width: '600',
+    height: '300',
+    colors: ['red', 'pink', 'blue','green', 'purple', 'orange', 'gray'],
+    formatRowLabel: function(str){
+      var weekday=['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      return weekday[str.getDay()];
+    }
+  });
+});
 
-/*
-            chartstack.ready(function(){
-              var barchart = new chartstack.Chart({
-                el: document.getElementById('fitbit1'),
-                chartType: 'barchart',
-                datasource: '../api/fitbit/data.csv',
-                dataformat: 'csv',
-                provider: 'fitbit',
-                width: '600',
-                height: '300'
-              });
-            });
-*/
-
+// We are now doing a fancy example 3 with a mashup of 2 CSV files below.
 function fetchFormat(url, cb){
   // Fetch CSV
   chartstack.getAjax(url, function(r){
