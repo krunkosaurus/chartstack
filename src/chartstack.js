@@ -155,14 +155,18 @@
 
   // Adapters that normalize 3rd party api to a standard format.
   function addAdapter(domain, configObj){
-    each(configObj, function(func, type){
-      if (!adapters[domain]){
-        adapters[domain] = {};
-      }
+    if (chartstack.is(configObj, 'function')){
+      adapters[domain] = configObj;
+    }else{
+      each(configObj, function(func, type){
+        // If domain doesn't exist, create the namespace.
+        if (!adapters[domain]){
+          adapters[domain] = {};
+        }
+        adapters[domain][type] = func;
 
-      adapters[domain][type] = func;
-
-    });
+      });
+    }
   }
 
   // Chart specific Renderers that Chartstack uses to render charts.
@@ -175,6 +179,16 @@
       renderers[provider][type] = func;
     });
   }
+
+  // Rendersets are chart library-related renderer and adapters.
+  function addRenderSet(configObj){
+    var libfullName = configObj.name;
+    var libNamespace = configObj.namespace;
+
+    chartstack.addRenderer(libNamespace, configObj.render)
+    chartstack.addAdapter(libNamespace, configObj.adapter)
+  }
+
 
   // Methods that transform non-JSON data to JSON.
   function addTransformer(name, func){
@@ -213,6 +227,7 @@
     get: get,
     addAdapter : addAdapter,
     addRenderer : addRenderer,
+    addRenderSet : addRenderSet,
     addtransformer : addTransformer
   });
 
@@ -368,8 +383,14 @@
           });
         }
 
-        // Transform data into graph libs format.
-        data = adapters[$chart.library][$chart.chartType].call(new Adapter, data);
+        // Transform data into graph libs format using graph library's data
+        // adapter. Data adapter can be one method or an object of methods of
+        // chart types depending on how the chart library handles data.
+        if (chartstack.is(adapters[$chart.library], 'function')){
+          data = adapters[$chart.library].call(new Adapter, data);
+        }else{
+          data = adapters[$chart.library][$chart.chartType].call(new Adapter, data);
+        }
         cb(data);
       }
 

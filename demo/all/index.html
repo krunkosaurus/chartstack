@@ -70,14 +70,11 @@
         <script src="//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.9/highcharts.js"></script>
         <!-- Chartstack + all renderers + all adapters -->
         <script src="../../src/chartstack.js"></script>
-        <script src="../../src/adapter/chartstack.universal.nvd3.adapter.js"></script>
-        <script src="../../src/renderer/chartstack.nvd3.renderer.js"></script>
-        <script src="../../src/adapter/chartstack.universal.googlecharts.adapter.js"></script>
-        <script src="../../src/renderer/chartstack.googlecharts.renderer.js"></script>
-        <script src="../../src/adapter/chartstack.universal.highcharts.adapter.js"></script>
-        <script src="../../src/renderer/chartstack.highcharts.renderer.js"></script>
-        <script>
-
-        </script>
+        <!-- Nvd3 chartstack support -->
+        <script src="../../src/renderset/chartstack.nvd3.renderset.js"></script>
+        <!-- Google Charts chartstack support -->
+        <script src="../../src/renderset/chartstack.googlecharts.renderset.js"></script>
+        <!-- Highcharts Chartstack support -->
+        <script src="../../src/renderset/chartstack.highcharts.renderset.js"></script>
     </body>
 </html>
