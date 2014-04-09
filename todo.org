@@ -538,5 +538,6 @@ Keen.onChartsReady(function(){
 - Not all these libraries support things like title. Should we handle that ourselves over the charting library to have consistent dom/markup?
 - Not all of these libraries support drilldown.  Highcharts supports it: http://www.highcharts.com/demo/column-drilldown and http://www.highcharts.com/demo/pie-drilldown
 - We need an easy way to set preferences like date/time formatting.
+- We need a way to pass logic in data api like if data point is >3 red lines or else green line.
 * Universal data adapter:
 - Convert all items in a column to dates or integers
