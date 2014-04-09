@@ -287,15 +287,26 @@
   // DataResource class
   // -----------------------------
   chartstack.DataResource = function(config){
-    for (var option in config) {
-      this[option] = config[option];
+    // Types: String (Data or URL), Object
+    if (typeof config === "string") {
+      if (config.match(/^({|\[)/)) {
+        // Raw Data
+        this.response = JSON.parse(config);
+      } else {
+        // URL + Params
+        this.url = config;
+      }
+    } else {
+      for (var option in config) {
+        this[option] = config[option];
+      }
     }
     this.configure();
   };
 
   chartstack.DataResource.prototype = {
     configure: function(){
-      if (this.url.indexOf("?") && this.params == void 0) {
+      if (this.url !== void 0 && this.url.indexOf("?") && this.params == void 0) {
         this.params = parseParams(this.url);
         this.url = this.url.split("?")[0];
       }
@@ -317,36 +328,20 @@
   // Dataset class
   // -----------------------------
   chartstack.Dataset = function(config){
-    //var options, params;
-    var resources = [];
-
-    if (typeof config === "string") {
-      if (config.match(/^({|\[)/)) {
-        // Raw Data
-        resources.push(new chartstack.DataResource({ response: JSON.parse(config) }));
-      } else {
-        // URL + Params
-        resources.push(new chartstack.DataResource({ url: config }));
-      }
-
-    } else if (config instanceof Array) {
-      // Array of Objects
+    var resources = [], config = config || {};
+    if (config instanceof Array) {
       each(config, function(source){
         resources.push(new chartstack.DataResource(source));
       });
-
     } else {
-      // Object
       resources.push(new chartstack.DataResource(config));
     }
     this.resources = resources;
-    //this.configure();
+    return;
   };
 
   chartstack.Dataset.prototype = {
-    configure: function(){
-      return this;
-    },
+
     fetch: function(){
       var self = this, responses = [], completions = 0;
       var finish = function(response, index){
@@ -370,12 +365,14 @@
       });
       return self;
     },
+
     at: function(index){
       //if (typeof index == "string") {
       //  return this.resources where
       //}
       return this.resources[index] || null;
     }
+
   };
 
   function buildQueryString(params){
