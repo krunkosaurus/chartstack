@@ -281,6 +281,173 @@
     }
   });
 
+
+
+
+  // DataResource class
+  // -----------------------------
+  chartstack.DataResource = function(config){
+    for (var option in config) {
+      this[option] = config[option];
+    }
+    this.configure();
+  };
+
+  chartstack.DataResource.prototype = {
+    configure: function(){
+      if (this.url.indexOf("?") && this.params == void 0) {
+        this.params = parseParams(this.url);
+        this.url = this.url.split("?")[0];
+      }
+      console.log('New Resource', this);
+      return this;
+    },
+    get: function(attribute){
+      return this.params[attribute] || null;
+    },
+    set: function(attributes){
+      for (var attribute in attributes) {
+        this.params[attribute] = attributes[attribute];
+      }
+      return this;
+    }
+  };
+
+
+  // Dataset class
+  // -----------------------------
+  chartstack.Dataset = function(config){
+    //var options, params;
+    var resources = [];
+
+    if (typeof config === "string") {
+      if (config.match(/^({|\[)/)) {
+        // Raw Data
+        resources.push(new chartstack.DataResource({ response: JSON.parse(config) }));
+      } else {
+        // URL + Params
+        resources.push(new chartstack.DataResource({ url: config }));
+      }
+
+    } else if (config instanceof Array) {
+      // Array of Objects
+      each(config, function(source){
+        resources.push(new chartstack.DataResource(source));
+      });
+
+    } else {
+      // Object
+      resources.push(new chartstack.DataResource(config));
+    }
+    this.resources = resources;
+    //this.configure();
+  };
+
+  chartstack.Dataset.prototype = {
+    configure: function(){
+      return this;
+    },
+    fetch: function(){
+      var self = this, responses = [], completions = 0;
+      var finish = function(response, index){
+        //console.log(response.result);
+        responses[index] = response; // JSON.parse(response);
+        completions++;
+        if (completions == self.resources.length){
+          console.log('complete', responses);
+        }
+      };
+      var error = function(){
+        console.log('error');
+      };
+      each(self.resources, function(resource, index){
+        var url = resource.url + buildQueryString(resource.params);
+        var successSequencer = function(response){
+          finish(response, index)
+        };
+        //chartstack.getAjax(url, successSequencer, error);
+        getJSONP(url, successSequencer);
+      });
+      return self;
+    },
+    at: function(index){
+      //if (typeof index == "string") {
+      //  return this.resources where
+      //}
+      return this.resources[index] || null;
+    }
+  };
+
+  function buildQueryString(params){
+    var query = [];
+    for (var key in params) {
+      if (params[key]) {
+        var value = params[key];
+        if (Object.prototype.toString.call(value) !== '[object String]') {
+          value = JSON.stringify(value);
+        }
+        value = encodeURIComponent(value);
+        query.push(key + '=' + value);
+      }
+    }
+    return "?" + query.join('&');
+  }
+
+  function parseParams(str){
+    // via http://stackoverflow.com/a/2880929/2511985
+    var urlParams = {},
+        match,
+        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+        search = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+        query  = str.split("?")[1];
+
+    while (match = search.exec(query))
+      urlParams[decode(match[1])] = decode(match[2]);
+
+    return urlParams;
+  }
+
+  function getJSONP(url, success, error){
+    // JSONP
+    var callbackName = "ChartstackJSONPCallback" + new Date().getTime();
+    while (callbackName in window) {
+      callbackName += "a";
+    }
+    var loaded = false;
+    window[callbackName] = function (response) {
+      loaded = true;
+      if (success && response) {
+        success(response);
+      };
+      // Remove this from the namespace
+      window[callbackName] = undefined;
+    };
+    url = url + "&jsonp=" + callbackName;
+    var script = document.createElement("script");
+    script.id = "chartstack-jsonp";
+    script.src = url;
+    document.getElementsByTagName("head")[0].appendChild(script);
+    // for early IE w/ no onerror event
+    script.onreadystatechange = function() {
+      if (loaded === false && this.readyState === "loaded") {
+        loaded = true;
+        if (error) error();
+      }
+    };
+    // non-ie, etc
+    script.onerror = function() {
+      if (loaded === false) { // on IE9 both onerror and onreadystatechange are called
+        loaded = true;
+        if (error) error();
+      }
+    }
+  }
+
+
+
+
+
   // Main Chart class.
   chartstack.Chart = Chart = function(args) {
     var $chart = this;

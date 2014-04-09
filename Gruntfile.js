@@ -23,6 +23,7 @@ module.exports = function(grunt) {
       build: {
         src: [
             '<%= chartstack.scriptPath %>/chartstack.js',
+            '<%= chartstack.scriptPath %>/util/chartstack.dataset.js',
             '<%= chartstack.scriptPath %>/util/chartstack.diver.js',
             '<%= chartstack.scriptPath %>/util/chartstack.csv.js',
             '<%= chartstack.scriptPath %>/adapter/chartstack.keen.universal.adapter.js',
@@ -50,16 +51,25 @@ module.exports = function(grunt) {
           open: 'http://localhost:9001/index.html'
         }
       }
+    },
+
+    watch: {
+      scripts: {
+        files: ['**/*.js'],
+        tasks: ['min']
+      }
     }
+
   });
 
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task(s).
-  grunt.registerTask('default', ['connect']);
+  grunt.registerTask('default', ['connect', 'watch']);
   grunt.registerTask('lint', ['jshint']);
   grunt.registerTask('min', ['uglify']);
   grunt.registerTask('serve', ['connect']);
