@@ -306,7 +306,7 @@
 
   chartstack.DataResource.prototype = {
     configure: function(){
-      if (this.url !== void 0 && this.url.indexOf("?") && this.params == void 0) {
+      if (this.url !== void 0 && this.url.indexOf("?") !== -1 && this.params == void 0) {
         this.params = parseParams(this.url);
         this.url = this.url.split("?")[0];
       }
@@ -343,15 +343,20 @@
   chartstack.Dataset.prototype = {
 
     fetch: function(){
-      var self = this, responses = [], completions = 0;
+      var self = this, completions = 0;
+      self.data = [], self.responses = [];
+
       var finish = function(response, index){
         //console.log(response.result);
-        responses[index] = response; // JSON.parse(response);
+        self.responses[index] = JSON.parse(response);
+        self.data[index] = adapters['keen-io'].call(self.resources[index], self.responses[index]);
+
         completions++;
         if (completions == self.resources.length){
-          console.log('complete', responses);
+          console.log('complete', self.data);
         }
       };
+
       var error = function(){
         console.log('error');
       };
@@ -360,8 +365,8 @@
         var successSequencer = function(response){
           finish(response, index)
         };
-        //chartstack.getAjax(url, successSequencer, error);
-        getJSONP(url, successSequencer);
+        chartstack.getAjax(url, successSequencer, error);
+        //getJSONP(url, successSequencer);
       });
       return self;
     },
@@ -551,6 +556,7 @@
       // assume it's a URL to fetch.  We do not check for http anymore
       // as it can be a local/relative file.
       if (typeof $chart.datasource == 'string'){
+        $chart.dataset = new chartstack.Dataset($chart.datasource);
         if ($chart.datasource.match(/^({|\[)/)){
           $chart.datasource = JSON.parse($chart.datasource);
         }else{
