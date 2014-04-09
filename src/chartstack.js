@@ -2,7 +2,7 @@
 (function(root) {
   var previousChartstack = root.chartstack;
   var chartstack = root.chartstack = {};
-  var adapters, renderers, charts, Chart, Adapter, transformers, isDomReady, readyCallbacks = [];
+  var adapters, renderers, charts, Chart, Adapter, Event, transformers, isDomReady, readyCallbacks = [];
 
   // These three functions taken from https://github.com/spocke/punymce
   function is(o, t){
@@ -240,6 +240,47 @@
   chartstack.DataAdapter = Adapter = function(){
   };
 
+  // Chartstack generic Event class.
+  chartstack.Event = Event = function(){
+    this.allEvents = {};
+  };
+
+  extend(Event.prototype, {
+    on: function(eventName, cb){
+      if (!(eventName in this.allEvents)){
+        this.allEvents[eventName] = [];
+      }
+      this.allEvents[eventName].push(cb);
+    },
+
+    off: function(eventName, cb){
+      if (!eventName && !cb){
+        this.allEvents = {};
+      }
+      if (cb){
+        var match = this.allEvents[eventName].indexOf(cb);
+        if (match){
+          this.allEvents[eventName].splice(match, 1);
+        }
+
+      }else{
+        delete this.allEvents[eventName];
+      }
+    },
+
+    trigger: function(eventName){
+      var self = this;
+      var args = Array.prototype.slice.call(arguments, 0);
+      args.shift();
+
+      if (eventName in this.allEvents){
+        this.allEvents[eventName].forEach(function(cb){
+          cb.apply(self, args);
+        });
+      }
+    }
+  });
+
   // Main Chart class.
   chartstack.Chart = Chart = function(args) {
     var $chart = this;
@@ -357,7 +398,6 @@
       }
     }
 
-
     // Fetches and normalizes data with a callback to pass data to.
     function fetch(cb){
       function finish(data){
@@ -412,22 +452,23 @@
       }else if(!renderer[$chart.chartType]){
         throw('Renderer for ' + $chart.library + ':' + $chart.chartType + ' is missing.');
       }
+
+      // Render chart using data.
       renderer[$chart.chartType]($chart, data);
     });
 
     // Public methods
-    extend(this, {
+    extend($chart, {
       show : function(){
-        this.el.style.display = 'none';
+        $chart.trigger('show');
       },
 
       hide : function(){
-        this.el.style.display = 'block';
+        $chart.trigger('hide');
       },
 
-      render : function(){
-        // TODO
-        // chartstack.renderer[this.chartType](this, this.fetch());
+      draw: function(){
+        $chart.trigger('draw');
       },
 
       fetch : function(cb){
@@ -436,6 +477,9 @@
       }
     });
   };
+
+  // Add Event support to Chart class.
+  Chart.prototype = new chartstack.Event();
 
   // Hack to support google charts.
   if (window.google){
