@@ -74,6 +74,12 @@
     };*/
   });
 
+
+  // -----------------------
+  // -----------------------
+  // -----------------------
+  
+
   cs.addAdapter('api.keen.io', {
     piechart: function(data){
       data = new cs.diver(data.result, {

@@ -241,6 +241,7 @@
   };
 
   // Chartstack generic Event class.
+  /*
   chartstack.Event = Event = function(){
     this.allEvents = {};
   };
@@ -279,8 +280,44 @@
         });
       }
     }
-  });
+  });*/
 
+  var Events = chartstack.Events = {
+
+    on: function(name, callback) {
+      this.listeners || (this.listeners = {});
+      var events = this.listeners[name] || (this.listeners[name] = []);
+      events.push({callback: callback});
+      return this;
+    },
+    off: function(name, callback) {
+      if (!name && !callback) {
+        this.listeners = void 0;
+        delete this.listeners;
+        return this;
+      }
+      var events = this.listeners[name] || [];
+      for (var i = events.length; i--;) {
+        if (callback && callback == events[i]['callback']) this.listeners[name].splice(i, 1);
+        if (!callback || events.length == 0) {
+          this.listeners[name] = void 0;
+          delete this.listeners[name];
+        }
+      }
+      return this;
+    },
+    trigger: function(name) {
+      if (!this.listeners) return this;
+      var args = Array.prototype.slice.call(arguments, 1);
+      var events = this.listeners[name] || [];
+      for (var i = 0; i < events.length; i++) {
+        events[i]['callback'].apply(this, args);
+      }
+      return this;
+    }
+
+  };
+  extend(chartstack, Events);
 
 
 
@@ -310,7 +347,7 @@
         this.params = parseParams(this.url);
         this.url = this.url.split("?")[0];
       }
-      console.log('New Resource', this);
+      //console.log('New Resource', this);
       return this;
     },
     get: function(attribute){
@@ -323,6 +360,7 @@
       return this;
     }
   };
+  extend(chartstack.DataResource.prototype, Events);
 
 
   // Dataset class
@@ -344,22 +382,28 @@
 
     fetch: function(){
       var self = this, completions = 0;
-      self.data = [], self.responses = [];
+
+      self.data = [];
+      self.responses = [];
 
       var finish = function(response, index){
-        //console.log(response.result);
+        var resource = self.resources[index],
+            adapter  = self.resources[index]['adapter'];
+
         self.responses[index] = JSON.parse(response);
-        self.data[index] = adapters['keen-io'].call(self.resources[index], self.responses[index]);
+        self.data[index] = adapters[adapter].call(resource, self.responses[index]);
 
         completions++;
         if (completions == self.resources.length){
-          console.log('complete', self.data);
+          //console.log('complete', self.data[0]);
+          self.trigger("complete", self.data[0]);
         }
       };
 
       var error = function(){
         console.log('error');
       };
+
       each(self.resources, function(resource, index){
         var url = resource.url + buildQueryString(resource.params);
         var successSequencer = function(response){
@@ -368,6 +412,7 @@
         chartstack.getAjax(url, successSequencer, error);
         //getJSONP(url, successSequencer);
       });
+
       return self;
     },
 
@@ -379,6 +424,9 @@
     }
 
   };
+  extend(chartstack.Dataset.prototype, Events);
+
+
 
   function buildQueryString(params){
     var query = [];
@@ -495,6 +543,7 @@
       // TODO: These strings should be objects with support for defaults and other options.
       each([
         ['provider', 'domain'],
+        'adapter',
         'datasource',
         'dataformat',
         'library',
@@ -552,11 +601,22 @@
         renderers[$chart.library].init($chart);
       }
 
+
       // Check datasource starts with { or [ assume it's JSON or else
       // assume it's a URL to fetch.  We do not check for http anymore
       // as it can be a local/relative file.
       if (typeof $chart.datasource == 'string'){
+
         $chart.dataset = new chartstack.Dataset($chart.datasource);
+        if ($chart.adapter) {
+          $chart.dataset.resources[0].adapter = $chart.adapter;
+        }
+        $chart.dataset.on("complete", function(data){
+          var renderer = chartstack.renderers[$chart.library];
+          //var data = adapters[$chart.domain][$chart.chartType].call(new Adapter, data);
+          renderer[$chart.chartType]($chart, data);
+        })
+
         if ($chart.datasource.match(/^({|\[)/)){
           $chart.datasource = JSON.parse($chart.datasource);
         }else{
@@ -631,25 +691,32 @@
     extend($chart, {
       show : function(){
         $chart.trigger('show');
+        return this;
       },
 
       hide : function(){
         $chart.trigger('hide');
+        return this;
       },
 
       draw: function(){
         $chart.trigger('draw');
+        return this;
       },
 
       fetch : function(cb){
+        this.dataset.fetch();
         cb || (cb = function(){});
         fetch(cb);
+        return this;
       }
     });
   };
 
   // Add Event support to Chart class.
-  Chart.prototype = new chartstack.Event();
+  //Chart.prototype = new chartstack.Event();
+  Chart.prototype = {};
+  extend(Chart.prototype, Events);
 
   // Hack to support google charts.
   if (window.google){

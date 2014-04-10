@@ -12,6 +12,11 @@
     // Renders DOM charts.
     render: {
       piechart: function($chart, data){
+
+        if (data instanceof Array) {
+          data = google.visualization.arrayToDataTable(data);
+        }
+
         var chart, options;
         var each = cs.each;
         var extend = cs.extend;
@@ -64,7 +69,7 @@
 
         // Set chart options
         options = {
-          title: $chart.title || '',
+          'title': $chart.title || '',
           'width': parseInt($chart.width),
           'height': parseInt($chart.height)
         };
@@ -100,7 +105,7 @@
 
         // Set chart options
         options = {
-          title: $chart.title || '',
+          'title': $chart.title || '',
           'width': parseInt($chart.width),
           'height': parseInt($chart.height)
         };
