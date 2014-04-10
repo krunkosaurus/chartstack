@@ -16,18 +16,21 @@
   cs.GoogleCharts.PieChart = cs.Visualization.extend({
     initialize: function(){
       console.log('pie!', this);
+      //this.trigger('error', 'testing pie errors');
     }
   });
 
   cs.GoogleCharts.BarChart = cs.Visualization.extend({
     initialize: function(){
       console.log('bar!', this);
+      //this.trigger('error', 'testing bar errors');
     }
   });
 
   cs.GoogleCharts.LineChart = cs.Visualization.extend({
     initialize: function(){
       console.log('line!', this);
+      //this.trigger('error', 'testing line errors');
     }
   });
 

@@ -418,19 +418,34 @@
   // by all library rendersets
   // -----------------------------
 
-  chartstack.Visualization = function(){
-    this.configure.apply(this, arguments);
+  chartstack.Visualization = function(config){
+
+    // Inherit configuration
+    extend(this, config);
+
+    // Set default event handlers
+    this.on("error", function(){
+      visualErrorHandler.apply(this, arguments);
+    });
+
+    // Let's kick it off!
+    this.initialize();
+
   };
+
   chartstack.Visualization.prototype = {
-    configure: function(config){
-      extend(this, config);
-      this.initialize();
+    initialize: function(){
+      // Sets listeners and prepares data
     },
-    initialize: function(){},
-    render: function(){},
-    update: function(){},
-    remove: function(){},
-    error: function(){}
+    render: function(){
+      // Builds artifacts
+    },
+    update: function(){
+      // Optional: handles data updates
+    },
+    remove: function(){
+      // Cleanup and DOM removal
+    }
   };
   extend(chartstack.Visualization.prototype, Events);
 
@@ -459,13 +474,17 @@
     return Visualization;
   };
 
+  function visualErrorHandler(){
+    console.log("Error!", arguments);
+  }
+
 
 
   // -----------------------------
   // Chart class
   // -----------------------------
-  // Primary class encompassing a
-  // chartstack instance
+  // Primary class encompassing
+  // every chartstack instance
   // -----------------------------
 
   chartstack.Chart = Chart = function(args) {
