@@ -12,7 +12,7 @@
 
         <div>
         <section>
-            <piechart width="300px" height="300px" adapter="keen-io" provider="api.keen.io" datasource="../api/keen/piechart.json"></piechart>
+            <piechart width="300px" height="300px" adapter="keen-io" provider="api.keen.io" datasource="https://api.keen.io/3.0/projects/51a3a10a38433136b2000002/queries/count?api_key=871484a840a256e0e24197b70c6c6c8f1aa6417c1c34acb12357ae31c18bebb9ec40981ba36232f03a32411fe62bf056f2db2d2ce3e484d3542d41ece1fa330e6cf55e8de3a82d1ee956a0fecbbdc63a6de77240a2f546d2c87e97b9571ebfb5ff96dae3b2e7330a05883f801a10b08a&event_collection=pageView&group_by=page"></piechart>
         </section>
 
         <section>
@@ -33,7 +33,8 @@
         <script src="../../src/util/chartstack.dataform.js"></script>
         <script src="../../src/util/chartstack.diver.js"></script>
         <script src="../../src/adapter/chartstack.keen.universal.adapter.js"></script>
-        <!-- Google Charts chartstack support -->
-        <script src="../../src/renderset/chartstack.googlecharts.renderset.js"></script>
+        <!-- Google Charts chartstack support
+        <script src="../../src/renderset/chartstack.googlecharts.renderset.js"></script>-->
+        <script src="../../src/renderset/cs.googlecharts.js"></script>
     </body>
 </html>

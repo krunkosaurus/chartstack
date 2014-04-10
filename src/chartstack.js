@@ -237,50 +237,13 @@
     labels: true
   };
 
-  chartstack.DataAdapter = Adapter = function(){
-  };
+  chartstack.DataAdapter = Adapter = function(){};
 
-  // Chartstack generic Event class.
-  /*
-  chartstack.Event = Event = function(){
-    this.allEvents = {};
-  };
 
-  extend(Event.prototype, {
-    on: function(eventName, cb){
-      if (!(eventName in this.allEvents)){
-        this.allEvents[eventName] = [];
-      }
-      this.allEvents[eventName].push(cb);
-    },
 
-    off: function(eventName, cb){
-      if (!eventName && !cb){
-        this.allEvents = {};
-      }
-      if (cb){
-        var match = this.allEvents[eventName].indexOf(cb);
-        if (match){
-          this.allEvents[eventName].splice(match, 1);
-        }
-
-      }else{
-        delete this.allEvents[eventName];
-      }
-    },
-
-    trigger: function(eventName){
-      var self = this;
-      var args = Array.prototype.slice.call(arguments, 0);
-      args.shift();
-
-      if (eventName in this.allEvents){
-        this.allEvents[eventName].forEach(function(cb){
-          cb.apply(self, args);
-        });
-      }
-    }
-  });*/
+  // -----------------------------
+  // Events class
+  // -----------------------------
 
   var Events = chartstack.Events = {
 
@@ -290,6 +253,9 @@
       events.push({callback: callback});
       return this;
     },
+
+    // once: function(name, callback) {},
+
     off: function(name, callback) {
       if (!name && !callback) {
         this.listeners = void 0;
@@ -306,6 +272,7 @@
       }
       return this;
     },
+
     trigger: function(name) {
       if (!this.listeners) return this;
       var args = Array.prototype.slice.call(arguments, 1);
@@ -321,8 +288,10 @@
 
 
 
+  // -----------------------------
   // DataResource class
   // -----------------------------
+
   chartstack.DataResource = function(config){
     // Types: String (Data or URL), Object
     if (typeof config === "string") {
@@ -363,8 +332,10 @@
   extend(chartstack.DataResource.prototype, Events);
 
 
+  // -----------------------------
   // Dataset class
   // -----------------------------
+
   chartstack.Dataset = function(config){
     var resources = [], config = config || {};
     if (config instanceof Array) {
@@ -428,77 +399,83 @@
 
 
 
-  function buildQueryString(params){
-    var query = [];
-    for (var key in params) {
-      if (params[key]) {
-        var value = params[key];
-        if (Object.prototype.toString.call(value) !== '[object String]') {
-          value = JSON.stringify(value);
-        }
-        value = encodeURIComponent(value);
-        query.push(key + '=' + value);
-      }
+  // -----------------------------
+  // Visualization class
+  // -----------------------------
+
+  chartstack.Visualization = function(){
+    //console.log('Let\'s build:', config.library + ':' + config.chartType);
+    //return new chartstack.Libraries[config.library][config.chartType](config);
+    this.configure.apply(this, arguments);
+  };
+  chartstack.Visualization.prototype = {
+    configure: function(config){
+      extend(this, config);
+      this.initialize();
+    },
+    initialize: function(){},
+    render: function(){},
+    update: function(){},
+    remove: function(){},
+    error: function(){}
+  };
+  extend(chartstack.Visualization.prototype, Events);
+
+  chartstack.Libraries = {};
+
+  chartstack.Visualization.register = function(name, methods){
+    chartstack.Libraries[name] = chartstack.Libraries[name] || {};
+    for (var method in methods) {
+      chartstack.Libraries[name][method] = methods[method];
     }
-    return "?" + query.join('&');
-  }
+  };
 
-  function parseParams(str){
-    // via http://stackoverflow.com/a/2880929/2511985
-    var urlParams = {},
-        match,
-        pl     = /\+/g,  // Regex for replacing addition symbol with a space
-        search = /([^&=]+)=?([^&]*)/g,
-        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
-        query  = str.split("?")[1];
-
-    while (match = search.exec(query))
-      urlParams[decode(match[1])] = decode(match[2]);
-
-    return urlParams;
-  }
-
-  function getJSONP(url, success, error){
-    // JSONP
-    var callbackName = "ChartstackJSONPCallback" + new Date().getTime();
-    while (callbackName in window) {
-      callbackName += "a";
+  chartstack.Visualization.extend = function(protoProps, staticProps){
+    var parent = this, Visualization;
+    if (protoProps && protoProps.hasOwnProperty('constructor')) {
+      Visualization = protoProps.constructor;
+    } else {
+      Visualization = function(){ return parent.apply(this, arguments); };
     }
-    var loaded = false;
-    window[callbackName] = function (response) {
-      loaded = true;
-      if (success && response) {
-        success(response);
-      };
-      // Remove this from the namespace
-      window[callbackName] = undefined;
-    };
-    url = url + "&jsonp=" + callbackName;
-    var script = document.createElement("script");
-    script.id = "chartstack-jsonp";
-    script.src = url;
-    document.getElementsByTagName("head")[0].appendChild(script);
-    // for early IE w/ no onerror event
-    script.onreadystatechange = function() {
-      if (loaded === false && this.readyState === "loaded") {
-        loaded = true;
-        if (error) error();
-      }
-    };
-    // non-ie, etc
-    script.onerror = function() {
-      if (loaded === false) { // on IE9 both onerror and onreadystatechange are called
-        loaded = true;
-        if (error) error();
-      }
-    }
-  }
+    extend(Visualization, parent, staticProps);
+    var Surrogate = function(){ this.constructor = Visualization; };
+    Surrogate.prototype = parent.prototype;
+    Visualization.prototype = new Surrogate;
+    if (protoProps) extend(Visualization.prototype, protoProps);
+    Visualization.__super__ = parent.prototype;
+    return Visualization;
+  };
+
+
+  // -----------------------------
+  // BaseVisual class
+  // -----------------------------
+  /*
+  chartstack.BaseVisual = function(){
+    this.configure.apply(this, arguments);
+  };
+
+  chartstack.BaseVisual.prototype = {
+    configure: function(config){
+      extend(this, config);
+      this.initialize();
+    },
+    initialize: function(){},
+    render: function(){},
+    update: function(){},
+    remove: function(){},
+    error: function(){}
+  };
+  */
 
 
 
 
 
-  // Main Chart class.
+  // -----------------------------
+  // Chart class
+  // -----------------------------
+
   chartstack.Chart = Chart = function(args) {
     var $chart = this;
     // Add to internal array.
@@ -507,29 +484,37 @@
     // Collects properties off DOM element and inspects data source.
 
     function setup(){
-      var setupDom, setupJS, domain;
+      var setupDom, setupJS, setupVis = {}, domain;
 
       setupDom = function(){
         $chart.el = args;
+        setupVis['el'] = args;
 
         // Type of chart.
         $chart.chartType = $chart.el.nodeName.toLocaleLowerCase();
+        setupVis['chartType'] = $chart.el.nodeName.toLocaleLowerCase();
 
         // Our made up HTML nodes are display: inline so we need to make
         // them block;
         $chart.el.style.display = "inline-block";
+        setupVis['style'] = {
+          display: "inline-block"
+        }
       };
 
       setupJS = function(){
         $chart.el = args.el;
+        setupVis['el'] = args.el;
 
         // Type of chart.
         $chart.chartType = args.chartType;
+        setupVis['chartType'] = args.chartType;
       };
 
       // Copy global defaults on to this chart.
       each(chartstack.defaults, function(k, v){
         $chart[v] = k;
+        setupVis[v] = k;
       });
 
       if ('nodeType' in args){
@@ -589,6 +574,7 @@
       // global one.
       if (!$chart.library){
         $chart.library = chartstack.library;
+        setupVis['library'] = chartstack.library;
       }
 
       // Used to transform response if needed to JSON.
@@ -615,7 +601,7 @@
           var renderer = chartstack.renderers[$chart.library];
           //var data = adapters[$chart.domain][$chart.chartType].call(new Adapter, data);
           renderer[$chart.chartType]($chart, data);
-        })
+        });
 
         if ($chart.datasource.match(/^({|\[)/)){
           $chart.datasource = JSON.parse($chart.datasource);
@@ -626,7 +612,10 @@
           }
         }
       }
-    }
+
+      //$chart.visual = new chartstack.Visualization(setupVis);
+      $chart.visual = new chartstack.Libraries[setupVis.library][setupVis.chartType](setupVis);
+    };
 
     // Fetches and normalizes data with a callback to pass data to.
     function fetch(cb){
@@ -687,36 +676,109 @@
       renderer[$chart.chartType]($chart, data);
     });
 
-    // Public methods
-    extend($chart, {
-      show : function(){
-        $chart.trigger('show');
-        return this;
-      },
-
-      hide : function(){
-        $chart.trigger('hide');
-        return this;
-      },
-
-      draw: function(){
-        $chart.trigger('draw');
-        return this;
-      },
-
-      fetch : function(cb){
-        this.dataset.fetch();
-        cb || (cb = function(){});
-        fetch(cb);
-        return this;
-      }
-    });
   };
 
   // Add Event support to Chart class.
   //Chart.prototype = new chartstack.Event();
-  Chart.prototype = {};
+  Chart.prototype = {
+
+    show : function(){
+      $chart.trigger('show');
+      return this;
+    },
+
+    hide : function(){
+      $chart.trigger('hide');
+      return this;
+    },
+
+    draw: function(){
+      $chart.trigger('draw');
+      return this;
+    },
+
+    fetch : function(){
+      this.dataset.fetch();
+      //cb || (cb = function(){});
+      //fetch(cb);
+      return this;
+    }
+
+  };
   extend(Chart.prototype, Events);
+
+
+
+  // -----------------------------
+  // Private Methods
+  // -----------------------------
+
+  function parseParams(str){
+    // via http://stackoverflow.com/a/2880929/2511985
+    var urlParams = {},
+        match,
+        pl     = /\+/g,  // Regex for replacing addition symbol with a space
+        search = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+        query  = str.split("?")[1];
+
+    while (match = search.exec(query))
+      urlParams[decode(match[1])] = decode(match[2]);
+
+    return urlParams;
+  }
+
+  function buildQueryString(params){
+    var query = [];
+    for (var key in params) {
+      if (params[key]) {
+        var value = params[key];
+        if (Object.prototype.toString.call(value) !== '[object String]') {
+          value = JSON.stringify(value);
+        }
+        value = encodeURIComponent(value);
+        query.push(key + '=' + value);
+      }
+    }
+    return "?" + query.join('&');
+  }
+
+  function getJSONP(url, success, error){
+    var callbackName = "ChartstackJSONPCallback" + new Date().getTime();
+    while (callbackName in window) {
+      callbackName += "a";
+    }
+    var loaded = false;
+    window[callbackName] = function (response) {
+      loaded = true;
+      if (success && response) {
+        success(response);
+      };
+      // Remove this from the namespace
+      window[callbackName] = undefined;
+    };
+    url = url + "&jsonp=" + callbackName;
+    var script = document.createElement("script");
+    script.id = "chartstack-jsonp";
+    script.src = url;
+    document.getElementsByTagName("head")[0].appendChild(script);
+    // for early IE w/ no onerror event
+    script.onreadystatechange = function() {
+      if (loaded === false && this.readyState === "loaded") {
+        loaded = true;
+        if (error) error();
+      }
+    };
+    // non-ie, etc
+    script.onerror = function() {
+      if (loaded === false) { // on IE9 both onerror and onreadystatechange are called
+        loaded = true;
+        if (error) error();
+      }
+    }
+  }
+
+
 
   // Hack to support google charts.
   if (window.google){
