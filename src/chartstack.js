@@ -244,6 +244,9 @@
   // -----------------------------
   // Events class
   // -----------------------------
+  // Extended by all classes that
+  // require event listeners
+  // -----------------------------
 
   var Events = chartstack.Events = {
 
@@ -291,6 +294,10 @@
   // -----------------------------
   // DataResource class
   // -----------------------------
+  // This class is never directly
+  // instantiated, but is managed
+  // by the Dataset class
+  // -----------------------------
 
   chartstack.DataResource = function(config){
     // Types: String (Data or URL), Object
@@ -334,6 +341,10 @@
 
   // -----------------------------
   // Dataset class
+  // -----------------------------
+  // This class instantiates and
+  // manages instances of the
+  // DataResource class
   // -----------------------------
 
   chartstack.Dataset = function(config){
@@ -402,10 +413,12 @@
   // -----------------------------
   // Visualization class
   // -----------------------------
+  // This class is never directly
+  // instantiated, but extended
+  // by all library rendersets
+  // -----------------------------
 
   chartstack.Visualization = function(){
-    //console.log('Let\'s build:', config.library + ':' + config.chartType);
-    //return new chartstack.Libraries[config.library][config.chartType](config);
     this.configure.apply(this, arguments);
   };
   chartstack.Visualization.prototype = {
@@ -447,33 +460,12 @@
   };
 
 
-  // -----------------------------
-  // BaseVisual class
-  // -----------------------------
-  /*
-  chartstack.BaseVisual = function(){
-    this.configure.apply(this, arguments);
-  };
-
-  chartstack.BaseVisual.prototype = {
-    configure: function(config){
-      extend(this, config);
-      this.initialize();
-    },
-    initialize: function(){},
-    render: function(){},
-    update: function(){},
-    remove: function(){},
-    error: function(){}
-  };
-  */
-
-
-
-
 
   // -----------------------------
   // Chart class
+  // -----------------------------
+  // Primary class encompassing a
+  // chartstack instance
   // -----------------------------
 
   chartstack.Chart = Chart = function(args) {
