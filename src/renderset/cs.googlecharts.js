@@ -28,7 +28,7 @@
         'title': this.title || '',
         'width': parseInt(this.width),
         'height': parseInt(this.height),
-        'isStacked': true
+        'isStacked': this.stacked || true
       };
       this._chart.draw(data, options);
     }
@@ -52,7 +52,8 @@
       var options = {
         'title': this.title || '',
         'width': parseInt(this.width),
-        'height': parseInt(this.height)
+        'height': parseInt(this.height),
+        'isStacked': this.stacked || false
       };
       this._chart.draw(data, options);
     }
@@ -65,7 +66,7 @@
 
   cs.GoogleCharts.ColumnChart = cs.Visualization.extend({
     initialize: function(){
-      console.log('bar!', this);
+      //console.log('bar!', this);
       this.render();
     },
     render: function(){
@@ -77,7 +78,8 @@
       var options = {
         'title': this.title || '',
         'width': parseInt(this.width),
-        'height': parseInt(this.height)
+        'height': parseInt(this.height),
+        'isStacked': this.stacked || false
       };
       this._chart.draw(data, options);
     }

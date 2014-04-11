@@ -522,7 +522,8 @@
       // TODO: These strings should be objects with support for defaults and other options.
 
       dataAttributes = ['adapter', 'dataset', 'dataformat'];
-      visualAttributes = ['title', 'labels', 'height', 'width'];
+      initAttributes = ['library'];
+      visualAttributes = ['title', 'labels', 'height', 'width', 'stacked'];
 
       each(
       /*[
@@ -546,7 +547,7 @@
         // methods
         //'formatRowLabel' // Pie labels, xlabels on other charts.
       ]*/
-      ['library'].concat(dataAttributes, visualAttributes), function(attr){
+      initAttributes.concat(dataAttributes, visualAttributes), function(attr){
         var test, newKey;
 
         if (is(attr, 'object')){
@@ -578,10 +579,10 @@
       function mapAttribute(key, value){
         if (dataAttributes.indexOf(key) !== -1) {
           setupData[key] = value;
-        } else if (visualAttributes.indexOf(key) !== -1) {
-          setupVis[key] = value;
-        } else {
+        } else if (initAttributes.indexOf(key) !== -1) {
           options[key] = value;
+        } else {
+          setupVis[key] = value;
         }
       }
 

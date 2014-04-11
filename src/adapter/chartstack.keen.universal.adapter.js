@@ -69,7 +69,7 @@
       //console.log(map);
 
     }
-    console.log(response.result, map);
+    //console.log(response.result, map);
     data = new cs.dataform(response, map);
     return data.table;
     /*return {
