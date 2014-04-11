@@ -23,14 +23,14 @@ module.exports = function(grunt) {
       build: {
         src: [
             '<%= chartstack.scriptPath %>/chartstack.js',
-            '<%= chartstack.scriptPath %>/util/chartstack.dataset.js',
             '<%= chartstack.scriptPath %>/util/chartstack.dataform.js',
-            '<%= chartstack.scriptPath %>/util/chartstack.diver.js',
+            //'<%= chartstack.scriptPath %>/util/chartstack.diver.js',
             '<%= chartstack.scriptPath %>/util/chartstack.csv.js',
-            '<%= chartstack.scriptPath %>/adapter/chartstack.keen.universal.adapter.js',
-            '<%= chartstack.scriptPath %>/renderset/chartstack.googlecharts.renderset.js',
-            '<%= chartstack.scriptPath %>/renderset/chartstack.nvd3.renderset.js',
-            '<%= chartstack.scriptPath %>/renderset/chartstack.highcharts.renderset.js'
+            '<%= chartstack.scriptPath %>/util/chartstack.moment.js'
+            //'<%= chartstack.scriptPath %>/adapter/chartstack.keen.universal.adapter.js',
+            //'<%= chartstack.scriptPath %>/renderset/chartstack.googlecharts.renderset.js',
+            //'<%= chartstack.scriptPath %>/renderset/chartstack.nvd3.renderset.js',
+            //'<%= chartstack.scriptPath %>/renderset/chartstack.highcharts.renderset.js'
         ],
         dest: '<%= chartstack.distPath %>/chartstack.min.js'
       }

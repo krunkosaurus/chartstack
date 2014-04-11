@@ -16,11 +16,11 @@
         </section>
 
         <section>
-            <areachart width="600px" height="300px" adapter="keen-io" dataset="../api/keen/barchart.json"></areachart>
+            <areachart dateformat="MMM D" width="600px" height="300px" adapter="keen-io" dataset="../api/keen/barchart.json"></areachart>
         </section>
 
         <section>
-            <columnchart stacked="true" width="600px" height="300px" adapter="keen-io" dataset="../api/keen/barchart.json"></columnchart>
+            <columnchart dateformat="MM-DD" stacked="true" width="600px" height="300px" adapter="keen-io" dataset="../api/keen/barchart.json"></columnchart>
         </section>
 
         <section>
@@ -39,10 +39,10 @@
         <script src="https://www.google.com/jsapi"></script>
         <script src="../../src/chartstack.js"></script>
         <script src="../../src/util/chartstack.dataform.js"></script>
-        <script src="../../src/util/chartstack.diver.js"></script>
+        <script src="../../src/util/chartstack.moment.js"></script>
+
         <script src="../../src/adapter/chartstack.keen.universal.adapter.js"></script>
-        <!-- Google Charts chartstack support
-        <script src="../../src/renderset/chartstack.googlecharts.renderset.js"></script>-->
         <script src="../../src/renderset/cs.googlecharts.js"></script>
+
     </body>
 </html>

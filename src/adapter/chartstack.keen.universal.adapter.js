@@ -4,7 +4,8 @@
   var each = cs.each;
 
   cs.addAdapter('keen-io', function(response){
-    var data, map = this.map || false;
+    var self = this, data, output;
+    var map = self.map || false;
     //console.log("map", map);
 
     // Default Response Map
@@ -71,7 +72,21 @@
     }
     //console.log(response.result, map);
     data = new cs.dataform(response, map);
-    return data.table;
+    output = data.table;
+
+    // Date formatting
+    each(output, function(row, i){
+      each(row, function(cell, j){
+        if (j == 0) {
+          if (chartstack.moment(cell).isValid() && self.dateformat) {
+            output[i][j] = chartstack.moment(cell).format(self.dateformat);
+          }
+        }
+      });
+    });
+
+
+    return output;
     /*return {
       data: data.table,
       extras: {}

@@ -521,7 +521,7 @@
       // Support arrays here so we can store the data under a different name.
       // TODO: These strings should be objects with support for defaults and other options.
 
-      dataAttributes = ['adapter', 'dataset', 'dataformat'];
+      dataAttributes = ['adapter', 'dataset', 'dataformat', 'dateformat'];
       initAttributes = ['library'];
       visualAttributes = ['title', 'labels', 'height', 'width', 'stacked'];
 
@@ -614,13 +614,12 @@
       if (typeof setupData['dataset'] == 'string'){
 
         $chart.dataset = new chartstack.Dataset(setupData['dataset']);
-        if (setupData['adapter']) {
-          $chart.dataset.resources[0].adapter = setupData['adapter'];
-        }
-        //if (!options.dataformat){
-        //  $chart.dataset.resources[0].format = 'json';
-        //}
-        $chart.dataset.resources[0].format = setupData['dataformat'] || 'json';
+
+        $chart.dataset.resources[0]['adapter'] = setupData['adapter'] || false;
+        $chart.dataset.resources[0]['dataformat'] = setupData['dataformat'] || 'json';
+
+        $chart.dataset.resources[0]['dateformat'] = setupData['dateformat'] || false;
+
         $chart.dataset.on("complete", function(data){
           //var renderer = chartstack.renderers[$chart.library];
           //var data = adapters[$chart.domain][$chart.chartType].call(new Adapter, data);
@@ -833,7 +832,6 @@
       }
     }
   }
-
 
   // Hack to support google charts.
   if (window.google){
