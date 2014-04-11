@@ -125,7 +125,6 @@
         'width': parseInt(this.width),
         'height': parseInt(this.height)
       };
-      console.log(this, options);
       this._chart.draw(data, options);
     }
   });

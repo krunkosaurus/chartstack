@@ -400,7 +400,7 @@
       visualErrorHandler.apply(this, arguments);
     });
     self.on("update", function(){
-      console.log("update", arguments);
+      //console.log("update", arguments);
       self.update.apply(this, arguments);
     });
 
@@ -465,40 +465,44 @@
   // -----------------------------
 
   chartstack.Chart = Chart = function(args) {
-    var $chart = this, setupVis = {};
+    var $chart = this,
+    setupVis = {},
+    setupData = {},
+    options = args || {};
+
     // Add to internal array.
-    chartstack.charts.push(this);
+    chartstack.charts.push($chart);
 
     // Collects properties off DOM element and inspects data source.
 
     function setup(){
       var setupDom, setupJS;
+      var dataAttributes, visualAttributes;
 
       setupDom = function(){
         //$chart.el = args;
-        setupVis['el'] = args;
+        setupVis['el'] = options;
 
         // Type of chart.
         //$chart.chartType = $chart.el.nodeName.toLocaleLowerCase();
-        setupVis['chartType'] = setupVis['el'].nodeName.toLocaleLowerCase();
+        //setupVis['chartType']
+        options['chartType'] = setupVis['el'].nodeName.toLocaleLowerCase();
 
         // Our made up HTML nodes are display: inline so we need to make
         // them block;
         //$chart.el.style.display = "inline-block";
         setupVis['style'] = {
           display: "inline-block"
-        }
-
-        console.log(setupVis['el'].offsetWidth)
+        };
       };
 
       setupJS = function(){
         //$chart.el = args.el;
-        setupVis['el'] = args.el;
+        setupVis['el'] = options.el;
 
         // Type of chart.
         //$chart.chartType = args.chartType;
-        setupVis['chartType'] = args.chartType;
+        //setupVis['chartType'] = options.chartType;
       };
 
       // Copy global defaults on to this chart.
@@ -507,16 +511,21 @@
         setupVis[v] = k;
       });
 
-      if ('nodeType' in args){
+      if ('nodeType' in options){
         setupDom();
-      }else{
+      } else {
         setupJS();
       }
 
       // Find properties on dom element to override defaults.
       // Support arrays here so we can store the data under a different name.
       // TODO: These strings should be objects with support for defaults and other options.
-      each([
+
+      dataAttributes = ['adapter', 'dataset', 'dataformat'];
+      visualAttributes = ['title', 'labels', 'height', 'width'];
+
+      each(
+      /*[
         //['provider', 'domain'],
         'adapter',
         //'datasource',
@@ -536,47 +545,52 @@
         //'customOptions',
         // methods
         //'formatRowLabel' // Pie labels, xlabels on other charts.
-      ], function(attr){
+      ]*/
+      ['library'].concat(dataAttributes, visualAttributes), function(attr){
         var test, newKey;
 
         if (is(attr, 'object')){
           newKey = attr[1];
           attr = attr[0];
         }
-        test = args.nodeType ? args.getAttribute(attr) : args[attr];
+        test = options.nodeType ? options.getAttribute(attr) : options[attr];
         // If property exists, save it.
         if (test){
           // Support for real booleans.
           if (test == 'false' || test == '0' || test == 'off'){
             test = false;
-          }else if (test == 'true' || test == '1' || test == "on"){
+          } else if (test == 'true' || test == '1' || test == "on"){
             test = true;
           }
 
           if (newKey){
-            $chart[newKey] = test;
-          }else{
-            $chart[attr] = test;
+            mapAttribute(newKey, test);
+            //options[newKey] = test;
+          } else {
+            mapAttribute(attr, test);
+            //options[attr] = test;
           }
         }
       });
 
-      if ($chart.title) {
-        setupVis['title'] = $chart.title;
-      }
 
-      if ($chart.height) {
-        setupVis['height'] = $chart.height;
-      }
-      if ($chart.width) {
-        setupVis['width'] = $chart.width;
+
+      function mapAttribute(key, value){
+        if (dataAttributes.indexOf(key) !== -1) {
+          setupData[key] = value;
+        } else if (visualAttributes.indexOf(key) !== -1) {
+          setupVis[key] = value;
+        } else {
+          options[key] = value;
+        }
       }
 
       // If we don't have a localized library set on this chart then set the
       // global one.
-      if (!$chart.library){
+      if (!options.library){
         //$chart.library = chartstack.library;
-        setupVis['library'] = chartstack.library;
+        //setupVis['library']
+        options['library'] = chartstack.library;
       }
 
       // Used to transform response if needed to JSON.
@@ -589,21 +603,23 @@
         renderers[$chart.library].init($chart);
       }*/
 
-      $chart.visual = new chartstack.Libraries[setupVis.library][setupVis.chartType](setupVis);
+      $chart.visual = new chartstack.Libraries[options.library][options.chartType](setupVis);
 
 
       // Check datasource starts with { or [ assume it's JSON or else
       // assume it's a URL to fetch.  We do not check for http anymore
       // as it can be a local/relative file.
-      if (typeof $chart.dataset == 'string'){
 
-        $chart.dataset = new chartstack.Dataset($chart.dataset);
-        if ($chart.adapter) {
-          $chart.dataset.resources[0].adapter = $chart.adapter;
+      if (typeof setupData['dataset'] == 'string'){
+
+        $chart.dataset = new chartstack.Dataset(setupData['dataset']);
+        if (setupData['adapter']) {
+          $chart.dataset.resources[0].adapter = setupData['adapter'];
         }
-        if (!$chart.dataformat){
-          $chart.dataset.resources[0].format = 'json';
-        }
+        //if (!options.dataformat){
+        //  $chart.dataset.resources[0].format = 'json';
+        //}
+        $chart.dataset.resources[0].format = setupData['dataformat'] || 'json';
         $chart.dataset.on("complete", function(data){
           //var renderer = chartstack.renderers[$chart.library];
           //var data = adapters[$chart.domain][$chart.chartType].call(new Adapter, data);
