@@ -1,6 +1,7 @@
 /* global google, chartstack */
 (function(cs){
   var each = cs.each;
+  var extend = cs.extend;
 
   // -----------------------------
   // Library Namespace
@@ -10,27 +11,122 @@
 
 
   // -----------------------------
+  // Type: Area chart
+  // -----------------------------
+
+  cs.GoogleCharts.AreaChart = cs.Visualization.extend({
+    initialize: function(){
+      //this.trigger('error', 'testing pie errors');
+      this.render();
+    },
+    render: function(){
+      this._chart = this._chart || new google.visualization.AreaChart(this.el);
+    },
+    update: function(data){
+      var data = google.visualization.arrayToDataTable(data);
+      var options = {
+        'title': this.title || '',
+        'width': parseInt(this.width),
+        'height': parseInt(this.height)
+      };
+      this._chart.draw(data, options);
+    }
+  });
+
+
+  // -----------------------------
+  // Type: Bar chart
+  // -----------------------------
+
+  cs.GoogleCharts.BarChart = cs.Visualization.extend({
+    initialize: function(){
+      //console.log('bar!', this);
+      this.render();
+    },
+    render: function(){
+      this._chart = this._chart || new google.visualization.BarChart(this.el);
+    },
+    update: function(data){
+      var data = google.visualization.arrayToDataTable(data);
+      var options = {
+        'title': this.title || '',
+        'width': parseInt(this.width),
+        'height': parseInt(this.height)
+      };
+      this._chart.draw(data, options);
+    }
+  });
+
+
+  // -----------------------------
+  // Type: Column chart
+  // -----------------------------
+
+  cs.GoogleCharts.ColumnChart = cs.Visualization.extend({
+    initialize: function(){
+      console.log('bar!', this);
+      this.render();
+    },
+    render: function(){
+      this._chart = this._chart || new google.visualization.ColumnChart(this.el);
+      //this.chart.draw(data, options);
+    },
+    update: function(data){
+      var data = google.visualization.arrayToDataTable(data);
+      var options = {
+        'title': this.title || '',
+        'width': parseInt(this.width),
+        'height': parseInt(this.height)
+      };
+      this._chart.draw(data, options);
+    }
+  });
+
+
+  // -----------------------------
+  // Type: Line chart
+  // -----------------------------
+
+  cs.GoogleCharts.LineChart = cs.Visualization.extend({
+    initialize: function(){
+      this.render();
+    },
+    render: function(){
+      this._chart = this._chart || new google.visualization.LineChart(this.el);
+    },
+    update: function(data){
+      var data = google.visualization.arrayToDataTable(data);
+      var options = {
+        'title': this.title || '',
+        'width': parseInt(this.width),
+        'height': parseInt(this.height)
+      };
+      this._chart.draw(data, options);
+    }
+  });
+
+
+  // -----------------------------
   // Type: Pie chart
   // -----------------------------
 
   cs.GoogleCharts.PieChart = cs.Visualization.extend({
     initialize: function(){
-      console.log('pie!', this);
-      //this.trigger('error', 'testing pie errors');
-    }
-  });
-
-  cs.GoogleCharts.BarChart = cs.Visualization.extend({
-    initialize: function(){
-      console.log('bar!', this);
-      //this.trigger('error', 'testing bar errors');
-    }
-  });
-
-  cs.GoogleCharts.LineChart = cs.Visualization.extend({
-    initialize: function(){
-      console.log('line!', this);
-      //this.trigger('error', 'testing line errors');
+      this.render();
+    },
+    render: function(){
+      this._chart = this._chart || new google.visualization.PieChart(this.el);
+      //this.chart.draw(data, options);
+    },
+    update: function(data){
+      var data = google.visualization.arrayToDataTable(data);
+      var options = {
+        'title': this.title || '',
+        'width': parseInt(this.width),
+        'height': parseInt(this.height)
+      };
+      console.log(this, options);
+      this._chart.draw(data, options);
     }
   });
 
@@ -40,146 +136,11 @@
   // -----------------------------
 
   cs.Visualization.register("google", {
-    "piechart": cs.GoogleCharts.PieChart,
+    "areachart": cs.GoogleCharts.AreaChart,
     "barchart": cs.GoogleCharts.BarChart,
-    "linechart": cs.GoogleCharts.LineChart
-  });
-
-
-  cs.addRenderSet({
-    name: 'Google Charts',
-    namespace: 'google',
-
-    // Adapts data from UD format to library format.
-    adapter: function(data){
-      return google.visualization.arrayToDataTable(data.data);
-    },
-
-    // Renders DOM charts.
-    render: {
-      piechart: function($chart, data){
-
-        if (data instanceof Array) {
-          data = google.visualization.arrayToDataTable(data);
-        }
-
-        var chart, options;
-        var each = cs.each;
-        var extend = cs.extend;
-
-        // Set chart options
-        options = {
-          'title': $chart.title || '',
-          'width': parseInt($chart.width),
-          'height': parseInt($chart.height)
-        };
-
-        if ($chart.customOptions){
-          extend(options, $chart.customOptions);
-        }
-
-        each(['backgroundColor', 'pieSliceBorderColor', 'colors'], function(prop){
-          if (prop in $chart){
-            options[prop] = $chart[prop];
-          }
-        });
-
-        if ('pieSliceTextColor' in $chart){
-          options.pieSliceTextStyle = {
-            color: $chart.pieSliceTextColor
-          };
-        }
-
-        if ('titleTextColor' in $chart){
-          options.titleTextStyle = {
-            color: $chart.titleTextColor
-          };
-        }
-
-        if ('legendColor' in $chart){
-          options.legend = {
-            textStyle: {
-              color: $chart.legendColor
-            }
-          };
-        }
-
-        chart = new google.visualization.PieChart($chart.el);
-        chart.draw(data, options);
-      },
-
-      barchart: function($chart, data){
-        var chart, options;
-        var each = cs.each;
-        var extend = cs.extend;
-
-        // Set chart options
-        options = {
-          'title': $chart.title || '',
-          'width': parseInt($chart.width),
-          'height': parseInt($chart.height)
-        };
-
-        each(['backgroundColor', 'pieSliceBorderColor', 'colors'], function(prop){
-          if (prop in $chart){
-            options[prop] = $chart[prop];
-          }
-        });
-
-        if ('titleTextColor' in $chart){
-          options.titleTextStyle = {
-            color: $chart.titleTextColor
-          };
-        }
-
-        if ('legendColor' in $chart){
-          options.legend = {
-            textStyle: {
-              color: $chart.legendColor
-            }
-          };
-        }
-
-        chart = new google.visualization.BarChart($chart.el);
-        chart.draw(data, options);
-      },
-
-      linechart: function($chart, data){
-        var chart, options;
-        var each = cs.each;
-        var extend = cs.extend;
-
-        // Set chart options
-        options = {
-          'title': $chart.title || '',
-          'width': parseInt($chart.width),
-          'height': parseInt($chart.height)
-        };
-
-        each(['backgroundColor', 'pieSliceBorderColor', 'colors'], function(prop){
-          if (prop in $chart){
-            options[prop] = $chart[prop];
-          }
-        });
-
-        if ('titleTextColor' in $chart){
-          options.titleTextStyle = {
-            color: $chart.titleTextColor
-          };
-        }
-
-        if ('legendColor' in $chart){
-          options.legend = {
-            textStyle: {
-              color: $chart.legendColor
-            }
-          };
-        }
-
-        chart = new google.visualization.LineChart($chart.el);
-        chart.draw(data, options);
-      }
-    }
+    "columnchart": cs.GoogleCharts.ColumnChart,
+    "linechart": cs.GoogleCharts.LineChart,
+    "piechart": cs.GoogleCharts.PieChart
   });
 
 })(chartstack);

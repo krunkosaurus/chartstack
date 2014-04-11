@@ -2,28 +2,26 @@
 (function(root) {
   var previousChartstack = root.chartstack;
   var chartstack = root.chartstack = {};
-  var adapters, renderers, charts, Chart, Adapter, Event, transformers, isDomReady, readyCallbacks = [];
+  var adapters, charts, Chart, Events, transformers, isDomReady, readyCallbacks = [];
 
-  // These three functions taken from https://github.com/spocke/punymce
+  // Removed: renderers, Adapter
+
+  // These three functions taken from:
+  // https://github.com/spocke/punymce
   function is(o, t){
     o = typeof(o);
-
     if (!t){
       return o != 'undefined';
     }
-
     return o == t;
   }
 
   function each(o, cb, s){
     var n;
-
     if (!o){
       return 0;
     }
-
     s = !s ? o : s;
-
     if (is(o.length)){
       // Indexed arrays, needed for Safari
       for (n=0; n<o.length; n++) {
@@ -41,7 +39,6 @@
         }
       }
     }
-
     return 1;
   }
 
@@ -50,10 +47,8 @@
     each(e, function(v, n){
       o[n] = v;
     });
-
     return o;
   }
-
 
   function noConflict(){
     root.chartstack = previousChartstack;
@@ -76,7 +71,7 @@
     if (chartstack.defaults.library){
       chartstack.library = chartstack.defaults.library;
     }else{
-      each(Object.keys(chartstack.renderers), function(ns){
+      each(Object.keys(chartstack.Libraries), function(ns){
         if (ns in window){
           chartstack.library = ns;
           return false;
@@ -88,7 +83,7 @@
       }
 
       // Parse the dom.
-      chartstack.parse();
+      chartstack.parseDOM();
 
       isDomReady = true;
       each(readyCallbacks, function(cb){
@@ -98,42 +93,22 @@
   }
 
   // Parse the DOM and search for valid charting elements to turn to classes.
-  function parse(){
-    var chartNodes = document.querySelectorAll('piechart,barchart,linechart');
-    each(chartNodes, function(el){
+  function parseDOM(){
+    var registeredNodes = [], retrievedNodes;
+    each(chartstack.Libraries, function(library){
+      for (var key in library){
+        if (registeredNodes.indexOf(key) == -1) {
+          registeredNodes.push(key);
+        }
+      }
+    });
+    retrievedNodes = document.querySelectorAll(registeredNodes.join(','));
+    each(retrievedNodes, function(el){
       // Ensure data attribute exists.
-      if (el.getAttribute('datasource')){
+      if (el.getAttribute('dataset')){
         new Chart(el);
       }
     });
-  }
-
-  function getAjax(url, cb){
-    var xhr;
-    var createXHR = function(){
-      var xhr;
-      if (window.ActiveXObject){
-        try{
-          xhr = new ActiveXObject("Microsoft.XMLHTTP");
-        }catch(e){
-          console.warn(e.message);
-          xhr = null;
-        }
-      }else{
-        xhr = new XMLHttpRequest();
-      }
-      return xhr;
-    };
-
-    xhr = createXHR();
-    xhr.onreadystatechange = function(){
-      if (xhr.readyState === 4){
-        cb(xhr.responseText);
-      }
-    };
-    xhr.open('GET', url, true);
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.send();
   }
 
   // Returns a chartstack object by html element id or element comparison.
@@ -170,7 +145,7 @@
   }
 
   // Chart specific Renderers that Chartstack uses to render charts.
-  function addRenderer(provider, configObj){
+  /*function addRenderer(provider, configObj){
     each(configObj, function(func, type){
       if (!renderers[provider]){
         renderers[provider] = {};
@@ -178,28 +153,28 @@
 
       renderers[provider][type] = func;
     });
-  }
+  }*/
 
   // Rendersets are chart library-related renderer and adapters.
-  function addRenderSet(configObj){
+  /*function addRenderSet(configObj){
     var libfullName = configObj.name;
     var libNamespace = configObj.namespace;
 
     chartstack.addRenderer(libNamespace, configObj.render)
     chartstack.addAdapter(libNamespace, configObj.adapter)
-  }
+  }*/
 
 
   // Methods that transform non-JSON data to JSON.
-  function addTransformer(name, func){
+  /*function addTransformer(name, func){
     transformers[name] = func;
-  }
+  }*/
 
   // Placeholder for chartstack data adapters.
   chartstack.adapters = adapters = {};
 
   // Placeholder for chartstack renderers.
-  chartstack.renderers = renderers = {};
+  // chartstack.renderers = renderers = {};
 
   // Array of instantiated charts.
   chartstack.charts = charts = [];
@@ -218,27 +193,26 @@
   // Store them in API as well for plugin use.
   extend(chartstack, {
     noConflict : noConflict,
-    parse : parse,
+    parseDOM : parseDOM,
     is : is,
     each : each,
     extend : extend,
     getAjax : getAjax,
     ready: ready,
     get: get,
-    addAdapter : addAdapter,
-    addRenderer : addRenderer,
-    addRenderSet : addRenderSet,
-    addtransformer : addTransformer
+    addAdapter : addAdapter
+    //addRenderer : addRenderer,
+    //addRenderSet : addRenderSet,
+    //addtransformer : addTransformer
   });
 
   // Defaults accessible from outside in case user wants to change them.
   // DOM properties override defaults.
-  chartstack.defaults = {
+  chartstack.defaults = extend({
     labels: true
-  };
+  }, chartstack.defaults || {});
 
-  chartstack.DataAdapter = Adapter = function(){};
-
+  //chartstack.DataAdapter = Adapter = function(){};
 
 
   // -----------------------------
@@ -392,7 +366,7 @@
           finish(response, index)
         };
         chartstack.getAjax(url, successSequencer, error);
-        //getJSONP(url, successSequencer);
+        //chartstack.getJSONP(url, successSequencer);
       });
 
       return self;
@@ -409,7 +383,6 @@
   extend(chartstack.Dataset.prototype, Events);
 
 
-
   // -----------------------------
   // Visualization class
   // -----------------------------
@@ -419,18 +392,20 @@
   // -----------------------------
 
   chartstack.Visualization = function(config){
-
-    // Inherit configuration
-    extend(this, config);
+    var self = this;
+    extend(self, config);
 
     // Set default event handlers
-    this.on("error", function(){
+    self.on("error", function(){
       visualErrorHandler.apply(this, arguments);
+    });
+    self.on("update", function(){
+      console.log("update", arguments);
+      self.update.apply(this, arguments);
     });
 
     // Let's kick it off!
     this.initialize();
-
   };
 
   chartstack.Visualization.prototype = {
@@ -452,8 +427,10 @@
   chartstack.Libraries = {};
 
   chartstack.Visualization.register = function(name, methods){
+    //chartstack.renderers[name] = chartstack.Libraries[name] || {};
     chartstack.Libraries[name] = chartstack.Libraries[name] || {};
     for (var method in methods) {
+      //chartstack.renderers[name][method] = methods[method];
       chartstack.Libraries[name][method] = methods[method];
     }
   };
@@ -488,43 +465,45 @@
   // -----------------------------
 
   chartstack.Chart = Chart = function(args) {
-    var $chart = this;
+    var $chart = this, setupVis = {};
     // Add to internal array.
     chartstack.charts.push(this);
 
     // Collects properties off DOM element and inspects data source.
 
     function setup(){
-      var setupDom, setupJS, setupVis = {}, domain;
+      var setupDom, setupJS;
 
       setupDom = function(){
-        $chart.el = args;
+        //$chart.el = args;
         setupVis['el'] = args;
 
         // Type of chart.
-        $chart.chartType = $chart.el.nodeName.toLocaleLowerCase();
-        setupVis['chartType'] = $chart.el.nodeName.toLocaleLowerCase();
+        //$chart.chartType = $chart.el.nodeName.toLocaleLowerCase();
+        setupVis['chartType'] = setupVis['el'].nodeName.toLocaleLowerCase();
 
         // Our made up HTML nodes are display: inline so we need to make
         // them block;
-        $chart.el.style.display = "inline-block";
+        //$chart.el.style.display = "inline-block";
         setupVis['style'] = {
           display: "inline-block"
         }
+
+        console.log(setupVis['el'].offsetWidth)
       };
 
       setupJS = function(){
-        $chart.el = args.el;
+        //$chart.el = args.el;
         setupVis['el'] = args.el;
 
         // Type of chart.
-        $chart.chartType = args.chartType;
+        //$chart.chartType = args.chartType;
         setupVis['chartType'] = args.chartType;
       };
 
       // Copy global defaults on to this chart.
       each(chartstack.defaults, function(k, v){
-        $chart[v] = k;
+        //$chart[v] = k;
         setupVis[v] = k;
       });
 
@@ -538,24 +517,25 @@
       // Support arrays here so we can store the data under a different name.
       // TODO: These strings should be objects with support for defaults and other options.
       each([
-        ['provider', 'domain'],
+        //['provider', 'domain'],
         'adapter',
-        'datasource',
+        //'datasource',
+        'dataset',
         'dataformat',
         'library',
         'labels',
         'width',
         'height',
         'title',
-        'titleTextColor', // Custom, currently supported on Google  TODO: NVD3
-        'legendColor', // Custom, currently supported on Google TODO: NVD3
-        'colors', // item colors - Supported for all chart types for Google and NVD3.
-        'pieSliceBorderColor', // TODO: Pie only  TODO: NVD3
-        'pieSliceTextColor', // TODO: Pie only  TODO: NVD3
-        'backgroundColor', // Bg color of chart.  TODO: NVD3
-        'customOptions',
+        //'titleTextColor', // Custom, currently supported on Google  TODO: NVD3
+        //'legendColor', // Custom, currently supported on Google TODO: NVD3
+        //'colors', // item colors - Supported for all chart types for Google and NVD3.
+        //'pieSliceBorderColor', // TODO: Pie only  TODO: NVD3
+        //'pieSliceTextColor', // TODO: Pie only  TODO: NVD3
+        //'backgroundColor', // Bg color of chart.  TODO: NVD3
+        //'customOptions',
         // methods
-        'formatRowLabel' // Pie labels, xlabels on other charts.
+        //'formatRowLabel' // Pie labels, xlabels on other charts.
       ], function(attr){
         var test, newKey;
 
@@ -581,39 +561,58 @@
         }
       });
 
+      if ($chart.title) {
+        setupVis['title'] = $chart.title;
+      }
+
+      if ($chart.height) {
+        setupVis['height'] = $chart.height;
+      }
+      if ($chart.width) {
+        setupVis['width'] = $chart.width;
+      }
+
       // If we don't have a localized library set on this chart then set the
       // global one.
       if (!$chart.library){
-        $chart.library = chartstack.library;
+        //$chart.library = chartstack.library;
         setupVis['library'] = chartstack.library;
       }
 
       // Used to transform response if needed to JSON.
-      if (!$chart.dataformat){
+      /*if (!$chart.dataformat){
         $chart.dataformat = 'json';
-      }
+      }*/
 
       // Run library renderer's init if the lib needs to do some setup.
-      if (renderers[$chart.library] && renderers[$chart.library].init){
+      /*if (renderers[$chart.library] && renderers[$chart.library].init){
         renderers[$chart.library].init($chart);
-      }
+      }*/
+
+      $chart.visual = new chartstack.Libraries[setupVis.library][setupVis.chartType](setupVis);
 
 
       // Check datasource starts with { or [ assume it's JSON or else
       // assume it's a URL to fetch.  We do not check for http anymore
       // as it can be a local/relative file.
-      if (typeof $chart.datasource == 'string'){
+      if (typeof $chart.dataset == 'string'){
 
-        $chart.dataset = new chartstack.Dataset($chart.datasource);
+        $chart.dataset = new chartstack.Dataset($chart.dataset);
         if ($chart.adapter) {
           $chart.dataset.resources[0].adapter = $chart.adapter;
         }
+        if (!$chart.dataformat){
+          $chart.dataset.resources[0].format = 'json';
+        }
         $chart.dataset.on("complete", function(data){
-          var renderer = chartstack.renderers[$chart.library];
+          //var renderer = chartstack.renderers[$chart.library];
           //var data = adapters[$chart.domain][$chart.chartType].call(new Adapter, data);
-          renderer[$chart.chartType]($chart, data);
+          //renderer[$chart.chartType]($chart, data);
+          $chart.visual.trigger("update", data);
         });
+        $chart.dataset.fetch();
 
+        /*
         if ($chart.datasource.match(/^({|\[)/)){
           $chart.datasource = JSON.parse($chart.datasource);
         }else{
@@ -621,14 +620,15 @@
           if (domain){
             $chart.domain = domain[1];
           }
-        }
+        }*/
       }
 
       //$chart.visual = new chartstack.Visualization(setupVis);
-      $chart.visual = new chartstack.Libraries[setupVis.library][setupVis.chartType](setupVis);
+      //$chart.visual = new chartstack.Libraries[setupVis.library][setupVis.chartType](setupVis);
     };
 
     // Fetches and normalizes data with a callback to pass data to.
+    /*
     function fetch(cb){
       function finish(data){
 
@@ -672,10 +672,10 @@
       }else{
         finish($chart.datasource);
       }
-    }
+    }*/
 
     setup();
-    fetch(function(data){
+    /*fetch(function(data){
       var renderer = chartstack.renderers[$chart.library];
       if (!renderer){
         throw('Renderer for ' + $chart.library + ' is missing.');
@@ -685,7 +685,7 @@
 
       // Render chart using data.
       renderer[$chart.chartType]($chart, data);
-    });
+    });*/
 
   };
 
@@ -754,6 +754,34 @@
     return "?" + query.join('&');
   }
 
+  function getAjax(url, cb){
+    var xhr;
+    var createXHR = function(){
+      var xhr;
+      if (window.ActiveXObject){
+        try{
+          xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        }catch(e){
+          console.warn(e.message);
+          xhr = null;
+        }
+      }else{
+        xhr = new XMLHttpRequest();
+      }
+      return xhr;
+    };
+
+    xhr = createXHR();
+    xhr.onreadystatechange = function(){
+      if (xhr.readyState === 4){
+        cb(xhr.responseText);
+      }
+    };
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.send();
+  }
+
   function getJSONP(url, success, error){
     var callbackName = "ChartstackJSONPCallback" + new Date().getTime();
     while (callbackName in window) {
@@ -788,7 +816,6 @@
       }
     }
   }
-
 
 
   // Hack to support google charts.
