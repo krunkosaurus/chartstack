@@ -27,7 +27,8 @@
       var options = {
         'title': this.title || '',
         'width': parseInt(this.width),
-        'height': parseInt(this.height)
+        'height': parseInt(this.height),
+        'isStacked': true
       };
       this._chart.draw(data, options);
     }

@@ -44,8 +44,8 @@
     };
 
     self.order = {
-      rows: ['date', 'asc'],
-      cols: ['number', 'desc']
+      rows: self.map.sort.index || 'asc',
+      cols: self.map.sort.label || 'desc',
     };
 
     // SORT ROWS
@@ -54,7 +54,7 @@
         var aIndex = parse.apply(self, [a].concat(self.rows.index));
         var bIndex = parse.apply(self, [b].concat(self.rows.index));
 
-        if (self.order.rows[1] == 'asc') {
+        if (self.order.rows == 'asc') {
           if (aIndex > bIndex){return 1;}
           if (aIndex < bIndex){return -1;}
           return 0;
@@ -105,7 +105,7 @@
           bTotal += record.value;
         });
 
-        if (self.order.cols[1] == 'asc') {
+        if (self.order.cols == 'asc') {
           return aTotal - bTotal;
         } else {
           return bTotal - aTotal;

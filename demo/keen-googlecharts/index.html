@@ -12,11 +12,15 @@
 
         <div>
         <section>
-            <piechart title="Pie Chart" width="500" height="300" adapter="keen-io" dataset="https://api.keen.io/3.0/projects/51a3a10a38433136b2000002/queries/count?api_key=871484a840a256e0e24197b70c6c6c8f1aa6417c1c34acb12357ae31c18bebb9ec40981ba36232f03a32411fe62bf056f2db2d2ce3e484d3542d41ece1fa330e6cf55e8de3a82d1ee956a0fecbbdc63a6de77240a2f546d2c87e97b9571ebfb5ff96dae3b2e7330a05883f801a10b08a&event_collection=pageView&group_by=page"></piechart>
+            <piechart title="Pie Chart" width="500" height="300" adapter="keen-io" dataset="../api/keen/piechart.json"></piechart>
         </section>
 
         <section>
-            <cs:pie width="600px" height="300px" adapter="keen-io" dataset="../api/keen/barchart.json"></cs>
+            <areachart width="600px" height="300px" adapter="keen-io" dataset="../api/keen/barchart.json"></areachart>
+        </section>
+
+        <section>
+            <columnchart width="600px" height="300px" adapter="keen-io" dataset="../api/keen/barchart.json"></columnchart>
         </section>
 
         <section>

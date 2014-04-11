@@ -12,12 +12,16 @@
 
       map = {
         root: "result",
-        each: {}
+        each: {},
+        sort: {
+          index: 'asc',
+          label: 'desc'
+        }
       };
 
       if (response.result instanceof Array) {
 
-        if (response.result[0]['value']){
+        if (response.result[0]['value'] !== void 0){
 
           if (response.result[0]['value'] instanceof Array) {
             // Interval + Group_by
@@ -65,7 +69,7 @@
       //console.log(map);
 
     }
-
+    console.log(response.result, map);
     data = new cs.dataform(response, map);
     return data.table;
     /*return {
