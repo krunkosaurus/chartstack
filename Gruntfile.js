@@ -13,6 +13,28 @@ module.exports = function(grunt) {
 
     pkg: grunt.file.readJSON('package.json'),
 
+    karma: {
+      // Shared options.
+      options: {
+        files: ['test/**/*.js'],
+        logLevel: 'ERROR',
+        frameworks: ['mocha', 'chai', 'sinon'],
+        browsers: ['PhantomJS', 'Chrome', 'Firefox']
+      },
+        // autoWatch: true,
+        // configFile: 'karma.conf.js',
+      continuous: {
+        // Auto close browsers.
+        singleRun: true,
+        browsers: ['PhantomJS'],
+        reporters: 'progress'
+        // runnerPort: 9999,
+        // logLevel: 'ERROR'
+        // logLevel: 'DEBUG'
+      }
+
+    },
+
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
@@ -53,6 +75,9 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-karma');
+
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -63,5 +88,6 @@ module.exports = function(grunt) {
   grunt.registerTask('lint', ['jshint']);
   grunt.registerTask('min', ['uglify']);
   grunt.registerTask('serve', ['connect']);
+  grunt.registerTask('test', ['karma:unit', 'watch']);
 
 };
