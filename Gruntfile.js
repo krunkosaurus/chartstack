@@ -16,20 +16,23 @@ module.exports = function(grunt) {
     karma: {
       // Shared options.
       options: {
-        files: ['test/**/*.js'],
+        files: [
+          '<%= chartstack.scriptPath %>/chartstack.js',
+          '<%= chartstack.scriptPath %>/**/*.js',
+          'test/**/*.js'
+        ],
         logLevel: 'ERROR',
         frameworks: ['mocha', 'chai', 'sinon'],
-        browsers: ['PhantomJS', 'Chrome', 'Firefox']
+        // browsers: ['PhantomJS', 'Chrome', 'Firefox'],
+        reporters: 'spec'
       },
-        // autoWatch: true,
-        // configFile: 'karma.conf.js',
+      dev: {
+        browsers: ['PhantomJS']
+      },
       continuous: {
         // Auto close browsers.
         singleRun: true,
-        browsers: ['PhantomJS'],
-        reporters: 'progress'
-        // runnerPort: 9999,
-        // logLevel: 'ERROR'
+        browsers: ['PhantomJS']
         // logLevel: 'DEBUG'
       }
 
