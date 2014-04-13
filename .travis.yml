@@ -9,3 +9,7 @@ branches:
 
 before_install: npm install -g grunt-cli
 install: npm install
+
+notifications:
+  email:
+    on_success: never
