@@ -1,0 +1,6 @@
+# whitelist
+branches:
+  only:
+    - feature/testrunner
+
+script: grunt karma:continuous
