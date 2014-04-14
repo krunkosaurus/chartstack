@@ -1,48 +1,237 @@
-<!DOCTYPE HTML>
-<html>
-    <head>
-        <title>Chartstack Keen<>Google Charts Page</title>
-        <link href="../css/page_styling.css" rel="stylesheet">
-    </head>
-    <body>
-        <h1>Chartstack Keen<>Google Charts Demo Page</h1>
-        <ul class="menu">
-            <li><a href="../">Go back</a></li>
-        </ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Chartstack Keen<>Google Charts Page</title>
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+</head>
+<body>
 
-        <div>
-        <section>
-            <piechart title="Pie Chart" width="500" height="300" adapter="keen-io" dataset="../api/keen/piechart.json"></piechart>
-        </section>
+  <div class="container">
+    <ul class="menu">
+        <li><a href="../">Back to Main</a></li>
+    </ul>
+    <div class="page-header">
+      <h1>Chartstack Keen IO -> Google Charts</h1>
+    </div>
 
-        <section>
-            <areachart dateformat="MMM D" width="600" height="300" adapter="keen-io" dataset="../api/keen/barchart.json"></areachart>
-        </section>
+    <div class="row">
+      <div class="col-xs-6">
+        <h4 class="text-center">DOM API</h4>
+      </div>
+      <div class="col-xs-6">
+        <h4 class="text-center">JS API</h4>
+      </div>
+    </div>
+    <hr>
 
-        <section>
-            <linechart dateformat="MM-DD" stacked="true" width="600" height="300" adapter="keen-io" dataset="../api/keen/barchart.json"></linechart>
-        </section>
+    <h5 class="text-muted">Pie chart</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
 
-        <section>
-            <barchart width="600" height="300" adapter="keen-io" dataset="../api/keen/barchart.json"></barchart>
-        </section>
+            <!-- DOM ELEMENT -->
+            <piechart title="Pie Chart" height="300" adapter="keen-io" dataset="../api/keen/piechart.json"></piechart>
 
-        <section>
-            <linechart dateformat="MM/DD" width="600" height="500" adapter="keen-io" dataset="../api/keen/multilinechart.json"></linechart>
-        </section>
-
-        <section>
-            <columnchart stacked="true" dateformat="MM-DD" width="600" height="500" adapter="keen-io" dataset="../api/keen/multilinechart.json"></columnchart>
-        </section>
+          </div>
         </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
 
-        <script src="https://www.google.com/jsapi"></script>
-        <script src="../../src/chartstack.js"></script>
-        <script src="../../src/util/chartstack.dataform.js"></script>
-        <script src="../../src/util/chartstack.moment.js"></script>
+            <!-- CONTAINER -->
+            <div id="pie-js"></div>
 
-        <script src="../../src/adapter/chartstack.keen.universal.adapter.js"></script>
-        <script src="../../src/renderset/cs.googlecharts.js"></script>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    </body>
+
+    <h5 class="text-muted">Area chart</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <areachart title="Area chart" stacked="true" dateformat="MMM D" height="300" adapter="keen-io" dataset="../api/keen/barchart.json"></areachart>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER -->
+            <div id="area-js"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <h5 class="text-muted">Line chart</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <linechart title="Line chart" dateformat="MM-DD" stacked="true" height="300" adapter="keen-io" dataset="../api/keen/barchart.json"></linechart>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER -->
+            <div id="line-js"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <h5 class="text-muted">Bar chart</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <barchart title="Bar chart" dateformat="MM/DD" height="300" adapter="keen-io" dataset="../api/keen/barchart.json"></barchart>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER -->
+            <div id="bar-js"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <h5 class="text-muted">Column chart</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <columnchart title="Column chart" stacked="true" dateformat="MM-DD" height="300" adapter="keen-io" dataset="../api/keen/multilinechart.json"></columnchart>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER -->
+            <div id="column-js"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!--// .container //-->
+
+  <script src="https://www.google.com/jsapi"></script>
+  <script src="../../src/chartstack.js"></script>
+  <script src="../../src/util/chartstack.dataform.js"></script>
+  <script src="../../src/util/chartstack.moment.js"></script>
+
+  <script src="../../src/adapter/chartstack.keen.universal.adapter.js"></script>
+  <script src="../../src/renderset/cs.googlecharts.js"></script>
+
+  <script>
+    chartstack.ready(function(){
+      var pie = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+          adapter: 'keen-io',
+          url: '../api/keen/piechart.json'
+        }),
+        visual: new chartstack.GoogleCharts.PieChart({
+          title: 'Pie chart',
+          el: document.getElementById('pie-js'),
+          height: '300',
+          options: {
+            pieHole: 0.35
+          }
+        })
+      });
+
+      var area = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+          adapter: 'keen-io',
+          dateformat: 'MMM D',
+          url: '../api/keen/barchart.json'
+        }),
+        visual: new chartstack.GoogleCharts.AreaChart({
+          title: 'Area chart',
+          el: document.getElementById('area-js'),
+          height: '300',
+          options: {
+            isStacked: true
+          }
+        })
+      });
+
+      var line = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+          adapter: 'keen-io',
+          dateformat: 'MM-DD',
+          url: '../api/keen/barchart.json'
+        }),
+        visual: new chartstack.GoogleCharts.LineChart({
+          title: 'Line chart',
+          el: document.getElementById('line-js'),
+          height: '300'
+        })
+      });
+
+      var bar = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+          adapter: 'keen-io',
+          dateformat: 'MM/DD',
+          url: '../api/keen/barchart.json'
+        }),
+        visual: new chartstack.GoogleCharts.BarChart({
+          title: 'Bar chart',
+          el: document.getElementById('bar-js'),
+          height: '300'
+        })
+      });
+
+      var column = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+          adapter: 'keen-io',
+          dateformat: 'MM-DD',
+          url: '../api/keen/multilinechart.json'
+        }),
+        visual: new chartstack.GoogleCharts.ColumnChart({
+          title: 'Column chart',
+          el: document.getElementById('column-js'),
+          height: '300',
+          stacked: true
+        })
+      });
+
+    });
+  </script>
+</body>
 </html>

@@ -206,6 +206,9 @@
     var self = this;
     extend(self, config);
 
+    self.options = self.options || {};
+    self.width = self.width || self.el.offsetWidth;
+
     // Set default event handlers
     self.on("error", function(){
       visualErrorHandler.apply(this, arguments);
@@ -295,14 +298,14 @@
 
         // Our made up HTML nodes are display: inline so we need to make
         // them block;
-        //$chart.el.style.display = "inline-block";
+        setupVis['el'].style.display = "block";
         setupVis['style'] = {
           display: "inline-block"
         };
       };
 
       setupJS = function(){
-        setupVis['el'] = options.el;
+        //setupVis['el'] = options.el;
       };
 
       // Copy global defaults on to this chart.
@@ -369,22 +372,31 @@
         options['library'] = chartstack.library;
       }
 
-      $chart.visual = new chartstack.Libraries[options.library][options.chartType](setupVis);
+      if (options.visual instanceof chartstack.Visualization) {
+        $chart.visual = options.visual;
+      } else {
+        $chart.visual = new chartstack.Libraries[options.library][options.chartType](setupVis);
+      }
 
 
       // Check datasource starts with { or [ assume it's JSON or else
       // assume it's a URL to fetch.  We do not check for http anymore
       // as it can be a local/relative file.
-      if (typeof setupData['dataset'] == 'string'){
+
+      if (options.dataset instanceof chartstack.Dataset) {
+        $chart.dataset = options.dataset;
+
+      } else if (typeof setupData['dataset'] == 'string'){
         $chart.dataset = new chartstack.Dataset(setupData['dataset']);
         $chart.dataset.resources[0]['adapter'] = setupData['adapter'] || false;
         $chart.dataset.resources[0]['dataformat'] = setupData['dataformat'] || 'json';
         $chart.dataset.resources[0]['dateformat'] = setupData['dateformat'] || false;
-        $chart.dataset.on("complete", function(data){
-          $chart.visual.trigger("update", data);
-        });
-        $chart.dataset.fetch();
       }
+
+      $chart.dataset.on("complete", function(data){
+        $chart.visual.trigger("update", data);
+      });
+      $chart.dataset.fetch();
     };
 
     setup();
@@ -505,26 +517,26 @@
     // lib found on the page that we have an adapter for.
     if (chartstack.defaults.library){
       chartstack.library = chartstack.defaults.library;
-    }else{
-      each(Object.keys(chartstack.Libraries), function(ns){
-        if (ns in window){
-          chartstack.library = ns;
-          return false;
+    } else {
+      for (var namespace in chartstack.Libraries) {
+        if (namespace in window) {
+          chartstack.library = namespace;
+          break;
         }
-      });
-
-      if (!chartstack.library){
-        throw new Error('No charting library located.');
       }
-
-      // Parse the dom.
-      chartstack.parseDOM();
-
-      isDomReady = true;
-      each(readyCallbacks, function(cb){
-        cb();
-      });
     }
+
+    if (!chartstack.library){
+      throw new Error('No charting library located.');
+    }
+
+    // Parse the dom.
+    chartstack.parseDOM();
+    isDomReady = true;
+
+    each(readyCallbacks, function(cb){
+      cb();
+    });
   }
 
   // Returns a chartstack object by html element id or element comparison.

@@ -24,12 +24,12 @@
     },
     update: function(data){
       var data = google.visualization.arrayToDataTable(data);
-      var options = {
-        'title': this.title || '',
-        'width': parseInt(this.width),
-        'height': parseInt(this.height),
-        'isStacked': this.stacked || true
-      };
+      var options = extend(this.options, {
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width),
+        isStacked: this.stacked || this.options.isStacked || false
+      });
       this._chart.draw(data, options);
     }
   });
@@ -49,12 +49,12 @@
     },
     update: function(data){
       var data = google.visualization.arrayToDataTable(data);
-      var options = {
-        'title': this.title || '',
-        'width': parseInt(this.width),
-        'height': parseInt(this.height),
-        'isStacked': this.stacked || false
-      };
+      var options = extend(this.options, {
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width),
+        isStacked: this.stacked || this.options.isStacked || false
+      });
       this._chart.draw(data, options);
     }
   });
@@ -75,12 +75,12 @@
     },
     update: function(data){
       var data = google.visualization.arrayToDataTable(data);
-      var options = {
-        'title': this.title || '',
-        'width': parseInt(this.width),
-        'height': parseInt(this.height),
-        'isStacked': this.stacked || false
-      };
+      var options = extend(this.options, {
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width),
+        isStacked: this.stacked || this.options.isStacked || false
+      });
       this._chart.draw(data, options);
     }
   });
@@ -99,11 +99,11 @@
     },
     update: function(data){
       var data = google.visualization.arrayToDataTable(data);
-      var options = {
-        'title': this.title || '',
-        'width': parseInt(this.width),
-        'height': parseInt(this.height)
-      };
+      var options = extend(this.options, {
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width)
+      });
       this._chart.draw(data, options);
     }
   });
@@ -123,11 +123,11 @@
     },
     update: function(data){
       var data = google.visualization.arrayToDataTable(data);
-      var options = {
-        'title': this.title || '',
-        'width': parseInt(this.width),
-        'height': parseInt(this.height)
-      };
+      var options = extend(this.options, {
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width)
+      });
       this._chart.draw(data, options);
     }
   });
