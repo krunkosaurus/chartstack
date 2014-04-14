@@ -34,5 +34,6 @@
   "dependencies": {
     "nvd3": "~1.1.15-beta",
     "highcharts": "~3.0.7"
-  }
+  },
+  "devDependencies": {}
 }
