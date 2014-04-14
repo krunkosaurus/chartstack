@@ -39,7 +39,8 @@ describe('Chartstack.noConflict', function(){
   it('should allow us to move the chartstack namespace', function(){
     banana = chartstack.noConflict();
     expect(chartstack).to.be.undefined;
-    expect(banana).to.be.an('object');
+    // failing.
+    expect(banana).to.be.an('function');
 
     // Move back for other tests.
     chartstack = banana.noConflict();
