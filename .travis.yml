@@ -8,10 +8,9 @@ branches:
     - feature/testrunner
 
 install:
-    - sudo npm install -g grunt-cli
-    - sudo npm install -g bower
+    - npm install -g grunt-cli
+    - npm install -g bower
     - npm install
-    - bower install
 
 before_script:
     - bower install
