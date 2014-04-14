@@ -378,10 +378,10 @@
         options.library = chartstack.library;
       }
 
-      if (options.visual instanceof chartstack.Visualization) {
-        $chart.visual = options.visual;
+      if (options.view instanceof chartstack.Visualization) {
+        $chart.view = options.view;
       } else {
-        $chart.visual = new chartstack.Libraries[options.library][options.chartType](setupVis);
+        $chart.view = new chartstack.Libraries[options.library][options.chartType](setupVis);
       }
 
 
@@ -400,7 +400,7 @@
       }
 
       $chart.dataset.on("complete", function(data){
-        $chart.visual.trigger("update", data);
+        $chart.view.trigger("update", data);
       });
       $chart.dataset.fetch();
     }
