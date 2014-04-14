@@ -17,22 +17,29 @@ module.exports = function(grunt) {
       // Shared options.
       options: {
         files: [
+          'test/*.html',
           '<%= chartstack.scriptPath %>/chartstack.js',
           '<%= chartstack.scriptPath %>/**/*.js',
-          'test/**/*.js'
+          'test/**/*.js',
+           //{pattern: 'test/runner.html', watched: false}
+           {pattern: 'test/fixtures/*.html', watched: true, included: true}
         ],
+        preprocessors: {
+          'test/fixtures/*.html': ['html2js']
+        },
         logLevel: 'ERROR',
         frameworks: ['mocha', 'chai', 'sinon'],
         // browsers: ['PhantomJS', 'Chrome', 'Firefox'],
         reporters: 'spec'
       },
       dev: {
-        browsers: ['PhantomJS']
+        singleRun: false,
+        browsers: ['Chrome'],
       },
       continuous: {
         // Auto close browsers.
         singleRun: true,
-        browsers: ['PhantomJS']
+        browsers: ['Chrome']
         // logLevel: 'DEBUG'
       }
 

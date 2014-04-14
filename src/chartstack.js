@@ -71,6 +71,8 @@
 
   // Called when DOM and chart libs are loaded and ready.
   function bootstrap (){
+    console.log('Boostrap!');
+    console.log(google);
     // If graph library isn't set in defaults, match provider to the first graph
     // lib found on the page that we have an adapter for.
     if (chartstack.defaults.library){
