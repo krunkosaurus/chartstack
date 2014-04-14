@@ -27,3 +27,8 @@ section{
 .nv-legend{
     fill: blue;
 }
+
+#mocha-report{
+    float: right;
+    width: 370px;
+}

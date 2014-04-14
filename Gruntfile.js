@@ -13,36 +13,8 @@ module.exports = function(grunt) {
 
     pkg: grunt.file.readJSON('package.json'),
 
-    karma: {
-      // Shared options.
-      options: {
-        files: [
-          'test/*.html',
-          '<%= chartstack.scriptPath %>/chartstack.js',
-          '<%= chartstack.scriptPath %>/**/*.js',
-          'test/**/*.js',
-           //{pattern: 'test/runner.html', watched: false}
-           {pattern: 'test/fixtures/*.html', watched: true, included: true}
-        ],
-        preprocessors: {
-          'test/fixtures/*.html': ['html2js']
-        },
-        logLevel: 'ERROR',
-        frameworks: ['mocha', 'chai', 'sinon'],
-        // browsers: ['PhantomJS', 'Chrome', 'Firefox'],
-        reporters: 'spec'
-      },
-      dev: {
-        singleRun: false,
-        browsers: ['Chrome'],
-      },
-      continuous: {
-        // Auto close browsers.
-        singleRun: true,
-        browsers: ['Chrome']
-        // logLevel: 'DEBUG'
-      }
-
+    mocha_phantomjs: {
+      all: ['demo/universal-nvd3/*.html', 'demo/universal-googlecharts/*.html']
     },
 
     uglify: {
@@ -92,12 +64,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-mocha-phantomjs');
 
   // Default task(s).
   grunt.registerTask('default', ['connect']);
   grunt.registerTask('lint', ['jshint']);
   grunt.registerTask('min', ['uglify']);
   grunt.registerTask('serve', ['connect']);
-  grunt.registerTask('test', ['karma:unit', 'watch']);
+  grunt.registerTask('test', ['mocha_phantomjs']);
 
 };
