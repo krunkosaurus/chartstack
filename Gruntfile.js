@@ -14,6 +14,10 @@ module.exports = function(grunt) {
 
     pkg: grunt.file.readJSON('package.json'),
 
+    mocha_phantomjs: {
+      all: ['demo/universal-nvd3/*.html', 'demo/universal-googlecharts/*.html']
+    },
+
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
@@ -64,19 +68,23 @@ module.exports = function(grunt) {
         tasks: ['build']
       }
     }
-
   });
+
 
   // Load tasks
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-mocha-phantomjs');
 
   // Register tasks
   grunt.registerTask('build', ['jshint', 'uglify']);
   grunt.registerTask('serve', ['build', 'connect', 'watch']);
-  // grunt.registerTask('test', ['build', 'connect', 'saucelabs-mocha']);
+  grunt.registerTask('test', ['mocha_phantomjs']);
   grunt.registerTask('default', ['build']);
 
+  // Optional aliases
+  grunt.registerTask('lint', ['jshint']);
+  grunt.registerTask('min', ['uglify']);
 };

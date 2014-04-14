@@ -541,3 +541,6 @@ Keen.onChartsReady(function(){
 - We need a way to pass logic in data api like if data point is >3 red lines or else green line.
 * Universal data adapter:
 - Convert all items in a column to dates or integers
+* To do testing:
+- Add in test coverage: https://github.com/gotwarlost/istanbul
+- Add in http://huddle.github.io/Resemble.js/
