@@ -1,4 +1,5 @@
 /* global chartstack */
+/* jshint camelcase: false */
 (function(cs){
   var proto;
   var each = chartstack.each;
@@ -31,9 +32,9 @@
         fixed: [split_index[split_index.length-1]]
       };
       if (self.map.each.label) {
-        output['cells'] = self.map.each.label.split(" -> ");
+        output.cells = self.map.each.label.split(" -> ");
       } else {
-        output['fixed'].push(split_value[split_value.length-1]);
+        output.fixed.push(split_value[split_value.length-1]);
       }
       return output;
     })();
@@ -179,7 +180,7 @@
 
       each(args, function(el){
 
-        if (el[target] || el[target] == 0 || el[target] !== void 0) {
+        if (el[target] || el[target] === 0 || el[target] !== void 0) {
           // Easy grab!
           if (el[target] === null) {
             return result.push('');

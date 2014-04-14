@@ -35,7 +35,7 @@
   // require event listeners
   // -----------------------------
 
-  var Events = chartstack.Events = {
+  Events = chartstack.Events = {
 
     on: function(name, callback) {
       this.listeners || (this.listeners = {});
@@ -54,8 +54,10 @@
       }
       var events = this.listeners[name] || [];
       for (var i = events.length; i--;) {
-        if (callback && callback == events[i]['callback']) this.listeners[name].splice(i, 1);
-        if (!callback || events.length == 0) {
+        if (callback && callback == events[i].callback) {
+          this.listeners[name].splice(i, 1);
+        }
+        if (!callback || events.length === 0) {
           this.listeners[name] = void 0;
           delete this.listeners[name];
         }
@@ -64,11 +66,13 @@
     },
 
     trigger: function(name) {
-      if (!this.listeners) return this;
+      if (!this.listeners) {
+        return this;
+      }
       var args = Array.prototype.slice.call(arguments, 1);
       var events = this.listeners[name] || [];
       for (var i = 0; i < events.length; i++) {
-        events[i]['callback'].apply(this, args);
+        events[i].callback.apply(this, args);
       }
       return this;
     }
@@ -134,13 +138,13 @@
   // -----------------------------
 
   chartstack.Dataset = function(config){
-    var resources = [], config = config || {};
-    if (config instanceof Array) {
-      each(config, function(source){
+    var resources = [], options = config || {};
+    if (options instanceof Array) {
+      each(options, function(source){
         resources.push(new chartstack.DataResource(source));
       });
     } else {
-      resources.push(new chartstack.DataResource(config));
+      resources.push(new chartstack.DataResource(options));
     }
     this.resources = resources;
     return;
@@ -156,7 +160,7 @@
 
       var finish = function(response, index){
         var resource = self.resources[index],
-            adapter  = self.resources[index]['adapter'];
+            adapter  = self.resources[index].adapter;
 
         self.responses[index] = JSON.parse(response);
         self.data[index] = adapters[adapter].call(resource, self.responses[index]);
@@ -174,7 +178,7 @@
       each(self.resources, function(resource, index){
         var url = resource.url + buildQueryString(resource.params);
         var successSequencer = function(response){
-          finish(response, index)
+          finish(response, index);
         };
         chartstack.getAjax(url, successSequencer, error);
         //chartstack.getJSONP(url, successSequencer);
@@ -256,8 +260,10 @@
     extend(Visualization, parent, staticProps);
     var Surrogate = function(){ this.constructor = Visualization; };
     Surrogate.prototype = parent.prototype;
-    Visualization.prototype = new Surrogate;
-    if (protoProps) extend(Visualization.prototype, protoProps);
+    Visualization.prototype = new Surrogate();
+    if (protoProps) {
+      extend(Visualization.prototype, protoProps);
+    }
     Visualization.__super__ = parent.prototype;
     return Visualization;
   };
@@ -291,15 +297,15 @@
 
       setupDom = function(){
         //$chart.el = args;
-        setupVis['el'] = options;
+        setupVis.el = options;
 
         // Type of chart.
-        options['chartType'] = setupVis['el'].nodeName.toLocaleLowerCase();
+        options.chartType = setupVis.el.nodeName.toLocaleLowerCase();
 
         // Our made up HTML nodes are display: inline so we need to make
         // them block;
-        setupVis['el'].style.display = "block";
-        setupVis['style'] = {
+        setupVis.el.style.display = "block";
+        setupVis.style = {
           display: "inline-block"
         };
       };
@@ -369,7 +375,7 @@
       // If we don't have a localized library set on this chart then set the
       // global one.
       if (!options.library){
-        options['library'] = chartstack.library;
+        options.library = chartstack.library;
       }
 
       if (options.visual instanceof chartstack.Visualization) {
@@ -386,18 +392,18 @@
       if (options.dataset instanceof chartstack.Dataset) {
         $chart.dataset = options.dataset;
 
-      } else if (typeof setupData['dataset'] == 'string'){
-        $chart.dataset = new chartstack.Dataset(setupData['dataset']);
-        $chart.dataset.resources[0]['adapter'] = setupData['adapter'] || false;
-        $chart.dataset.resources[0]['dataformat'] = setupData['dataformat'] || 'json';
-        $chart.dataset.resources[0]['dateformat'] = setupData['dateformat'] || false;
+      } else if (typeof setupData.dataset == 'string'){
+        $chart.dataset = new chartstack.Dataset(setupData.dataset);
+        $chart.dataset.resources[0].adapter = setupData.adapter || false;
+        $chart.dataset.resources[0].dataformat = setupData.dataformat || 'json';
+        $chart.dataset.resources[0].dateformat = setupData.dateformat || false;
       }
 
       $chart.dataset.on("complete", function(data){
         $chart.visual.trigger("update", data);
       });
       $chart.dataset.fetch();
-    };
+    }
 
     setup();
   };
@@ -405,17 +411,17 @@
   Chart.prototype = {
 
     show : function(){
-      $chart.trigger('show');
+      this.trigger('show');
       return this;
     },
 
     hide : function(){
-      $chart.trigger('hide');
+      this.trigger('hide');
       return this;
     },
 
     draw: function(){
-      $chart.trigger('draw');
+      this.trigger('draw');
       return this;
     },
 
@@ -600,9 +606,9 @@
         decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
         query  = str.split("?")[1];
 
-    while (match = search.exec(query))
+    while (!!(match=search.exec(query))) {
       urlParams[decode(match[1])] = decode(match[2]);
-
+    }
     return urlParams;
   }
 
@@ -659,7 +665,7 @@
       loaded = true;
       if (success && response) {
         success(response);
-      };
+      }
       // Remove this from the namespace
       window[callbackName] = undefined;
     };
@@ -672,18 +678,21 @@
     script.onreadystatechange = function() {
       if (loaded === false && this.readyState === "loaded") {
         loaded = true;
-        if (error) error();
+        if (error) {
+          error();
+        }
       }
     };
     // non-ie, etc
     script.onerror = function() {
       if (loaded === false) { // on IE9 both onerror and onreadystatechange are called
         loaded = true;
-        if (error) error();
+        if (error) {
+          error();
+        }
       }
-    }
+    };
   }
-
 
   // Hack to support google charts.
   if (window.google){
