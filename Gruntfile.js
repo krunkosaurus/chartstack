@@ -8,7 +8,8 @@ module.exports = function(grunt) {
       // configurable paths
       appPath: 'demo',
       scriptPath: 'src',
-      distPath: 'dist'
+      distPath: 'dist',
+      bowerPath: 'demo/bower_components'
     },
 
     pkg: grunt.file.readJSON('package.json'),
@@ -25,11 +26,11 @@ module.exports = function(grunt) {
             '<%= chartstack.scriptPath %>/chartstack.js',
             '<%= chartstack.scriptPath %>/utils/chartstack.dataform.js',
             '<%= chartstack.scriptPath %>/utils/chartstack.csv.js',
-            '<%= chartstack.scriptPath %>/utils/chartstack.moment.js',
             '<%= chartstack.scriptPath %>/adapters/chartstack.keen-io.js',
-            '<%= chartstack.scriptPath %>/libraries/chartstack.googlecharts.js'
+            '<%= chartstack.scriptPath %>/libraries/chartstack.googlecharts.js',
             //'<%= chartstack.scriptPath %>/renderset/chartstack.nvd3.renderset.js',
             //'<%= chartstack.scriptPath %>/renderset/chartstack.highcharts.renderset.js'
+            '<%= chartstack.bowerPath %>/momentjs/min/moment.min.js'
         ],
         dest: '<%= chartstack.distPath %>/chartstack.min.js'
       }

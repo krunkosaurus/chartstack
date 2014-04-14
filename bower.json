@@ -15,25 +15,21 @@
   ],
   "main": "./dist/chartstack.min.js",
   "keywords": [
-    "chart",
+    "charts",
     "charting",
     "graph",
     "keen",
     "keen io",
     "keenio",
     "keen.io",
-    "d3",
-    "nvd3",
-    "highcharts",
-    "Google Charts",
-    "chart.js",
-    "nvd3",
-    "javascript"
+    "Google Charts"
   ],
   "license": "MIT",
   "dependencies": {
     "nvd3": "~1.1.15-beta",
     "highcharts": "~3.0.7"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "momentjs": "~2.6.0"
+  }
 }

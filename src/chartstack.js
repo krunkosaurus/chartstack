@@ -540,6 +540,9 @@
     chartstack.parseDOM();
     isDomReady = true;
 
+    // Bring moment.js into the mix
+    chartstack.moment = root.moment || false;
+
     each(readyCallbacks, function(cb){
       cb();
     });
