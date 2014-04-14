@@ -5,7 +5,7 @@ node_js:
 # whitelist
 branches:
   only:
-    - feature/testrunner
+    - master
 
 install:
     - npm install -g grunt-cli
