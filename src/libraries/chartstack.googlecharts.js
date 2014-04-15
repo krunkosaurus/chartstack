@@ -26,11 +26,10 @@
     },
     update: function(data){
       var data = google.visualization.arrayToDataTable(data);
-      var options = extend(this.options, {
-        title: this.title || '',
-        height: parseInt(this.height),
-        width: parseInt(this.width),
-        isStacked: this.stacked || this.options.isStacked || false
+      var options = extend(this.chartOptions, {
+        title: this.chartOptions.title || '',
+        height: parseInt(this.chartOptions.height),
+        width: parseInt(this.chartOptions.width)
       });
       this._chart.draw(data, options);
     }
@@ -51,11 +50,10 @@
     },
     update: function(data){
       var data = google.visualization.arrayToDataTable(data);
-      var options = extend(this.options, {
-        title: this.title || '',
-        height: parseInt(this.height),
-        width: parseInt(this.width),
-        isStacked: this.stacked || this.options.isStacked || false
+      var options = extend(this.chartOptions, {
+        title: this.chartOptions.title || '',
+        height: parseInt(this.chartOptions.height),
+        width: parseInt(this.chartOptions.width)
       });
       this._chart.draw(data, options);
     }
@@ -77,11 +75,10 @@
     },
     update: function(data){
       var data = google.visualization.arrayToDataTable(data);
-      var options = extend(this.options, {
-        title: this.title || '',
-        height: parseInt(this.height),
-        width: parseInt(this.width),
-        isStacked: this.stacked || this.options.isStacked || false
+      var options = extend(this.chartOptions, {
+        title: this.chartOptions.title || '',
+        height: parseInt(this.chartOptions.height),
+        width: parseInt(this.chartOptions.width)
       });
       this._chart.draw(data, options);
     }
@@ -101,10 +98,10 @@
     },
     update: function(data){
       var data = google.visualization.arrayToDataTable(data);
-      var options = extend(this.options, {
-        title: this.title || '',
-        height: parseInt(this.height),
-        width: parseInt(this.width)
+      var options = extend(this.chartOptions, {
+        title: this.chartOptions.title || '',
+        height: parseInt(this.chartOptions.height),
+        width: parseInt(this.chartOptions.width)
       });
       this._chart.draw(data, options);
     }
@@ -125,10 +122,10 @@
     },
     update: function(data){
       var data = google.visualization.arrayToDataTable(data);
-      var options = extend(this.options, {
-        title: this.title || '',
-        height: parseInt(this.height),
-        width: parseInt(this.width)
+      var options = extend(this.chartOptions, {
+        title: this.chartOptions.title || '',
+        height: parseInt(this.chartOptions.height),
+        width: parseInt(this.chartOptions.width)
       });
       this._chart.draw(data, options);
     }

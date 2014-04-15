@@ -221,8 +221,8 @@
     var self = this;
     extend(self, config);
 
-    self.options = self.options || {};
-    self.width = self.width || self.el.offsetWidth;
+    self.chartOptions = self.chartOptions || {};
+    self.chartOptions.width = self.chartOptions.width || self.el.offsetWidth;
 
     // Set default event handlers
     self.on("error", function(){
@@ -252,12 +252,12 @@
   };
   extend(chartstack.Visualization.prototype, Events);
 
-  chartstack.Libraries = {};
+  chartstack.libraries = {};
 
   chartstack.Visualization.register = function(name, methods){
-    chartstack.Libraries[name] = chartstack.Libraries[name] || {};
+    chartstack.libraries[name] = chartstack.libraries[name] || {};
     for (var method in methods) {
-      chartstack.Libraries[name][method] = methods[method];
+      chartstack.libraries[name][method] = methods[method];
     }
   };
 
@@ -294,7 +294,7 @@
 
   chartstack.Chart = Chart = function(args) {
     var $chart = this,
-    setupVis = {},
+    setupVis = { chartOptions: {} },
     setupData = {},
     options = args || {};
 
@@ -342,7 +342,7 @@
 
       dataAttributes = ['adapter', 'dataset', 'dataformat', 'dateformat'];
       initAttributes = ['library'];
-      visualAttributes = ['title', 'labels', 'height', 'width', 'stacked'];
+      visualAttributes = ['title', 'labels', 'height', 'width', 'isStacked'];
 
       // Prev:
       // titleTextColor, legendColor, colors, pieSliceBorderColor,
@@ -379,7 +379,7 @@
         } else if (initAttributes.indexOf(key) !== -1) {
           options[key] = value;
         } else {
-          setupVis[key] = value;
+          setupVis.chartOptions[key] = value;
         }
       }
 
@@ -392,7 +392,7 @@
       if (options.view instanceof chartstack.Visualization) {
         $chart.view = options.view;
       } else {
-        $chart.view = new chartstack.Libraries[options.library][options.chartType](setupVis);
+        $chart.view = new chartstack.libraries[options.library][options.chartType](setupVis);
       }
 
 
@@ -535,7 +535,7 @@
     if (chartstack.defaults.library){
       chartstack.library = chartstack.defaults.library;
     } else {
-      for (var namespace in chartstack.Libraries) {
+      for (var namespace in chartstack.libraries) {
         if (namespace in window) {
           chartstack.library = namespace;
           break;
@@ -595,7 +595,7 @@
   // Parse the DOM and search for valid charting elements to turn to classes.
   function parseDOM(){
     var registeredNodes = [], retrievedNodes;
-    each(chartstack.Libraries, function(library){
+    each(chartstack.libraries, function(library){
       for (var key in library){
         if (registeredNodes.indexOf(key) == -1) {
           registeredNodes.push(key);
