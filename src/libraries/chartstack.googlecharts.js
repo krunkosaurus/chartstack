@@ -9,6 +9,8 @@
 
   cs.GoogleCharts = cs.GoogleCharts || {};
 
+  // "https://www.google.com/jsapi"
+
 
   // -----------------------------
   // Type: Area chart

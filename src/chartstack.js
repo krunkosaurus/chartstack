@@ -159,31 +159,42 @@
       self.responses = [];
 
       var finish = function(response, index){
-        var resource = self.resources[index],
-            adapter  = self.resources[index].adapter;
-
         self.responses[index] = JSON.parse(response);
-        self.data[index] = adapters[adapter].call(resource, self.responses[index]);
-
         completions++;
         if (completions == self.resources.length){
-          self.trigger("complete", self.data[0]);
+          self.transform();
         }
       };
 
       var error = function(){
-        console.log('error');
+        //console.log('error');
+        return false;
       };
 
       each(self.resources, function(resource, index){
-        var url = resource.url + buildQueryString(resource.params);
-        var successSequencer = function(response){
-          finish(response, index);
-        };
-        chartstack.getAjax(url, successSequencer, error);
-        //chartstack.getJSONP(url, successSequencer);
+        if (resource.url) {
+          var url = resource.url + buildQueryString(resource.params);
+          var successSequencer = function(response){
+            finish(response, index);
+          };
+          chartstack.getAjax(url, successSequencer, error);
+          //chartstack.getJSONP(url, successSequencer);
+        } else {
+          error();
+        }
       });
 
+      return self;
+    },
+
+    transform: function() {
+      var self = this;
+      each(self.resources, function(resource, index){
+        var adapter = resource.adapter;
+        var response = self.responses[index];
+        self.data[index] = adapters[adapter].call(resource, response);
+      });
+      self.trigger("complete", self.data[0]);
       return self;
     },
 
