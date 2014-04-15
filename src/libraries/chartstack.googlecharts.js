@@ -133,6 +133,25 @@
 
 
   // -----------------------------
+  // Type: Table
+  // -----------------------------
+
+  cs.GoogleCharts.DataTable = cs.Visualization.extend({
+    initialize: function(){
+      this.render();
+    },
+    render: function(){
+      this._chart = this._chart || new google.visualization.Table(this.el);
+      //this.chart.draw(data, options);
+    },
+    update: function(data){
+      var data = google.visualization.arrayToDataTable(data);
+      this._chart.draw(data, this.chartOptions);
+    }
+  });
+
+
+  // -----------------------------
   // Register Methods
   // -----------------------------
 
@@ -141,7 +160,8 @@
     "barchart": cs.GoogleCharts.BarChart,
     "columnchart": cs.GoogleCharts.ColumnChart,
     "linechart": cs.GoogleCharts.LineChart,
-    "piechart": cs.GoogleCharts.PieChart
+    "piechart": cs.GoogleCharts.PieChart,
+    "datatable": cs.GoogleCharts.DataTable
   });
 
 })(chartstack);

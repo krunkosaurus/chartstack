@@ -710,7 +710,7 @@
 
   // Hack to support google charts.
   if (window.google){
-    google.load('visualization', '1.0', {'packages':['corechart']});
+    google.load('visualization', '1.0', {'packages':['corechart','table']});
     google.setOnLoadCallback(bootstrap);
   }else{
     document.addEventListener("DOMContentLoaded", bootstrap);

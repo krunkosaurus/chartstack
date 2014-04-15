@@ -148,6 +148,31 @@
       </div>
     </div>
 
+
+    <h5 class="text-muted">Table</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <datatable title="Table" dateformat="MM-DD" adapter="keen-io" dataset="../api/keen/barchart.json"></datatable>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER -->
+            <div id="table-js"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div><!--// .container //-->
 
   <script src="https://www.google.com/jsapi"></script>
@@ -240,6 +265,21 @@
             title: 'Column chart',
             height: '300',
             isStacked: true
+          }
+        })
+      });
+
+      var table = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+          adapter: 'keen-io',
+          dateformat: 'MMM DD',
+          url: '../api/keen/barchart.json'
+        }),
+        view: new chartstack.GoogleCharts.DataTable({
+          el: document.getElementById('table-js'),
+          chartOptions: {
+            title: 'DataTable',
+            sortColumn: 1
           }
         })
       });
