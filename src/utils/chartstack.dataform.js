@@ -44,10 +44,19 @@
       cells: self.map.each.value.split(" -> ")
     };
 
-    self.order = {
+    self.order = (function(){
+      var output = {};
+      if (self.map.sort) {
+        output.rows = self.map.sort.index || 'asc';
+        output.cols = self.map.sort.label || 'desc';
+      }
+      return output;
+    })();
+
+    /*self.order = {
       rows: self.map.sort.index || 'asc',
       cols: self.map.sort.label || 'desc',
-    };
+    };*/
 
     // SORT ROWS
     if (self.order.rows.length > 0) {
