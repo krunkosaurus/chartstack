@@ -14,22 +14,20 @@
 
         <div>
         <section>
-            <piechart title="Yay browsers!" width="400px" height="400px" datasource="../api/universal/piechart.json"></piechart>
+            <piechart title="Yay browsers!" width="400px" height="400px" dataset="../api/universal/piechart.json"></piechart>
         </section>
 
         <section>
-            <barchart width="600px" height="300px" datasource="../api/universal/barchart.json"></barchart>
+            <barchart width="600px" height="300px" dataset="../api/universal/barchart.json"></barchart>
         </section>
 
         <section>
-            <linechart width="600px" height="300px" datasource="../api/universal/linechart.json"></linechart>
+            <linechart width="600px" height="300px" dataset="../api/universal/linechart.json"></linechart>
         </section>
         </div>
 
         <script src="https://www.google.com/jsapi"></script>
-        <script src="../../src/chartstack.js"></script>
-        <!-- Google Charts chartstack support -->
-        <script src="../../src/renderset/chartstack.googlecharts.renderset.js"></script>
+        <script src="../dist/chartstack.min.js"></script>
 
        <!-- tests -->
         <script src="../bower_components/mocha/mocha.js"></script>

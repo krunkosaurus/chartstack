@@ -15,7 +15,7 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     mocha_phantomjs: {
-      all: ['demo/universal-nvd3/*.html', 'demo/universal-googlecharts/*.html']
+      all: ['demo/keen-googlecharts-test/*.html']
     },
 
     uglify: {
