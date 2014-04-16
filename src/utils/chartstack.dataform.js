@@ -17,11 +17,15 @@
     // map.each.label
     // map.each.value
 
-    var self = this,
+    var self = this, _root;
     // root = data[map.root];
-    _root = parse.apply(self, [data].concat(map.root.split(" -> ")));
-    root = _root[0];
-
+    if (map.root == "") {
+      _root = [[data]];
+      //console.log('root', _root[0])
+    } else {
+      _root = parse.apply(self, [data].concat(map.root.split(" -> ")));
+    }
+    self.root = _root[0],
     self.map = map,
     self.table = [],
     self.series = [],
@@ -79,8 +83,8 @@
 
     // SORT ROWS
     if (self.order.rows.length > 0) {
-      if (root instanceof Array) {
-        root.sort(function(a, b){
+      if (self.root instanceof Array) {
+        self.root.sort(function(a, b){
           var aIndex = parse.apply(self, [a].concat(self.rows.index));
           var bIndex = parse.apply(self, [b].concat(self.rows.index));
 
@@ -103,7 +107,7 @@
     (function(){
       self.cols.label = (self.cols.fixed) ? self.cols.fixed[0] : 'series';
       var fixed = (self.cols.fixed) ? self.cols.fixed : [];
-      var cells = (self.cols.cells) ? parse.apply(self, [root[0]].concat(self.cols.cells)) : [];
+      var cells = (self.cols.cells) ? parse.apply(self, [self.root[0]].concat(self.cols.cells)) : [];
       var output = fixed.concat(cells);
       output.splice(0,1);
       each(output, function(el){
@@ -112,8 +116,8 @@
     })();
 
     // ADD SERIES' RECORDS
-    if (root instanceof Array || typeof root == 'object') {
-      each(root, function(el){
+    if (self.root instanceof Array || typeof self.root == 'object') {
+      each(self.root, function(el){
         var index = parse.apply(self, [el].concat(self.rows.index));
         var cells = parse.apply(self, [el].concat(self.rows.cells));
         each(cells, function(cell, j){
@@ -127,7 +131,7 @@
       (function(){
         var output = {};
         output[self.cols.label] = 'result';
-        output.value = root;
+        output.value = self.root;
         self.series[0].values.push(output);
       })();
     }
@@ -218,6 +222,13 @@
       }
 
       each(args, function(el){
+
+
+        if (target == "" && typeof el == "number") {
+          //console.log(typeof(el), el);
+          return result.push(el);
+        }
+        //
 
         if (el[target] || el[target] === 0 || el[target] !== void 0) {
           // Easy grab!

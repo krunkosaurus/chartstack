@@ -24,6 +24,32 @@
     </div>
     <hr>
 
+
+    <h5 class="text-muted">Funnel demo</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <barchart title="Funnel" dateformat="MM/DD" height="300" adapter="keen-io" dataset="../api/keen/funnel.json"></barchart>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER -->
+            <div id="funnel-js"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <h5 class="text-muted">Number widget</h5>
     <div class="row">
       <div class="col-sm-6">
@@ -216,6 +242,20 @@
 
   <script>
     chartstack.ready(function(){
+
+      var funnel = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+          adapter: 'keen-io',
+          url: '../api/keen/funnel.json'
+        }),
+        view: new chartstack.GoogleCharts.ColumnChart({
+          el: document.getElementById('funnel-js'),
+          chartOptions: {
+            title: 'Funnnnnels',
+            height: '300'
+          }
+        })
+      });
 
       var metric = new chartstack.Chart({
         dataset: new chartstack.Dataset({
