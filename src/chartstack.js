@@ -415,7 +415,7 @@
         $chart.dataset = options.dataset;
 
       } else if (typeof setupData.dataset == 'string'){
-        $chart.dataset = new chartstack.Dataset(setupData.dataset);
+        $chart.dataset = new chartstack.Dataset(setupData.dataset.replace(/(\r\n|\n|\r|\ )/g,""));
         $chart.dataset.resources[0].adapter = setupData.adapter || false;
         $chart.dataset.resources[0].dataformat = setupData.dataformat || 'json';
         $chart.dataset.resources[0].dateformat = setupData.dateformat || false;
