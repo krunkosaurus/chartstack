@@ -31,6 +31,7 @@ module.exports = function(grunt) {
             '<%= chartstack.scriptPath %>/utils/chartstack.dataform.js',
             '<%= chartstack.scriptPath %>/utils/chartstack.csv.js',
             '<%= chartstack.scriptPath %>/adapters/chartstack.keen-io.js',
+            '<%= chartstack.scriptPath %>/libraries/chartstack.widgets.js',
             '<%= chartstack.scriptPath %>/libraries/chartstack.googlecharts.js',
             //'<%= chartstack.scriptPath %>/renderset/chartstack.nvd3.renderset.js',
             //'<%= chartstack.scriptPath %>/renderset/chartstack.highcharts.renderset.js'

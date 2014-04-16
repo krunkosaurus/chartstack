@@ -24,6 +24,30 @@
     </div>
     <hr>
 
+    <h5 class="text-muted">Number widget</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <metric library="widgets" title="DOM Subtitle" height="300" adapter="keen-io" dataset="../api/keen/number.json"></metric>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER -->
+            <div id="metric-js"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
     <h5 class="text-muted">Pie chart</h5>
     <div class="row">
       <div class="col-sm-6">
@@ -192,6 +216,21 @@
 
   <script>
     chartstack.ready(function(){
+
+      var metric = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+          adapter: 'keen-io',
+          url: '../api/keen/number.json'
+        }),
+        view: new chartstack.Widgets.Metric({
+          el: document.getElementById('metric-js'),
+          chartOptions: {
+            title: 'Subtitle from the JS API',
+            height: '300'
+          }
+        })
+      });
+
       var pie = new chartstack.Chart({
         dataset: new chartstack.Dataset({
           adapter: 'keen-io',
