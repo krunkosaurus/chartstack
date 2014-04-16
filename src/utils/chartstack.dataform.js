@@ -28,19 +28,11 @@
     self.raw = data;
 
     self.cols = (function(){
-      var split_index, split_value,
-          output = {
-            fixed: []
-          };
+      var split_index, split_value, output = { fixed: [] };
 
       split_value = self.map.each.value.split(" -> ");
-
-      if (self.map.each.index) {
-        split_index = self.map.each.index.split(" -> ");
-        output.fixed.push(split_index[split_index.length-1]);
-      } else {
-        output.fixed.push('result');
-      }
+      split_index =  (self.map.each.index) ? self.map.each.index.split(" -> ") : self.map.each.value.split(" -> ");
+      output.fixed.push(split_index[split_index.length-1]);
 
       if (self.map.each.label) {
         output.cells = self.map.each.label.split(" -> ");
@@ -48,6 +40,14 @@
         output.fixed.push(split_value[split_value.length-1])
       }
       return output;
+
+      /*
+      if (self.map.each.index) {
+        split_index = self.map.each.index.split(" -> ");
+        output.fixed.push(split_index[split_index.length-1]);
+      } else {
+        output.fixed.push('result');
+      }*/
 
       /*var split_index = self.map.each.index.split(" -> ");
       var split_value = self.map.each.value.split(" -> ");
@@ -64,7 +64,7 @@
 
 
     self.rows = {
-      index: (self.map.each.index) ? self.map.each.index.split(" -> ") : [],
+      index: (self.map.each.index) ? self.map.each.index.split(" -> ") : ['result'],
       cells: (self.map.each.value) ? self.map.each.value.split(" -> ") : []
     };
 
@@ -112,17 +112,26 @@
     })();
 
     // ADD SERIES' RECORDS
-    each(root, function(el){
-      var index = parse.apply(self, [el].concat(self.rows.index));
-      var cells = parse.apply(self, [el].concat(self.rows.cells));
-
-      each(cells, function(cell, j){
-        var output = {};
-        output[self.cols.label] = index[0];
-        output.value = cell;
-        self.series[j].values.push(output);
+    if (root instanceof Array || typeof root == 'object') {
+      each(root, function(el){
+        var index = parse.apply(self, [el].concat(self.rows.index));
+        var cells = parse.apply(self, [el].concat(self.rows.cells));
+        each(cells, function(cell, j){
+          var output = {};
+          output[self.cols.label] = index[0];
+          output.value = cell;
+          self.series[j].values.push(output);
+        });
       });
-    });
+    } else {
+      (function(){
+        var output = {};
+        output[self.cols.label] = 'result';
+        output.value = root;
+        self.series[0].values.push(output);
+      })();
+    }
+
 
     // SORT COLUMNS
     if (self.order.cols.length > 0) {

@@ -6,7 +6,7 @@
   cs.addAdapter('keen-io', function(response){
     var self = this, data, output;
     var map = self.map || false;
-    // var response = { result: 2450 };
+    //var response = { result: 2450 };
 
     // Default Response Map
     if (!map) {
@@ -61,30 +61,33 @@
           }
         }
 
-        data = new cs.dataform(response, map);
-        output = data.table;
-        // Date formatting
-        if (chartstack.moment) {
-          each(output, function(row, i){
-            each(row, function(cell, j){
-              if (j == 0) {
-                if (chartstack.moment(cell).isValid() && self.dateformat) {
-                  output[i][j] = chartstack.moment(cell).format(self.dateformat);
-                }
-              }
-            });
-          });
-        }
+
 
       } else {
         // Metric: { result: 2450 } -> [['result'],[2450]]
-        data = {
+        /*data = {
           table: [['result'], [response.result]],
           series: [{ key: 'result', values: [{ value: response.result }] }]
         };
-        output = data.table;
+        output = data.table;*/
+        map.each.value = 'result';
       }
 
+    }
+
+    data = new cs.dataform(response, map);
+    output = data.table;
+    // Date formatting
+    if (chartstack.moment) {
+      each(output, function(row, i){
+        each(row, function(cell, j){
+          if (j == 0) {
+            if (chartstack.moment(cell).isValid() && self.dateformat) {
+              output[i][j] = chartstack.moment(cell).format(self.dateformat);
+            }
+          }
+        });
+      });
     }
     //console.log(data);
     return output;
