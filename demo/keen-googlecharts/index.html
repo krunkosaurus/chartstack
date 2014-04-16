@@ -31,7 +31,7 @@
           <div class="panel-body">
 
             <!-- DOM ELEMENT -->
-            <metric library="widgets" title="DOM Subtitle" height="300" adapter="keen-io" dataset="../api/keen/number.json"></metric>
+            <metric library="widgets" title="Fluid DOM Subtitle" height="300" adapter="keen-io" dataset="../api/keen/number.json"></metric>
 
           </div>
         </div>
@@ -225,8 +225,9 @@
         view: new chartstack.Widgets.Metric({
           el: document.getElementById('metric-js'),
           chartOptions: {
-            title: 'Subtitle from the JS API',
-            height: '300'
+            title: 'JS API with fixed width',
+            height: '300',
+            width: '400'
           }
         })
       });
