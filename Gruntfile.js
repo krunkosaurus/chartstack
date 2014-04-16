@@ -9,7 +9,7 @@ module.exports = function(grunt) {
       appPath: 'demo',
       scriptPath: 'src',
       distPath: 'dist',
-      bowerPath: 'demo/bower_components'
+      bowerPath: 'lib'
     },
 
     pkg: grunt.file.readJSON('package.json'),
