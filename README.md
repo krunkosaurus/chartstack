@@ -106,6 +106,17 @@ Run `grunt` or `grunt build` to minify all Chartstack JavaScript files to charts
 #### Lint JavaScript files - `grunt lint`
 Run `grunt lint` to check all chartstack.* JavaScript files for errors and warnings.  The file `.jshintrc` contains the linting rules. **Uses [jshint](http://www.jshint.com/).**
 
+#### Run command-line Mocha/Phantom tests - `grunt test`
+Run `grunt test` execute all tests via command line and outputs results. **Uses [grunt-mocha-phantomjs](https://github.com/jdcataldo/grunt-mocha-phantomjs).**
+
+#### Run browser-based Mocha/Phantom tests - `grunt test:dev`
+Run `grunt test:dev` opens up a local web browser and execute all tests and outputs results. **Uses [jekyll](https://github.com/jekyll/jekyll) and [grunt-mocha-phantomjs](https://github.com/jdcataldo/grunt-mocha-phantomjs).**
+
+## Running tests
+
+Chartstack tests can be run in two ways, via comman-line and via the browser. See the Grunt tasks above to run them.
+
+
 ### Troubleshooting dependencies
 
 Should you encounter problems with installing dependencies or running Grunt commands, uninstall all previous dependency versions (global and local). Then, rerun `npm install`.
