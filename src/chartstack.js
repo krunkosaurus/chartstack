@@ -383,10 +383,21 @@
         }
       }
 
-      // If we don't have a localized library set on this chart then set the
-      // global one.
+      // If we don't have a designated library...
       if (!options.library){
-        options.library = chartstack.library;
+        if(options.chartType in chartstack.libraries[chartstack.library] || options.view instanceof chartstack.Visualization) {
+          // Set global default if type matches
+          options.library = chartstack.library;
+        } else {
+          // Select library with matching type
+          each(chartstack.libraries, function(library, namespace){
+            each(library, function(value, key){
+              if (options.chartType == key) {
+                options.library = namespace;
+              }
+            });
+          });
+        }
       }
 
       if (options.view instanceof chartstack.Visualization) {
