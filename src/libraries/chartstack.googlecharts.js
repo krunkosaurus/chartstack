@@ -24,8 +24,8 @@
     render: function(){
       this._chart = this._chart || new google.visualization.AreaChart(this.el);
     },
-    update: function(data){
-      var data = google.visualization.arrayToDataTable(data);
+    update: function(){
+      var data = google.visualization.arrayToDataTable(this.data[0]);
       var options = extend(this.chartOptions, {
         title: this.chartOptions.title || '',
         height: parseInt(this.chartOptions.height),
@@ -48,8 +48,8 @@
     render: function(){
       this._chart = this._chart || new google.visualization.BarChart(this.el);
     },
-    update: function(data){
-      var data = google.visualization.arrayToDataTable(data);
+    update: function(){
+      var data = google.visualization.arrayToDataTable(this.data[0]);
       var options = extend(this.chartOptions, {
         title: this.chartOptions.title || '',
         height: parseInt(this.chartOptions.height),
@@ -73,8 +73,8 @@
       this._chart = this._chart || new google.visualization.ColumnChart(this.el);
       //this.chart.draw(data, options);
     },
-    update: function(data){
-      var data = google.visualization.arrayToDataTable(data);
+    update: function(){
+      var data = google.visualization.arrayToDataTable(this.data[0]);
       var options = extend(this.chartOptions, {
         title: this.chartOptions.title || '',
         height: parseInt(this.chartOptions.height),
@@ -96,8 +96,8 @@
     render: function(){
       this._chart = this._chart || new google.visualization.LineChart(this.el);
     },
-    update: function(data){
-      var data = google.visualization.arrayToDataTable(data);
+    update: function(){
+      var data = google.visualization.arrayToDataTable(this.data[0]);
       var options = extend(this.chartOptions, {
         title: this.chartOptions.title || '',
         height: parseInt(this.chartOptions.height),
@@ -118,10 +118,9 @@
     },
     render: function(){
       this._chart = this._chart || new google.visualization.PieChart(this.el);
-      //this.chart.draw(data, options);
     },
-    update: function(data){
-      var data = google.visualization.arrayToDataTable(data);
+    update: function(){
+      var data = google.visualization.arrayToDataTable(this.data[0]);
       var options = extend(this.chartOptions, {
         title: this.chartOptions.title || '',
         height: parseInt(this.chartOptions.height),
@@ -144,8 +143,8 @@
       this._chart = this._chart || new google.visualization.Table(this.el);
       //this.chart.draw(data, options);
     },
-    update: function(data){
-      var data = google.visualization.arrayToDataTable(data);
+    update: function(){
+      var data = google.visualization.arrayToDataTable(this.data[0]);
       this._chart.draw(data, this.chartOptions);
     }
   });

@@ -411,6 +411,8 @@
       }
 
       $chart.dataset.on("complete", function(data){
+        //console.log('data', this.data);
+        $chart.view.data = this.data;
         $chart.view.trigger("update", data);
       });
       $chart.dataset.fetch();

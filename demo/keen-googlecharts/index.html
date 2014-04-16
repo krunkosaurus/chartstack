@@ -31,7 +31,7 @@
           <div class="panel-body">
 
             <!-- DOM ELEMENT -->
-            <metric library="widgets" title="Fluid DOM Subtitle" height="300" adapter="keen-io" dataset="../api/keen/number.json"></metric>
+            <metric library="keen-io" title="Fluid DOM Subtitle" height="300" adapter="keen-io" dataset="../api/keen/number.json"></metric>
 
           </div>
         </div>
@@ -222,7 +222,7 @@
           adapter: 'keen-io',
           url: '../api/keen/number.json'
         }),
-        view: new chartstack.Widgets.Metric({
+        view: new chartstack.Keen.Metric({
           el: document.getElementById('metric-js'),
           chartOptions: {
             title: 'JS API with fixed width',
@@ -266,14 +266,19 @@
       var line = new chartstack.Chart({
         dataset: new chartstack.Dataset({
           adapter: 'keen-io',
-          dateformat: 'MM-DD',
+          //dateformat: 'MM-DD',
           url: '../api/keen/barchart.json'
         }),
         view: new chartstack.GoogleCharts.LineChart({
           el: document.getElementById('line-js'),
           chartOptions: {
             title: 'Line chart',
-            height: '300'
+            height: '300',
+            lineWidth: 5,
+            curveType: 'function',
+            hAxis: {
+              viewWindowMode: 'maximized'
+            }
           }
         })
       });

@@ -7,13 +7,13 @@
   // Library Namespace
   // -----------------------------
 
-  cs.Widgets = cs.Widgets || {};
+  cs.Keen = cs.Keen || {};
 
   // -----------------------------
   // Type: Number
   // -----------------------------
 
-  cs.Widgets.Metric = cs.Visualization.extend({
+  cs.Keen.Metric = cs.Visualization.extend({
     initialize: function(){
       var css = document.createElement("style");
       css.type = "text/css";
@@ -42,16 +42,12 @@
       this.render();
     },
     //render: function(){},
-    update: function(data){
-      //var widget = document.createElement('div');
-      //widget.innerHTML =
-      this.el.innerHTML = '<div class="cs-widget cs-number" style="width:' + parseInt(this.chartOptions.width) + 'px;">' +
-          '<span class="cs-widget-title">' + data[1][1] + '</span>' +
+    update: function(){
+      this.el.innerHTML = '' +
+        '<div class="cs-widget cs-number" style="width:' + parseInt(this.chartOptions.width) + 'px;">' +
+          '<span class="cs-widget-title">' + this.data[0][1][1] + '</span>' +
           '<span class="cs-widget-subtitle">' + (this.chartOptions.title || 'Result') + '</span>' +
         '</div>';
-      /*while (widget.firstChild) {
-        this.el.innerHTML = widget.firstChild;
-      }*/
     }
   });
 
@@ -60,8 +56,8 @@
   // Register Methods
   // -----------------------------
 
-  cs.Visualization.register("widgets", {
-    "metric": cs.Widgets.Metric
+  cs.Visualization.register("keen-io", {
+    "metric": cs.Keen.Metric
   });
 
 })(chartstack);
