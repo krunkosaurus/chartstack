@@ -18,7 +18,9 @@
     // map.each.value
 
     var self = this,
-    root = data[map.root];
+    // root = data[map.root];
+    _root = parse.apply(self, [data].concat(map.root.split(" -> ")));
+    root = _root[0];
 
     self.map = map,
     self.table = [],
@@ -26,7 +28,28 @@
     self.raw = data;
 
     self.cols = (function(){
-      var split_index = self.map.each.index.split(" -> ");
+      var split_index, split_value,
+          output = {
+            fixed: []
+          };
+
+      split_value = self.map.each.value.split(" -> ");
+
+      if (self.map.each.index) {
+        split_index = self.map.each.index.split(" -> ");
+        output.fixed.push(split_index[split_index.length-1]);
+      } else {
+        output.fixed.push('result');
+      }
+
+      if (self.map.each.label) {
+        output.cells = self.map.each.label.split(" -> ");
+      } else {
+        output.fixed.push(split_value[split_value.length-1])
+      }
+      return output;
+
+      /*var split_index = self.map.each.index.split(" -> ");
       var split_value = self.map.each.value.split(" -> ");
       var output = {
         fixed: [split_index[split_index.length-1]]
@@ -36,12 +59,13 @@
       } else {
         output.fixed.push(split_value[split_value.length-1]);
       }
-      return output;
+      return output;*/
     })();
 
+
     self.rows = {
-      index: self.map.each.index.split(" -> "),
-      cells: self.map.each.value.split(" -> ")
+      index: (self.map.each.index) ? self.map.each.index.split(" -> ") : [],
+      cells: (self.map.each.value) ? self.map.each.value.split(" -> ") : []
     };
 
     self.order = (function(){
@@ -53,29 +77,26 @@
       return output;
     })();
 
-    /*self.order = {
-      rows: self.map.sort.index || 'asc',
-      cols: self.map.sort.label || 'desc',
-    };*/
-
     // SORT ROWS
     if (self.order.rows.length > 0) {
-      root.sort(function(a, b){
-        var aIndex = parse.apply(self, [a].concat(self.rows.index));
-        var bIndex = parse.apply(self, [b].concat(self.rows.index));
+      if (root instanceof Array) {
+        root.sort(function(a, b){
+          var aIndex = parse.apply(self, [a].concat(self.rows.index));
+          var bIndex = parse.apply(self, [b].concat(self.rows.index));
 
-        if (self.order.rows == 'asc') {
-          if (aIndex > bIndex){return 1;}
-          if (aIndex < bIndex){return -1;}
-          return 0;
-        } else {
-          if (aIndex > bIndex){return -1;}
-          if (aIndex < bIndex){return 1;}
-          return 0;
-        }
+          if (self.order.rows == 'asc') {
+            if (aIndex > bIndex){return 1;}
+            if (aIndex < bIndex){return -1;}
+            return 0;
+          } else {
+            if (aIndex > bIndex){return -1;}
+            if (aIndex < bIndex){return 1;}
+            return 0;
+          }
 
-        return false;
-      });
+          return false;
+        });
+      }
     }
 
     // ADD SERIES

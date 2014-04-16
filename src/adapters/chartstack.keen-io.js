@@ -6,7 +6,7 @@
   cs.addAdapter('keen-io', function(response){
     var self = this, data, output;
     var map = self.map || false;
-    //console.log("map", map);
+    // var response = { result: 2450 };
 
     // Default Response Map
     if (!map) {
@@ -61,129 +61,33 @@
           }
         }
 
+        data = new cs.dataform(response, map);
+        output = data.table;
+        // Date formatting
+        if (chartstack.moment) {
+          each(output, function(row, i){
+            each(row, function(cell, j){
+              if (j == 0) {
+                if (chartstack.moment(cell).isValid() && self.dateformat) {
+                  output[i][j] = chartstack.moment(cell).format(self.dateformat);
+                }
+              }
+            });
+          });
+        }
+
       } else {
-        // 1 result (metric)
-        // { result: 2450 }
-        map.each.index = "";
-        map.each.value = "result";
+        // Metric: { result: 2450 } -> [['result'],[2450]]
+        data = {
+          table: [['result'], [response.result]],
+          series: [{ key: 'result', values: [{ value: response.result }] }]
+        };
+        output = data.table;
       }
-      //console.log(map);
 
     }
-    //console.log(response.result, map);
-    data = new cs.dataform(response, map);
-    output = data.table;
-
-    // Date formatting
-    if (chartstack.moment) {
-      each(output, function(row, i){
-        each(row, function(cell, j){
-          if (j == 0) {
-            if (chartstack.moment(cell).isValid() && self.dateformat) {
-              output[i][j] = chartstack.moment(cell).format(self.dateformat);
-            }
-          }
-        });
-      });
-    }
-
-
+    //console.log(data);
     return output;
-    /*return {
-      data: data.table,
-      extras: {}
-    };*/
   });
 
-
-  // -----------------------
-  // -----------------------
-  // -----------------------
-
-
-  cs.addAdapter('api.keen.io', {
-    piechart: function(data){
-      data = new cs.diver(data.result, {
-        cols: {
-          fixed: ['Browser', 'Share']
-        },
-        rows: {
-          index: 'platform',
-          cells: 'result'
-        }
-      });
-
-      return {
-        data: data.table,
-        extras: {}
-      };
-    },
-
-    barchart: function(data){
-      data = new cs.diver(data.result, {
-        cols: {
-          fixed: ['Date'],
-          cells: 'value -> platform'
-        },
-        rows: {
-          index: 'timeframe -> start',
-          cells: 'value -> result',
-          transform: {
-            0: function(value){
-              return new Date(value);
-            }
-          }
-        }
-      });
-
-      return {
-        data: data.table,
-        extras: {}
-      };
-    },
-
-    linechart: function(data){
-      var diverFormat;
-
-      if(data.result[0].value instanceof Array){
-        diverFormat = {
-          cols: {
-            fixed: ['Date'],
-            cells: 'value -> platform'
-          },
-          rows: {
-            index: 'timeframe -> start',
-            cells: 'value -> result',
-            transform: {
-              0: function(value){
-                return new Date(value);
-              }
-            }
-          }
-        }
-      }else{
-        diverFormat = {
-          cols: {
-            fixed: ['Date', 'Value']
-          },
-          rows: {
-            index: 'timeframe -> start',
-            cells: 'value',
-            transform: {
-              0: function(value){
-                return new Date(value);
-              }
-            }
-          }
-        }
-      }
-
-      data = new cs.diver(data.result, diverFormat);
-
-      return {
-        data: data.table,
-        extras: {}
-      };
-    }
-  });
 })(chartstack);
