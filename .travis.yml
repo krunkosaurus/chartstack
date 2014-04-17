@@ -8,6 +8,7 @@ branches:
     - master
 
 install:
+    - gem install jekyll
     - npm install -g grunt-cli
     - npm install -g bower
     - npm install
