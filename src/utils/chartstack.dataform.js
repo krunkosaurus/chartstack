@@ -105,12 +105,24 @@
 
     // ADD SERIES
     (function(){
-      self.cols.label = (self.cols.fixed) ? self.cols.fixed[0] : 'series';
-      var fixed = (self.cols.fixed) ? self.cols.fixed : [];
+      //var fixed, cells, output;
+      //self.cols.label = (self.cols.fixed.length > 0) ? self.cols.fixed[0] : 'series';
+      if (self.cols.fixed && self.cols.fixed[self.cols.fixed.length-1] == "") {
+        self.cols.label = self.cols.fixed[self.cols.fixed.length-1];
+        fixed = self.cols.fixed;
+        fixed.splice((fixed.length-1),1);
+      } else {
+        self.cols.label = fixed = self.cols.fixed[0];
+        fixed = self.cols.fixed;
+      }
+
+      //var fixed = (self.cols.fixed) ? self.cols.fixed : [];
       var cells = (self.cols.cells) ? parse.apply(self, [self.root[0]].concat(self.cols.cells)) : [];
       var output = fixed.concat(cells);
-      output.splice(0,1);
-      each(output, function(el){
+      if (output.length > 1) {
+        output.splice(0,1);
+      }
+      each(output, function(el, i){
         self.series.push({ key: el, values: [] });
       });
     })();
@@ -120,12 +132,22 @@
       each(self.root, function(el){
         var index = parse.apply(self, [el].concat(self.rows.index));
         var cells = parse.apply(self, [el].concat(self.rows.cells));
-        each(cells, function(cell, j){
-          var output = {};
-          output[self.cols.label] = index[0];
-          output.value = cell;
-          self.series[j].values.push(output);
-        });
+        //console.log(index, cells);
+        if (index.length > 1) {
+          each(index, function(key, j){
+            var output = {};
+            output[self.cols.label] = key;
+            output.value = cells[j];
+            self.series[0].values.push(output);
+          });
+        } else {
+          each(cells, function(cell, j){
+            var output = {};
+            output[self.cols.label] = index[0];
+            output.value = cell;
+            self.series[j].values.push(output);
+          });
+        }
       });
     } else {
       (function(){
@@ -159,11 +181,19 @@
 
     // BUILD TABLE
     self.table = [];
-    self.table.push([self.cols.label]);
 
-    each(self.series[0].values, function(value){
-      self.table.push([value[self.cols.label]]);
-    });
+    //console.log(self.cols.fixed, self.cols.index);
+    //if (self.cols.index) {
+      self.table.push([self.cols.label]);
+      each(self.series[0].values, function(value){
+        self.table.push([value[self.cols.label]]);
+      });
+    /*} else {
+      self.table.push([]);
+      each(self.series[0].values, function(value){
+        self.table.push([]);
+      });
+    }*/
 
     each(self.series, function(series){
       self.table[0].push(series.key);

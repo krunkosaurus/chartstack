@@ -32,7 +32,7 @@
           <div class="panel-body">
 
             <!-- DOM ELEMENT -->
-            <barchart title="Funnel" dateformat="MM/DD" height="300" adapter="keen-io" dataset="../api/keen/funnel.json"></barchart>
+            <columnchart title="Funnel" dateformat="MM/DD" height="300" adapter="keen-io" dataset="../api/keen/funnel.json"></columnchart>
 
           </div>
         </div>
@@ -248,11 +248,12 @@
           adapter: 'keen-io',
           url: '../api/keen/funnel.json'
         }),
-        view: new chartstack.GoogleCharts.ColumnChart({
+        view: new chartstack.GoogleCharts.BarChart({
           el: document.getElementById('funnel-js'),
           chartOptions: {
             title: 'Funnnnnels',
-            height: '300'
+            height: '300',
+            legend: { position: 'none' }
           }
         })
       });

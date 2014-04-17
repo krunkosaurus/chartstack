@@ -63,8 +63,7 @@
 
         if (typeof response.result[0] == "number") {
           map.root = "";
-          //map.each.index = "steps -> event_collection";
-          map.each.label = "steps -> event_collection";
+          map.each.index = "steps -> event_collection";
           map.each.value = "result -> ";
         }
 
