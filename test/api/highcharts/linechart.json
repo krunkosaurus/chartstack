@@ -1,0 +1,10 @@
+series: [{
+    data: [1,2,3,4,6,7,9],
+    name: 'Right'
+}, {
+    data: [5,6,7,8,10,11,13],
+    name: 'Center'
+}, {
+    data: [9,10,11,12,14,15,17],
+    name: 'Left'
+}]

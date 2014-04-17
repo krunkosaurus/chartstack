@@ -9,14 +9,11 @@ module.exports = function(grunt) {
       appPath: 'demo',
       scriptPath: 'src',
       distPath: 'dist',
-      bowerPath: 'lib'
+      bowerPath: 'lib',
+      testPath: 'test'
     },
 
     pkg: grunt.file.readJSON('package.json'),
-
-    mocha_phantomjs: {
-      all: ['demo/keen-googlecharts-test/*.html']
-    },
 
     uglify: {
       options: {
@@ -55,22 +52,74 @@ module.exports = function(grunt) {
     },
 
     connect: {
-      server: {
+      demo: {
         options: {
           port: 9001,
           base: './demo'
         }
-      }
+      },
+      test: {
+        options: {
+          port: 9001,
+          base: './<%= chartstack.testPath %>/_site/',
+          open: true,
+          keepalive: true
+        }
+      },
     },
 
     watch: {
       scripts: {
         files: "<%= chartstack.scriptPath %>/**/*.js",
         tasks: ['build']
+      },
+      test: {
+        files: [
+          "<%= chartstack.testPath %>/index.html",
+          "<%= chartstack.testPath %>/**/*.html"
+        ],
+        tasks: ['jekyll:dist']
+      }
+    },
+
+    copy: {
+      test: {
+        files: [{
+          src: ['<%= chartstack.bowerPath %>/**'],
+          dest: '<%= chartstack.testPath %>/public',
+          expand: true
+        },{
+          src: ['<%= chartstack.distPath %>/*'],
+          dest: '<%= chartstack.testPath %>/public/'
+        }]
+      }
+    },
+
+    mocha_phantomjs: {
+      all: ['./<%= chartstack.testPath %>/_site/test*/index.html'],
+      options:{
+        base: './test'
+      }
+    },
+
+    jekyll: {
+      options: {
+        src : './<%= chartstack.testPath %>',
+        dest: './<%= chartstack.testPath %>/_site',
+        config: './<%= chartstack.testPath %>/_config.yml'
+      },
+      dist: {
+        options: {
+        }
+      },
+      serve: {
+        options: {
+          serve: true,
+          watch: true
+        }
       }
     }
   });
-
 
   // Load tasks
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -78,11 +127,16 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-phantomjs');
+  grunt.loadNpmTasks('grunt-jekyll');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Register tasks
   grunt.registerTask('build', ['jshint', 'uglify']);
-  grunt.registerTask('serve', ['build', 'connect', 'watch']);
-  grunt.registerTask('test', ['mocha_phantomjs']);
+  grunt.registerTask('serve', ['build', 'connect:demo', 'watch:scripts']);
+  // Testing via command-line and CI.
+  grunt.registerTask('test', ['copy:test', 'jekyll:dist', 'mocha_phantomjs']);
+  // Testing via browser and visually.
+  grunt.registerTask('test:dev', ['copy:test', 'jekyll:serve']);
   grunt.registerTask('default', ['build']);
 
   // Optional aliases

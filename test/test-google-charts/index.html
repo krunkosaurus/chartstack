@@ -1,0 +1,35 @@
+---
+layout: page
+title: Test Google Charts
+test: true
+---
+
+<metric title="Fluid DOM Subtitle" height="300" adapter="keen-io" dataset="../api/keen/number.json"></metric>
+
+<piechart title="Pie Chart" height="300" adapter="keen-io" dataset="../api/keen/piechart.json"></piechart>
+
+<areachart title="Area chart" isStacked="true" dateformat="MMM D" height="300" adapter="keen-io" dataset="../api/keen/barchart.json"></areachart>
+
+<linechart title="Line chart" dateformat="MM-DD" height="300" adapter="keen-io" dataset="../api/keen/barchart.json"></linechart>
+
+<barchart title="Bar chart" dateformat="MM/DD" height="300" adapter="keen-io" dataset="../api/keen/barchart.json"></barchart>
+
+<columnchart title="Column chart" isStacked="true" dateformat="MM-DD" height="300" adapter="keen-io" dataset="../api/keen/multilinechart.json"></columnchart>
+
+<datatable title="Table" dateformat="MM-DD" adapter="keen-io" dataset="../api/keen/barchart.json"></datatable>
+
+<script src="https://www.google.com/jsapi"></script>
+<script src="../public/dist/chartstack.min.js"></script>
+<script src="../public/lib/momentjs/min/langs.min.js"></script>
+<script>
+    moment.lang('en');
+</script>
+
+<script>
+describe('Google Charts', function(){
+  it('should have Google loaded', function(){
+    expect(google).is.an('object');
+
+  });
+});
+</script>
