@@ -1,0 +1,24 @@
+# Dependencies
+markdown:         redcarpet
+pygments:         true
+
+# Permalinks
+permalink:        pretty
+
+# Setup
+title:            Chartstack
+tagline:          'Jekyll/Mocha test suite'
+url:              https://github.com/keenlabs/chartstack/
+
+author:
+  name:           'Mauvis Ledford'
+  url:            https://twitter.com/krunkosaurus
+
+paginate:         5
+permalink:        pretty
+
+# Custom vars
+version:          1.0.0
+
+github:
+  repo:           https://github.com/keenlabs/chartstack/

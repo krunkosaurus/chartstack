@@ -1,0 +1,13 @@
+
+{
+  "result": [
+    {
+      "platform": "Mobile",
+      "result": 946
+    },
+    {
+      "platform": "Web",
+      "result": 229
+    }
+  ]
+}

@@ -25,13 +25,13 @@
     "Google Charts"
   ],
   "license": "MIT",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "nvd3": "~1.1.15-beta",
     "highcharts": "~3.0.7",
     "momentjs": "~2.6.0",
     "chai": "~1.9.1",
-    "mocha": "~1.18.2"
+    "mocha": "~1.18.2",
+    "resemblejs": "~1.1.0"
   }
 }
