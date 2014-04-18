@@ -254,10 +254,23 @@
 
   chartstack.libraries = {};
 
-  chartstack.Visualization.register = function(name, methods){
+  chartstack.attributes = {
+    data: ['adapter', 'dataset', 'dataformat', 'dateformat'],
+    init: ['library'],
+    visual: ['title', 'labels', 'height', 'width', 'colors']
+  };
+
+  chartstack.Visualization.register = function(name, methods, options){
     chartstack.libraries[name] = chartstack.libraries[name] || {};
     for (var method in methods) {
       chartstack.libraries[name][method] = methods[method];
+    }
+    if (options !== void 0 && options.attributes !== void 0) {
+      each(options.attributes, function(attribute, index){
+        if (chartstack.attributes.visual.indexOf(attribute) == -1) {
+          chartstack.attributes.visual.push(options.attributes[index]);
+        }
+      });
     }
   };
 
@@ -304,7 +317,7 @@
     // Collects properties off DOM element and inspects data source.
     function setup(){
       var setupDom, setupJS;
-      var initAttributes, dataAttributes, visualAttributes;
+      //var initAttributes, dataAttributes, visualAttributes;
 
       setupDom = function(){
         //$chart.el = args;
@@ -340,15 +353,11 @@
       // Support arrays here so we can store the data under a different name.
       // TODO: These strings should be objects with support for defaults and other options.
 
-      dataAttributes = ['adapter', 'dataset', 'dataformat', 'dateformat'];
-      initAttributes = ['library'];
-      visualAttributes = ['title', 'labels', 'height', 'width', 'isStacked'];
-
       // Prev:
       // titleTextColor, legendColor, colors, pieSliceBorderColor,
       // pieSliceTextColor, backgroundColor, customOptions, formatRowLabel
 
-      each(initAttributes.concat(dataAttributes, visualAttributes), function(attr){
+      each(chartstack.attributes.init.concat(chartstack.attributes.data, chartstack.attributes.visual), function(attr){
         var test, newKey;
 
         if (is(attr, 'object')){
@@ -373,10 +382,11 @@
         }
       });
 
-      function mapAttribute(key, value){
-        if (dataAttributes.indexOf(key) !== -1) {
+      function mapAttribute(key, val){
+        var value = (typeof val === "string" && val.match(/^({|\[)/)) ? JSON.parse(val.replace(/'/g, "\"")) : val;
+        if (chartstack.attributes.data.indexOf(key) !== -1) {
           setupData[key] = value;
-        } else if (initAttributes.indexOf(key) !== -1) {
+        } else if (chartstack.attributes.init.indexOf(key) !== -1) {
           options[key] = value;
         } else {
           setupVis.chartOptions[key] = value;

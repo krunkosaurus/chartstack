@@ -161,6 +161,21 @@
     "linechart": cs.GoogleCharts.LineChart,
     "piechart": cs.GoogleCharts.PieChart,
     "datatable": cs.GoogleCharts.DataTable
+  }, {
+    "attributes": [
+      "animation",
+      "backgroundColor",
+      "chartArea",
+      "fontName",
+      "fontSize",
+      "isStacked",
+      "hAxis",
+      "legend",
+      "orientation",
+      "titleTextStyle",
+      "tooltip",
+      "vAxis"
+    ]
   });
 
 })(chartstack);
