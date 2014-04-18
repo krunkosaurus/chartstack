@@ -51,7 +51,7 @@ describe('Chartstack structure', function(){
   });
 });
 
-describe('Chartstack.noConflict', function(){
+describe('Testing .noConflict', function(){
   var banana;
 
   it('should have .noConflict', function(){
@@ -76,12 +76,15 @@ describe('Testing core events', function(){
       done();
     });
 
+    expect(chartstack.listeners.banana).to.exist;
+    console.log('chartstack.listeners.banana', chartstack.listeners.banana);
+    expect(chartstack.listeners.banana.length).to.equal(1);
     chartstack.trigger('banana', 'a', 'monkey');
   });
 });
 
-describe('Testing method .transformers.json', function(){
-  it('should render json', function(){
+describe('Testing method .transformers', function(){
+  it('should support .json', function(){
     var bob = {
       'a': 1,
       'b': 'c'
@@ -95,6 +98,16 @@ describe('Testing method .transformers.json', function(){
     expect(a1.b).to.equal('c');
     expect(a2.a).to.equal(1);
   });
+});
 
+describe('Testing .ready', function(){
+  var r = false;
+  it('should work', function(done){
+    chartstack.ready(function(){
+      r = true;
+      expect(r).to.be.true;
+      done();
+    });
+  });
 });
 </script>
