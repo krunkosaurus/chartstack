@@ -77,7 +77,6 @@ describe('Testing core events', function(){
     });
 
     expect(chartstack.listeners.banana).to.exist;
-    console.log('chartstack.listeners.banana', chartstack.listeners.banana);
     expect(chartstack.listeners.banana.length).to.equal(1);
     chartstack.trigger('banana', 'a', 'monkey');
   });
@@ -106,6 +105,21 @@ describe('Testing .ready', function(){
     chartstack.ready(function(){
       r = true;
       expect(r).to.be.true;
+      done();
+    });
+  });
+});
+
+describe('Test DOM parsing', function(){
+  var p = document.getElementsByTagName('piechart')[0];
+  it('should have piechart element on page', function(){
+    expect(p).to.exist;
+  });
+
+  it('should have parsed it to an SVG chart', function(done){
+    chartstack.ready(function(){
+      var svg = p.getElementsByTagName('svg')[0];
+      expect(svg).to.exist;
       done();
     });
   });
