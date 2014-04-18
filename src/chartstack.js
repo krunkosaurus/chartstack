@@ -192,7 +192,12 @@
       each(self.resources, function(resource, index){
         var adapter = resource.adapter;
         var response = self.responses[index];
-        self.data[index] = adapters[adapter].call(resource, response);
+        if (adapter) {
+          self.data[index] = adapters[adapter].call(resource, response);
+        } else {
+          self.data[index] = response.data;
+        }
+
       });
       self.trigger("complete", self.data[0]);
       return self;

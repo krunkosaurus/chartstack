@@ -85,7 +85,31 @@
       </div>
     </div>
 
-    <h5 class="text-muted">Pie chart</h5>
+    <h5 class="text-muted">UDF Demos</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <piechart title="Pie Chart" height="300" dataset="../api/universal/piechart.json"></piechart>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER -->
+            <div id="udf-pie-js"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h5 class="text-muted">Keen Pie chart</h5>
     <div class="row">
       <div class="col-sm-6">
         <div class="panel panel-default">
@@ -293,6 +317,20 @@
           el: document.getElementById('pie-js'),
           chartOptions: {
             title: 'Pie chart',
+            height: '300',
+            pieHole: 0.35
+          }
+        })
+      });
+
+      var udf_pie = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+          url: '../api/universal/piechart.json'
+        }),
+        view: new chartstack.GoogleCharts.PieChart({
+          el: document.getElementById('udf-pie-js'),
+          chartOptions: {
+            title: 'UDF Pie chart',
             height: '300',
             pieHole: 0.35
           }
