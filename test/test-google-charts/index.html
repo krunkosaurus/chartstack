@@ -4,19 +4,7 @@ title: Test Google Charts
 test: true
 ---
 
-<metric title="Fluid DOM Subtitle" height="300" adapter="keen-io" dataset="../api/keen/number.json"></metric>
-
-<piechart title="Pie Chart" height="300" adapter="keen-io" dataset="../api/keen/piechart.json"></piechart>
-
-<areachart title="Area chart" isStacked="true" dateformat="MMM D" height="300" adapter="keen-io" dataset="../api/keen/barchart.json"></areachart>
-
-<linechart title="Line chart" dateformat="MM-DD" height="300" adapter="keen-io" dataset="../api/keen/barchart.json"></linechart>
-
-<barchart title="Bar chart" dateformat="MM/DD" height="300" adapter="keen-io" dataset="../api/keen/barchart.json"></barchart>
-
-<columnchart title="Column chart" isStacked="true" dateformat="MM-DD" height="300" adapter="keen-io" dataset="../api/keen/multilinechart.json"></columnchart>
-
-<datatable title="Table" dateformat="MM-DD" adapter="keen-io" dataset="../api/keen/barchart.json"></datatable>
+<div id="pie"></div>
 
 <script src="https://www.google.com/jsapi"></script>
 <script src="../public/dist/chartstack.min.js"></script>
@@ -29,7 +17,34 @@ test: true
 describe('Google Charts', function(){
   it('should have Google loaded', function(){
     expect(google).is.an('object');
+  });
 
+  it('should render JS chart', function(done){
+    chartstack.ready(function(){
+      var chartRender = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+          adapter: 'keen-io',
+          url: '../api/keen/piechart.json'
+        }),
+        view: new chartstack.GoogleCharts.PieChart({
+          title: 'Pie chart',
+          el: document.getElementById('pie'),
+          height: '300',
+          options: {
+            pieHole: 0.35
+          }
+        })
+      });
+
+      expect(chartstack.charts.length).to.equal(1);
+      chartstack.each([
+        'dataset',
+        'view'
+      ], function(item){
+        expect(chartRender[item]).to.exist;
+      });
+    });
+    done();
   });
 });
 </script>
