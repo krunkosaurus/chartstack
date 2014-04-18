@@ -42,8 +42,7 @@
               hAxis="{'baselineColor':'red'}"
               dateformat="MM/DD"
               height="300"
-              dataset="../api/keen/funnel.json"
-              adapter="keen-io">
+              dataset="../api/keen/funnel.json">
             </barchart>
 
           </div>
@@ -92,8 +91,9 @@
         <div class="panel panel-default">
           <div class="panel-body">
 
-            <!-- DOM ELEMENT -->
+            <!-- DOM ELEMENT
             <piechart title="Pie Chart" height="300" dataset="../api/universal/piechart.json"></piechart>
+            -->
 
           </div>
         </div>
@@ -102,9 +102,9 @@
         <div class="panel panel-default">
           <div class="panel-body">
 
-            <!-- CONTAINER -->
+            <!-- CONTAINER
             <div id="udf-pie-js"></div>
-
+            -->
           </div>
         </div>
       </div>
@@ -279,9 +279,11 @@
   <script>
     chartstack.ready(function(){
 
+      //console.log(chartstack.adapters['keen-io']);
+      chartstack.addAdapter('default', chartstack.adapters['keen-io']);
+
       var funnel = new chartstack.Chart({
         dataset: new chartstack.Dataset({
-          adapter: 'keen-io',
           url: '../api/keen/funnel.json'
         }),
         view: new chartstack.GoogleCharts.BarChart({
@@ -324,7 +326,7 @@
         })
       });
 
-      var udf_pie = new chartstack.Chart({
+      /*var udf_pie = new chartstack.Chart({
         dataset: new chartstack.Dataset({
           url: '../api/universal/piechart.json'
         }),
@@ -336,7 +338,7 @@
             pieHole: 0.35
           }
         })
-      });
+      });*/
 
       var area = new chartstack.Chart({
         dataset: new chartstack.Dataset({

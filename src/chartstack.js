@@ -190,10 +190,10 @@
     transform: function() {
       var self = this;
       each(self.resources, function(resource, index){
-        var adapter = resource.adapter;
+        var adapter = resource.adapter || 'default' || false;
         var response = self.responses[index];
         if (adapter) {
-          self.data[index] = adapters[adapter].call(resource, response);
+          self.data[index] = chartstack.adapters[adapter].call(resource, response);
         } else {
           self.data[index] = response.data;
         }
@@ -607,6 +607,7 @@
   // Adapters that normalize 3rd party api to a standard format.
   function addAdapter(domain, configObj){
     if (chartstack.is(configObj, 'function')){
+      //adapters.push({ name: domain, adapte: configObj }); // [domain] = configObj;
       adapters[domain] = configObj;
     }else{
       each(configObj, function(func, type){
