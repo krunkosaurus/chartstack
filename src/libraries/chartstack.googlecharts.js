@@ -165,6 +165,7 @@
     "attributes": [
       "animation",
       "backgroundColor",
+      "bar",
       "chartArea",
       "fontName",
       "fontSize",
