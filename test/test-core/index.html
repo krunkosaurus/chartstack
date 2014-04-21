@@ -100,6 +100,7 @@ describe('Testing method .transformers', function(){
 });
 
 describe('Testing .ready', function(){
+  var arrayOrder = [];
   var r = false;
   it('should work', function(done){
     chartstack.ready(function(){
@@ -108,6 +109,39 @@ describe('Testing .ready', function(){
       done();
     });
   });
+
+  it('should execute in order queued', function(done){
+    var count = 0;
+    var check = function(){
+      if (count == 3){
+        if (arrayOrder[0] == 'a' && arrayOrder[1] == 'b' && arrayOrder[2] == 'c'){
+          done();
+        }else{
+          throw new Error('.ready Out of order');
+        }
+      }
+    }
+
+    chartstack.ready(function(){
+      count++;
+      arrayOrder.push('a');
+      check();
+    });
+
+    chartstack.ready(function(){
+      count++;
+      arrayOrder.push('b');
+      check();
+    });
+
+    chartstack.ready(function(){
+      count++;
+      arrayOrder.push('c');
+      check();
+    });
+
+  });
+
 });
 
 describe('Test DOM parsing', function(){
@@ -118,9 +152,12 @@ describe('Test DOM parsing', function(){
 
   it('should have parsed it to an SVG chart', function(done){
     chartstack.ready(function(){
-      var svg = p.getElementsByTagName('svg')[0];
-      expect(svg).to.exist;
-      done();
+      console.log('p', p);
+      setTimeout(function(){
+        var svg = p.getElementsByTagName('svg')[0];
+        expect(svg).to.exist;
+        done();
+      },0);
     });
   });
 });
