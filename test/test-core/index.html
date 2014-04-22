@@ -152,7 +152,6 @@ describe('Test DOM parsing', function(){
 
   it('should have parsed it to an SVG chart', function(done){
     chartstack.ready(function(){
-      console.log('p', p);
       setTimeout(function(){
         var svg = p.getElementsByTagName('svg')[0];
         expect(svg).to.exist;

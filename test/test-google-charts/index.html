@@ -37,6 +37,7 @@ describe('Google Charts', function(){
       });
 
       expect(chartstack.charts.length).to.equal(1);
+
       chartstack.each([
         'dataset',
         'view'
@@ -46,5 +47,26 @@ describe('Google Charts', function(){
     });
     done();
   });
+
+  it('should match our visual spec', function(done){
+      chartstack.ready(function(){
+        setTimeout(function(){
+          var svg = document.getElementById('pie').getElementsByTagName('svg')[0];
+          var img = document.getElementById('test');
+
+          var c = new Simg(svg);
+          c.toBinaryBlob(function(blob){
+            url2blob('pie.png', function(blob2){
+              var diff = resemble(blob).compareTo(blob2).ignoreColors().onComplete(function(data){
+                expect(data.isSameDimensions).to.be.true;
+                expect(data.misMatchPercentage).to.equal("0.00");
+                done();
+              });
+            });
+          });
+        },50);
+      });
+  });
 });
+
 </script>
