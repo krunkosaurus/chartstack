@@ -581,6 +581,9 @@
 
     // Bring moment.js into the mix
     chartstack.moment = root.moment || false;
+    if (chartstack.moment) {
+      chartstack.moment.suppressDeprecationWarnings = true;
+    }
 
     each(readyCallbacks, function(cb){
       cb();

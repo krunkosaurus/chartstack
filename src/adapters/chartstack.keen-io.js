@@ -81,12 +81,13 @@
 
     data = new cs.dataform(response, map);
     output = data.table;
+    
     // Date formatting
     if (chartstack.moment) {
       each(output, function(row, i){
         each(row, function(cell, j){
           if (j == 0) {
-            if (chartstack.moment(cell).isValid()) {
+            if (moment(cell).isValid()) {
               output[i][j] = (self.dateformat) ? chartstack.moment(cell).format(self.dateformat) : new Date(cell);
             }
           }
