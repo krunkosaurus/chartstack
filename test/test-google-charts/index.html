@@ -8,10 +8,6 @@ test: true
 
 <script src="https://www.google.com/jsapi"></script>
 <script src="../public/dist/chartstack.min.js"></script>
-<script src="../public/lib/momentjs/min/langs.min.js"></script>
-<script>
-    moment.lang('en');
-</script>
 
 <script>
 describe('Google Charts', function(){
@@ -27,11 +23,11 @@ describe('Google Charts', function(){
           url: '../api/keen/piechart.json'
         }),
         view: new chartstack.GoogleCharts.PieChart({
-          title: 'Pie chart',
+          //title: 'Pie chart',
           el: document.getElementById('pie'),
           height: '300',
-          options: {
-            pieHole: 0.35
+          chartOptions: {
+            //pieHole: 0.35
           }
         })
       });
@@ -52,7 +48,7 @@ describe('Google Charts', function(){
       chartstack.ready(function(){
         setTimeout(function(){
           var svg = document.getElementById('pie').getElementsByTagName('svg')[0];
-          var img = document.getElementById('test');
+          //var img = document.getElementById('test');
 
           var c = new Simg(svg);
           c.toBinaryBlob(function(blob){

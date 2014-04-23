@@ -27,9 +27,9 @@
     update: function(){
       var data = google.visualization.arrayToDataTable(this.data[0]);
       var options = extend(this.chartOptions, {
-        title: this.chartOptions.title || '',
-        height: parseInt(this.chartOptions.height),
-        width: parseInt(this.chartOptions.width)
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width)
       });
       this._chart.draw(data, options);
     }
@@ -51,9 +51,9 @@
     update: function(){
       var data = google.visualization.arrayToDataTable(this.data[0]);
       var options = extend(this.chartOptions, {
-        title: this.chartOptions.title || '',
-        height: parseInt(this.chartOptions.height),
-        width: parseInt(this.chartOptions.width)
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width)
       });
       this._chart.draw(data, options);
     }
@@ -76,9 +76,9 @@
     update: function(){
       var data = google.visualization.arrayToDataTable(this.data[0]);
       var options = extend(this.chartOptions, {
-        title: this.chartOptions.title || '',
-        height: parseInt(this.chartOptions.height),
-        width: parseInt(this.chartOptions.width)
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width)
       });
       this._chart.draw(data, options);
     }
@@ -99,9 +99,9 @@
     update: function(){
       var data = google.visualization.arrayToDataTable(this.data[0]);
       var options = extend(this.chartOptions, {
-        title: this.chartOptions.title || '',
-        height: parseInt(this.chartOptions.height),
-        width: parseInt(this.chartOptions.width)
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width)
       });
       this._chart.draw(data, options);
     }
@@ -122,9 +122,9 @@
     update: function(){
       var data = google.visualization.arrayToDataTable(this.data[0]);
       var options = extend(this.chartOptions, {
-        title: this.chartOptions.title || '',
-        height: parseInt(this.chartOptions.height),
-        width: parseInt(this.chartOptions.width)
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width)
       });
       this._chart.draw(data, options);
     }
@@ -145,7 +145,12 @@
     },
     update: function(){
       var data = google.visualization.arrayToDataTable(this.data[0]);
-      this._chart.draw(data, this.chartOptions);
+      var options = extend(this.chartOptions, {
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width)
+      });
+      this._chart.draw(data, options);
     }
   });
 

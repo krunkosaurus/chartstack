@@ -24,7 +24,6 @@
     </div>
     <hr>
 
-
     <h5 class="text-muted">Funnel demo</h5>
     <div class="row">
       <div class="col-sm-6">
@@ -242,7 +241,7 @@
           <div class="panel-body">
 
             <!-- DOM ELEMENT -->
-            <datatable title="Table" dateformat="MM-DD" adapter="keen-io" dataset="../api/keen/barchart.json"></datatable>
+            <datatable dateformat="MM-DD" adapter="keen-io" dataset="../api/keen/barchart.json"></datatable>
 
           </div>
         </div>
@@ -268,7 +267,7 @@
   <script>
     moment.lang('en');
   </script>
-  
+
   <script>
     chartstack.ready(function(){
 
@@ -281,9 +280,9 @@
         }),
         view: new chartstack.GoogleCharts.BarChart({
           el: document.getElementById('funnel-js'),
+          title: 'Funnnnnels',
+          height: '300',
           chartOptions: {
-            title: 'Funnnnnels',
-            height: '300',
             legend: { position: 'none' }
           }
         })
@@ -296,11 +295,9 @@
         }),
         view: new chartstack.Keen.Metric({
           el: document.getElementById('metric-js'),
-          chartOptions: {
-            title: 'JS API with fixed width',
-            height: '300',
-            width: '400'
-          }
+          title: 'JS API with fixed width',
+          height: '300',
+          width: '400'
         })
       });
 
@@ -311,9 +308,9 @@
         }),
         view: new chartstack.GoogleCharts.PieChart({
           el: document.getElementById('pie-js'),
+          title: 'Pie chart',
+          height: '300',
           chartOptions: {
-            title: 'Pie chart',
-            height: '300',
             pieHole: 0.35
           }
         })
@@ -341,9 +338,9 @@
         }),
         view: new chartstack.GoogleCharts.AreaChart({
           el: document.getElementById('area-js'),
+          title: 'Area chart',
+          height: '300',
           chartOptions: {
-            title: 'Area chart',
-            height: '300',
             isStacked: true
           }
         })
@@ -357,9 +354,9 @@
         }),
         view: new chartstack.GoogleCharts.LineChart({
           el: document.getElementById('line-js'),
+          title: 'Line chart',
+          height: '300',
           chartOptions: {
-            title: 'Line chart',
-            height: '300',
             lineWidth: 5,
             curveType: 'function',
             hAxis: {
@@ -377,10 +374,8 @@
         }),
         view: new chartstack.GoogleCharts.BarChart({
           el: document.getElementById('bar-js'),
-          chartOptions: {
-            title: 'Bar chart',
-            height: '300'
-          }
+          title: 'Bar chart',
+          height: '300'
         })
       });
 
@@ -392,9 +387,9 @@
         }),
         view: new chartstack.GoogleCharts.ColumnChart({
           el: document.getElementById('column-js'),
+          title: 'Column chart',
+          height: '300',
           chartOptions: {
-            title: 'Column chart',
-            height: '300',
             isStacked: true
           }
         })
@@ -409,7 +404,6 @@
         view: new chartstack.GoogleCharts.DataTable({
           el: document.getElementById('table-js'),
           chartOptions: {
-            title: 'DataTable',
             sortColumn: 1
           }
         })

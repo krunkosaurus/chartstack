@@ -227,7 +227,7 @@
     extend(self, config);
 
     self.chartOptions = self.chartOptions || {};
-    self.chartOptions.width = self.chartOptions.width || self.el.offsetWidth;
+    self.width = self.width || self.el.offsetWidth;
 
     // Set default event handlers
     self.on("error", function(){
@@ -262,7 +262,8 @@
   chartstack.attributes = {
     data: ['adapter', 'dataset', 'dataformat', 'dateformat'],
     init: ['library'],
-    visual: ['title', 'labels', 'height', 'width', 'colors']
+    masterVis: ['title', 'labels', 'height', 'width', 'colors'],
+    customVis: []
   };
 
   chartstack.Visualization.register = function(name, methods, options){
@@ -272,8 +273,8 @@
     }
     if (options !== void 0 && options.attributes !== void 0) {
       each(options.attributes, function(attribute, index){
-        if (chartstack.attributes.visual.indexOf(attribute) == -1) {
-          chartstack.attributes.visual.push(options.attributes[index]);
+        if (chartstack.attributes.customVis.indexOf(attribute) == -1) {
+          chartstack.attributes.customVis.push(options.attributes[index]);
         }
       });
     }
@@ -321,7 +322,7 @@
 
     // Collects properties off DOM element and inspects data source.
     function setup(){
-      var setupDom, setupJS;
+      var setupDom, setupJS, attrs = [];
       //var initAttributes, dataAttributes, visualAttributes;
 
       setupDom = function(){
@@ -362,7 +363,12 @@
       // titleTextColor, legendColor, colors, pieSliceBorderColor,
       // pieSliceTextColor, backgroundColor, customOptions, formatRowLabel
 
-      each(chartstack.attributes.init.concat(chartstack.attributes.data, chartstack.attributes.visual), function(attr){
+      attrs = attrs.concat(chartstack.attributes.data);
+      attrs = attrs.concat(chartstack.attributes.init);
+      attrs = attrs.concat(chartstack.attributes.masterVis);
+      attrs = attrs.concat(chartstack.attributes.customVis);
+
+      each(attrs, function(attr){
         var test, newKey;
 
         if (is(attr, 'object')){
@@ -393,6 +399,8 @@
           setupData[key] = value;
         } else if (chartstack.attributes.init.indexOf(key) !== -1) {
           options[key] = value;
+        } else if (chartstack.attributes.masterVis.indexOf(key) !== -1) {
+          setupVis[key] = value;
         } else {
           setupVis.chartOptions[key] = value;
         }
@@ -1082,7 +1090,7 @@
 
       if (response.result instanceof Array) {
 
-        if (response.result[0]['value'] !== void 0){
+        if (response.result.length > 0 && response.result[0]['value'] !== void 0){
 
           if (response.result[0]['value'] instanceof Array) {
             // Interval + Group_by
@@ -1105,12 +1113,12 @@
           }
         }
 
-        if (response.result[0]['timeframe']) {
+        if (response.result.length > 0 && response.result[0]['timeframe']) {
           // Get index (start time)
           map.each.index = "timeframe -> start";
         }
 
-        if (response.result[0]['result']) {
+        if (response.result.length > 0 && response.result[0]['result']) {
           // Get value (group_by)
           map.each.value = "result";
           for (var key in response.result[0]){
@@ -1121,11 +1129,17 @@
           }
         }
 
-        if (typeof response.result[0] == "number") {
+        if (response.result.length > 0 && typeof response.result[0] == "number") {
           map.root = "";
           map.each.index = "steps -> event_collection";
           map.each.value = "result -> ";
         }
+
+        if (response.result.length == 0) {
+          map = false;
+          //data
+        }
+
 
       } else {
         // Metric: { result: 2450 } -> [['result'],[2450]]
@@ -1139,9 +1153,14 @@
 
     }
 
-    data = new cs.dataform(response, map);
-    output = data.table;
-    
+    if (map) {
+      data = new cs.dataform(response, map);
+      output = data.table;
+    }
+
+    // data = new cs.dataform(response, map);
+    // output = data.table;
+
     // Date formatting
     if (chartstack.moment) {
       each(output, function(row, i){
@@ -1253,9 +1272,9 @@
     update: function(){
       var data = google.visualization.arrayToDataTable(this.data[0]);
       var options = extend(this.chartOptions, {
-        title: this.chartOptions.title || '',
-        height: parseInt(this.chartOptions.height),
-        width: parseInt(this.chartOptions.width)
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width)
       });
       this._chart.draw(data, options);
     }
@@ -1277,9 +1296,9 @@
     update: function(){
       var data = google.visualization.arrayToDataTable(this.data[0]);
       var options = extend(this.chartOptions, {
-        title: this.chartOptions.title || '',
-        height: parseInt(this.chartOptions.height),
-        width: parseInt(this.chartOptions.width)
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width)
       });
       this._chart.draw(data, options);
     }
@@ -1302,9 +1321,9 @@
     update: function(){
       var data = google.visualization.arrayToDataTable(this.data[0]);
       var options = extend(this.chartOptions, {
-        title: this.chartOptions.title || '',
-        height: parseInt(this.chartOptions.height),
-        width: parseInt(this.chartOptions.width)
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width)
       });
       this._chart.draw(data, options);
     }
@@ -1325,9 +1344,9 @@
     update: function(){
       var data = google.visualization.arrayToDataTable(this.data[0]);
       var options = extend(this.chartOptions, {
-        title: this.chartOptions.title || '',
-        height: parseInt(this.chartOptions.height),
-        width: parseInt(this.chartOptions.width)
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width)
       });
       this._chart.draw(data, options);
     }
@@ -1348,9 +1367,9 @@
     update: function(){
       var data = google.visualization.arrayToDataTable(this.data[0]);
       var options = extend(this.chartOptions, {
-        title: this.chartOptions.title || '',
-        height: parseInt(this.chartOptions.height),
-        width: parseInt(this.chartOptions.width)
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width)
       });
       this._chart.draw(data, options);
     }
@@ -1371,7 +1390,12 @@
     },
     update: function(){
       var data = google.visualization.arrayToDataTable(this.data[0]);
-      this._chart.draw(data, this.chartOptions);
+      var options = extend(this.chartOptions, {
+        title: this.title || '',
+        height: parseInt(this.height),
+        width: parseInt(this.width)
+      });
+      this._chart.draw(data, options);
     }
   });
 

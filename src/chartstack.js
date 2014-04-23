@@ -227,7 +227,7 @@
     extend(self, config);
 
     self.chartOptions = self.chartOptions || {};
-    self.chartOptions.width = self.chartOptions.width || self.el.offsetWidth;
+    self.width = self.width || self.el.offsetWidth;
 
     // Set default event handlers
     self.on("error", function(){
@@ -262,7 +262,8 @@
   chartstack.attributes = {
     data: ['adapter', 'dataset', 'dataformat', 'dateformat'],
     init: ['library'],
-    visual: ['title', 'labels', 'height', 'width', 'colors']
+    masterVis: ['title', 'labels', 'height', 'width', 'colors'],
+    customVis: []
   };
 
   chartstack.Visualization.register = function(name, methods, options){
@@ -272,8 +273,8 @@
     }
     if (options !== void 0 && options.attributes !== void 0) {
       each(options.attributes, function(attribute, index){
-        if (chartstack.attributes.visual.indexOf(attribute) == -1) {
-          chartstack.attributes.visual.push(options.attributes[index]);
+        if (chartstack.attributes.customVis.indexOf(attribute) == -1) {
+          chartstack.attributes.customVis.push(options.attributes[index]);
         }
       });
     }
@@ -321,7 +322,7 @@
 
     // Collects properties off DOM element and inspects data source.
     function setup(){
-      var setupDom, setupJS;
+      var setupDom, setupJS, attrs = [];
       //var initAttributes, dataAttributes, visualAttributes;
 
       setupDom = function(){
@@ -362,7 +363,12 @@
       // titleTextColor, legendColor, colors, pieSliceBorderColor,
       // pieSliceTextColor, backgroundColor, customOptions, formatRowLabel
 
-      each(chartstack.attributes.init.concat(chartstack.attributes.data, chartstack.attributes.visual), function(attr){
+      attrs = attrs.concat(chartstack.attributes.data);
+      attrs = attrs.concat(chartstack.attributes.init);
+      attrs = attrs.concat(chartstack.attributes.masterVis);
+      attrs = attrs.concat(chartstack.attributes.customVis);
+
+      each(attrs, function(attr){
         var test, newKey;
 
         if (is(attr, 'object')){
@@ -393,6 +399,8 @@
           setupData[key] = value;
         } else if (chartstack.attributes.init.indexOf(key) !== -1) {
           options[key] = value;
+        } else if (chartstack.attributes.masterVis.indexOf(key) !== -1) {
+          setupVis[key] = value;
         } else {
           setupVis.chartOptions[key] = value;
         }
