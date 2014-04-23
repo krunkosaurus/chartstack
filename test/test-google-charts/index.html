@@ -1,0 +1,72 @@
+---
+layout: page
+title: Test Google Charts
+test: true
+---
+
+<div id="pie"></div>
+
+<script src="https://www.google.com/jsapi"></script>
+<script src="../public/dist/chartstack.min.js"></script>
+<script src="../public/lib/momentjs/min/langs.min.js"></script>
+<script>
+    moment.lang('en');
+</script>
+
+<script>
+describe('Google Charts', function(){
+  it('should have Google loaded', function(){
+    expect(google).is.an('object');
+  });
+
+  it('should render JS chart', function(done){
+    chartstack.ready(function(){
+      var chartRender = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+          adapter: 'keen-io',
+          url: '../api/keen/piechart.json'
+        }),
+        view: new chartstack.GoogleCharts.PieChart({
+          title: 'Pie chart',
+          el: document.getElementById('pie'),
+          height: '300',
+          options: {
+            pieHole: 0.35
+          }
+        })
+      });
+
+      expect(chartstack.charts.length).to.equal(1);
+
+      chartstack.each([
+        'dataset',
+        'view'
+      ], function(item){
+        expect(chartRender[item]).to.exist;
+      });
+    });
+    done();
+  });
+
+  it('should match our visual spec', function(done){
+      chartstack.ready(function(){
+        setTimeout(function(){
+          var svg = document.getElementById('pie').getElementsByTagName('svg')[0];
+          var img = document.getElementById('test');
+
+          var c = new Simg(svg);
+          c.toBinaryBlob(function(blob){
+            url2blob('pie.png', function(blob2){
+              var diff = resemble(blob).compareTo(blob2).ignoreColors().onComplete(function(data){
+                expect(data.isSameDimensions).to.be.true;
+                expect(data.misMatchPercentage).to.equal("0.00");
+                done();
+              });
+            });
+          });
+        },50);
+      });
+  });
+});
+
+</script>

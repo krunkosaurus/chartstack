@@ -1,5 +1,5 @@
 mocha.ui('bdd');
-mocha.reporter('html');
+mocha.reporter('spec');
 expect = chai.expect;
 
 describe('Google Charts', function(){

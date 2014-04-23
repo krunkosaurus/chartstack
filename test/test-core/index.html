@@ -1,0 +1,163 @@
+---
+layout: page
+title: Test core
+test: true
+---
+
+<piechart title="Pie Chart" height="300" adapter="keen-io" dataset="../api/keen/piechart.json"></piechart>
+<script src="https://www.google.com/jsapi"></script>
+<script src="../public/dist/chartstack.min.js"></script>
+<script>
+describe('Chartstack defaults', function(){
+  it('should have default object', function(){
+    expect(chartstack.defaults).to.be.an('object');
+  });
+
+  it('should have some default properties', function(){
+    expect(chartstack.defaults.labels).to.be.true;
+  });
+})
+
+describe('Chartstack structure', function(){
+  it('should support document.createElement', function(){
+    expect(document.createElement).to.be.a('function');
+  });
+
+    it('should have chartstack', function(){
+      expect(chartstack).to.be.an('object');
+    });
+
+    it('should have .each,.is,.extend,.ready', function(){
+      expect(chartstack.is).to.be.an('function');
+      expect(chartstack.each).to.be.an('function');
+      expect(chartstack.extend).to.be.an('function');
+      expect(chartstack.ready).to.be.an('function');
+    });
+
+  it('should have these properties exposed', function(done){
+    chartstack.each([
+      'adapters', 'transformers',
+      'charts',
+      'Events',
+      'DataResource', 'Dataset', 'Visualization',
+      'libraries',
+      'Chart',
+      'is', 'each', 'extend',
+      'parseDOM', 'parseParams',
+      'buildQueryString', 'getAjax', 'getJSONP'], function(str){
+        expect(chartstack[str]).to.exist;
+      });
+     done();
+  });
+});
+
+describe('Testing .noConflict', function(){
+  var banana;
+
+  it('should have .noConflict', function(){
+    expect(chartstack.noConflict).to.be.a('function');
+  });
+
+  it('should allow us to move the chartstack namespace', function(){
+    banana = chartstack.noConflict();
+    expect(chartstack).to.be.undefined;
+    expect(banana).to.be.an('object');
+
+    // Move back for other tests.
+    chartstack = banana.noConflict();
+  });
+});
+
+describe('Testing core events', function(){
+  it('should support .on, .trigger, and .trigger with arguments', function(done){
+    chartstack.on('banana', function(response1, response2){
+      expect(response1).to.equal('a');
+      expect(response2).to.equal('monkey');
+      done();
+    });
+
+    expect(chartstack.listeners.banana).to.exist;
+    expect(chartstack.listeners.banana.length).to.equal(1);
+    chartstack.trigger('banana', 'a', 'monkey');
+  });
+});
+
+describe('Testing method .transformers', function(){
+  it('should support .json', function(){
+    var bob = {
+      'a': 1,
+      'b': 'c'
+    }
+
+    var str = JSON.stringify({'a':1});
+    var a1 = chartstack.transformers.json(bob);
+    var a2 = chartstack.transformers.json(str);
+
+    expect(a1.a).to.equal(1);
+    expect(a1.b).to.equal('c');
+    expect(a2.a).to.equal(1);
+  });
+});
+
+describe('Testing .ready', function(){
+  var arrayOrder = [];
+  var r = false;
+  it('should work', function(done){
+    chartstack.ready(function(){
+      r = true;
+      expect(r).to.be.true;
+      done();
+    });
+  });
+
+  it('should execute in order queued', function(done){
+    var count = 0;
+    var check = function(){
+      if (count == 3){
+        if (arrayOrder[0] == 'a' && arrayOrder[1] == 'b' && arrayOrder[2] == 'c'){
+          done();
+        }else{
+          throw new Error('.ready Out of order');
+        }
+      }
+    }
+
+    chartstack.ready(function(){
+      count++;
+      arrayOrder.push('a');
+      check();
+    });
+
+    chartstack.ready(function(){
+      count++;
+      arrayOrder.push('b');
+      check();
+    });
+
+    chartstack.ready(function(){
+      count++;
+      arrayOrder.push('c');
+      check();
+    });
+
+  });
+
+});
+
+describe('Test DOM parsing', function(){
+  var p = document.getElementsByTagName('piechart')[0];
+  it('should have piechart element on page', function(){
+    expect(p).to.exist;
+  });
+
+  it('should have parsed it to an SVG chart', function(done){
+    chartstack.ready(function(){
+      setTimeout(function(){
+        var svg = p.getElementsByTagName('svg')[0];
+        expect(svg).to.exist;
+        done();
+      },0);
+    });
+  });
+});
+</script>

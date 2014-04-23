@@ -1,6 +1,6 @@
 # Chartstack
 
-[![Build Status](https://magnum.travis-ci.com/keenlabs/chartstack.svg?token=wfasM9dDfjzGTx53pqzt&branch=feature/testrunner)](https://magnum.travis-ci.com/keenlabs/chartstack)
+[![Build Status](https://magnum.travis-ci.com/keenlabs/chartstack.svg?token=wfasM9dDfjzGTx53pqzt&branch=master)](https://magnum.travis-ci.com/keenlabs/chartstack)
 
 **Chartstack** is a charting library and abstraction layer that enables a user to visualize their data on top of many popular charting libraries using one unified JavaScript API. Chartstack's goal is to allow any data format to work with any charting library, including an easy way to support your own custom data formats. Charstack is created and maintained by [Keen IO](http://keen.io/).
 
@@ -39,8 +39,8 @@ There are three ways to install.
 
 - Clone the repo: `git clone https://github.com/keenlabs/chartstack.git`.
 - Run `npm install` to setup Grunt and node packages it uses in tasks.
-- Run `bower install` to install 3rd party JS libraries.
-- Run `grunt` to launch the web server and view the demos. [http://localhost:9001/demo/](http://localhost:9001/demo/).
+- Run `bower install` to install 3rd party JS libraries. (UPDATE: Currently offline until this repo is public.)
+- Run `grunt serve` to launch the web server and view the demos. [http://localhost:9001/demo/](http://localhost:9001/demo/).
 
 #### Grab just the minified Chartstack file:
 - [Download the latest release](https://github.com/keenlabs/chartstack/releases/download/v0.0.1/chartstack.min.js) (1.58 kB gzipped)
@@ -97,14 +97,25 @@ When completed, you'll be able to run the various Grunt commands provided from t
 
 ### Available Grunt commands
 
-#### Launch web server - `grunt`
-Run `grunt` to start a test server locally accessible in your web browser at [http://localhost:9001/demo](http://localhost:9001/demo/).  This is useful for running the demos which require ajax.
+#### Launch web server - `grunt serve`
+Run `grunt serve` to start a test server locally accessible in your web browser at [http://localhost:9001/demo](http://localhost:9001/demo/).  This is useful for running the demos which require ajax.
 
-#### Compress files - `grunt min`
-Run `grunt min` to minify all Chartstack JavaScript files to chartstack.min.js in `/dist`. **Uses [UglifyJS](http://lisperator.net/uglifyjs/).**
+#### Compress files - `grunt` or `grunt build`
+Run `grunt` or `grunt build` to minify all Chartstack JavaScript files to chartstack.min.js in `/dist`. **Uses [UglifyJS](http://lisperator.net/uglifyjs/).**
 
-#### Lint JavaScript files - `grunt jshint`
+#### Lint JavaScript files - `grunt lint`
 Run `grunt lint` to check all chartstack.* JavaScript files for errors and warnings.  The file `.jshintrc` contains the linting rules. **Uses [jshint](http://www.jshint.com/).**
+
+#### Run command-line Mocha/Phantom tests - `grunt test`
+Run `grunt test` execute all tests via command line and outputs results. **Uses [grunt-mocha-phantomjs](https://github.com/jdcataldo/grunt-mocha-phantomjs).**
+
+#### Run browser-based Mocha/Phantom tests - `grunt test:dev`
+Run `grunt test:dev` opens up a local web browser and execute all tests and outputs results. **Uses [jekyll](https://github.com/jekyll/jekyll) and [grunt-mocha-phantomjs](https://github.com/jdcataldo/grunt-mocha-phantomjs).**
+
+## Running tests
+
+Chartstack tests can be run in two ways, via comman-line and via the browser. See the Grunt tasks above to run them.
+
 
 ### Troubleshooting dependencies
 
