@@ -4,3 +4,4 @@ node_modules
 .sass-cache
 demo/bower_components
 lib
+test/_site
