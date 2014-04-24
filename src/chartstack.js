@@ -657,7 +657,7 @@
 
     if (el){
       each(chartstack.charts, function(chart){
-        if (el == chart.el){
+        if (el == chart.view.el){
           matchedChart = chart;
           return false;
         }
