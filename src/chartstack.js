@@ -480,7 +480,7 @@
       }
     });
 
-    $chart.on("replace", function(cb){
+    $chart.on("freeze", function(cb){
       var c;
       var svg = this.view.el.getElementsByTagName('svg');
       cb = cb || function(){};
