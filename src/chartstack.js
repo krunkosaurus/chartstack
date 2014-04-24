@@ -105,6 +105,7 @@
         this[option] = config[option];
       }
     }
+    this.state = 'initialized';
     this.configure();
   };
 
@@ -137,14 +138,14 @@
   // DataResource class
   // -----------------------------
 
-  chartstack.Dataset = function(config){
-    var resources = [], options = config || {};
-    if (options instanceof Array) {
-      each(options, function(source){
-        resources.push(new chartstack.DataResource(source));
+  chartstack.Dataset = function(resource){
+    var resources = [];
+    if (resource instanceof Array) {
+      each(resource, function(instance){
+        resources.push(new chartstack.DataResource(instance));
       });
     } else {
-      resources.push(new chartstack.DataResource(options));
+      resources.push(new chartstack.DataResource(resource));
     }
     this.resources = resources;
     return;
@@ -159,7 +160,9 @@
       self.responses = [];
 
       var finish = function(response, index){
-        self.responses[index] = JSON.parse(response);
+        self.resources[index].response = (is(response, 'string')) ? JSON.parse(response) : response;
+        self.resources[index].state = 'synced';
+        self.responses[index] = self.resources[index].response;
         completions++;
         if (completions == self.resources.length){
           self.transform();
@@ -172,12 +175,20 @@
       };
 
       each(self.resources, function(resource, index){
+
         if (resource.url) {
           var url = resource.url + buildQueryString(resource.params);
           var successSequencer = function(response){
             finish(response, index);
           };
-          chartstack.getAjax(url, successSequencer, error);
+
+          if (resource.state == 'initialized' && resource.response !== void 0) {
+            finish(resource.response, index);
+          } else {
+            chartstack.getAjax(url, successSequencer, error);
+          }
+
+          //chartstack.getAjax(url, successSequencer, error);
           //chartstack.getJSONP(url, successSequencer);
         } else {
           error();
@@ -190,9 +201,14 @@
     transform: function() {
       var self = this;
       each(self.resources, function(resource, index){
-        var adapter = resource.adapter;
+        var adapter = resource.adapter || 'default' || false;
         var response = self.responses[index];
-        self.data[index] = adapters[adapter].call(resource, response);
+        if (adapter) {
+          self.data[index] = chartstack.adapters[adapter].call(resource, response);
+        } else {
+          self.data[index] = response.data;
+        }
+
       });
       self.trigger("complete", self.data[0]);
       return self;
@@ -222,7 +238,7 @@
     extend(self, config);
 
     self.chartOptions = self.chartOptions || {};
-    self.chartOptions.width = self.chartOptions.width || self.el.offsetWidth;
+    self.width = self.width || self.el.offsetWidth;
 
     // Set default event handlers
     self.on("error", function(){
@@ -254,10 +270,24 @@
 
   chartstack.libraries = {};
 
-  chartstack.Visualization.register = function(name, methods){
+  chartstack.attributes = {
+    data: ['adapter', 'dataset', 'dataformat', 'dateformat'],
+    init: ['library'],
+    masterVis: ['title', 'labels', 'height', 'width', 'colors'],
+    customVis: []
+  };
+
+  chartstack.Visualization.register = function(name, methods, options){
     chartstack.libraries[name] = chartstack.libraries[name] || {};
     for (var method in methods) {
       chartstack.libraries[name][method] = methods[method];
+    }
+    if (options !== void 0 && options.attributes !== void 0) {
+      each(options.attributes, function(attribute, index){
+        if (chartstack.attributes.customVis.indexOf(attribute) == -1) {
+          chartstack.attributes.customVis.push(options.attributes[index]);
+        }
+      });
     }
   };
 
@@ -303,8 +333,8 @@
 
     // Collects properties off DOM element and inspects data source.
     function setup(){
-      var setupDom, setupJS;
-      var initAttributes, dataAttributes, visualAttributes;
+      var setupDom, setupJS, attrs = [];
+      //var initAttributes, dataAttributes, visualAttributes;
 
       setupDom = function(){
         //$chart.el = args;
@@ -340,15 +370,16 @@
       // Support arrays here so we can store the data under a different name.
       // TODO: These strings should be objects with support for defaults and other options.
 
-      dataAttributes = ['adapter', 'dataset', 'dataformat', 'dateformat'];
-      initAttributes = ['library'];
-      visualAttributes = ['title', 'labels', 'height', 'width', 'isStacked'];
-
       // Prev:
       // titleTextColor, legendColor, colors, pieSliceBorderColor,
       // pieSliceTextColor, backgroundColor, customOptions, formatRowLabel
 
-      each(initAttributes.concat(dataAttributes, visualAttributes), function(attr){
+      attrs = attrs.concat(chartstack.attributes.data);
+      attrs = attrs.concat(chartstack.attributes.init);
+      attrs = attrs.concat(chartstack.attributes.masterVis);
+      attrs = attrs.concat(chartstack.attributes.customVis);
+
+      each(attrs, function(attr){
         var test, newKey;
 
         if (is(attr, 'object')){
@@ -373,11 +404,14 @@
         }
       });
 
-      function mapAttribute(key, value){
-        if (dataAttributes.indexOf(key) !== -1) {
+      function mapAttribute(key, val){
+        var value = (typeof val === "string" && val.match(/^({|\[)/)) ? JSON.parse(val.replace(/'/g, "\"")) : val;
+        if (chartstack.attributes.data.indexOf(key) !== -1) {
           setupData[key] = value;
-        } else if (initAttributes.indexOf(key) !== -1) {
+        } else if (chartstack.attributes.init.indexOf(key) !== -1) {
           options[key] = value;
+        } else if (chartstack.attributes.masterVis.indexOf(key) !== -1) {
+          setupVis[key] = value;
         } else {
           setupVis.chartOptions[key] = value;
         }
@@ -426,7 +460,10 @@
         $chart.view.data = this.data;
         $chart.view.trigger("update", data);
       });
-      $chart.dataset.fetch();
+      if (options.autoFetch || options.autoFetch == void 0) {
+        $chart.dataset.fetch();
+      }
+      //
     }
 
     setup();
@@ -566,6 +603,9 @@
 
     // Bring moment.js into the mix
     chartstack.moment = root.moment || false;
+    if (chartstack.moment) {
+      chartstack.moment.suppressDeprecationWarnings = true;
+    }
 
     each(readyCallbacks, function(cb){
       cb();
@@ -592,6 +632,7 @@
   // Adapters that normalize 3rd party api to a standard format.
   function addAdapter(domain, configObj){
     if (chartstack.is(configObj, 'function')){
+      //adapters.push({ name: domain, adapte: configObj }); // [domain] = configObj;
       adapters[domain] = configObj;
     }else{
       each(configObj, function(func, type){
