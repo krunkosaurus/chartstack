@@ -74,7 +74,7 @@ module.exports = function(grunt) {
       },
       test: {
         options: {
-          port: 9001,
+          port: 5000,
           base: './<%= chartstack.testPath %>/_site/',
           keepalive: false
         }
@@ -113,8 +113,8 @@ module.exports = function(grunt) {
         options:{
           //base: './test',
           urls: [
-            'http://localhost:9001/test-core/',
-            'http://localhost:9001/test-google-charts/'
+            'http://localhost:5000/test-core/',
+            'http://localhost:5000/test-google-charts/'
           ]
         }
       }
