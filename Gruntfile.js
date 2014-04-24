@@ -15,26 +15,34 @@ module.exports = function(grunt) {
 
     pkg: grunt.file.readJSON('package.json'),
 
-    uglify: {
+    concat: {
       options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
-        report: 'gzip',
-        sourceMap: true,
-        sourceMapIncludeSources: true
+        stripBanners: false
       },
-      build: {
+      all: {
         src: [
-            '<%= chartstack.scriptPath %>/chartstack.js',
-            '<%= chartstack.scriptPath %>/utils/chartstack.dataform.js',
-            '<%= chartstack.scriptPath %>/utils/chartstack.csv.js',
-            '<%= chartstack.scriptPath %>/adapters/chartstack.keen-io.js',
-            '<%= chartstack.scriptPath %>/libraries/chartstack.keen-widgets.js',
-            '<%= chartstack.scriptPath %>/libraries/chartstack.googlecharts.js',
-            //'<%= chartstack.scriptPath %>/renderset/chartstack.nvd3.renderset.js',
-            //'<%= chartstack.scriptPath %>/renderset/chartstack.highcharts.renderset.js'
-            '<%= chartstack.bowerPath %>/momentjs/min/moment.min.js'
+          '<%= chartstack.scriptPath %>/chartstack.js',
+          '<%= chartstack.scriptPath %>/utils/chartstack.dataform.js',
+          '<%= chartstack.scriptPath %>/utils/chartstack.csv.js',
+          '<%= chartstack.scriptPath %>/adapters/chartstack.keen-io.js',
+          '<%= chartstack.scriptPath %>/libraries/chartstack.keen-widgets.js',
+          '<%= chartstack.scriptPath %>/libraries/chartstack.googlecharts.js',
+          '<%= chartstack.bowerPath %>/momentjs/moment.js'
         ],
-        dest: '<%= chartstack.distPath %>/chartstack.min.js'
+        dest: '<%= chartstack.distPath %>/chartstack.js'
+      }
+    },
+
+    uglify: {
+      options : {
+        beautify : {
+          ascii_only : true
+        }
+      },
+      dist: {
+        files: {
+          '<%= chartstack.distPath %>/chartstack.min.js': '<%= chartstack.distPath %>/chartstack.js'
+        }
       }
     },
 
@@ -122,24 +130,29 @@ module.exports = function(grunt) {
   });
 
   // Load tasks
-  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks("grunt-contrib-concat");
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-watch');
+
   grunt.loadNpmTasks('grunt-mocha-phantomjs');
   grunt.loadNpmTasks('grunt-jekyll');
   grunt.loadNpmTasks('grunt-contrib-copy');
 
-  // Register tasks
-  grunt.registerTask('build', ['jshint', 'uglify']);
+  // Build and Serve
+  grunt.registerTask('build', ['jshint', 'concat', 'uglify']);
   grunt.registerTask('serve', ['build', 'connect:demo', 'watch:scripts']);
+
   // Testing via command-line and CI.
   grunt.registerTask('test', ['copy:test', 'jekyll:dist', 'mocha_phantomjs']);
+
   // Testing via browser and visually.
   grunt.registerTask('test:dev', ['copy:test', 'jekyll:serve']);
   grunt.registerTask('default', ['build']);
 
   // Optional aliases
-  grunt.registerTask('lint', ['jshint']);
-  grunt.registerTask('min', ['uglify']);
+  //grunt.registerTask('lint', ['jshint']);
+  //grunt.registerTask('min', ['uglify']);
 };

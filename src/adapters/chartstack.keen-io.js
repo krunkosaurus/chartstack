@@ -22,7 +22,7 @@
 
       if (response.result instanceof Array) {
 
-        if (response.result[0]['value'] !== void 0){
+        if (response.result.length > 0 && response.result[0]['value'] !== void 0){
 
           if (response.result[0]['value'] instanceof Array) {
             // Interval + Group_by
@@ -45,12 +45,12 @@
           }
         }
 
-        if (response.result[0]['timeframe']) {
+        if (response.result.length > 0 && response.result[0]['timeframe']) {
           // Get index (start time)
           map.each.index = "timeframe -> start";
         }
 
-        if (response.result[0]['result']) {
+        if (response.result.length > 0 && response.result[0]['result']) {
           // Get value (group_by)
           map.each.value = "result";
           for (var key in response.result[0]){
@@ -61,6 +61,16 @@
           }
         }
 
+        if (response.result.length > 0 && typeof response.result[0] == "number") {
+          map.root = "";
+          map.each.index = "steps -> event_collection";
+          map.each.value = "result -> ";
+        }
+
+        if (response.result.length == 0) {
+          map = false;
+          //data
+        }
 
 
       } else {
@@ -75,14 +85,20 @@
 
     }
 
-    data = new cs.dataform(response, map);
-    output = data.table;
+    if (map) {
+      data = new cs.dataform(response, map);
+      output = data.table;
+    }
+
+    // data = new cs.dataform(response, map);
+    // output = data.table;
+
     // Date formatting
     if (chartstack.moment) {
       each(output, function(row, i){
         each(row, function(cell, j){
           if (j == 0) {
-            if (chartstack.moment(cell).isValid()) {
+            if (moment(cell).isValid()) {
               output[i][j] = (self.dateformat) ? chartstack.moment(cell).format(self.dateformat) : new Date(cell);
             }
           }
