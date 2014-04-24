@@ -1,37 +1,334 @@
-<!DOCTYPE HTML>
-<html>
-    <head>
-        <title>Chartstack Google Charts Test Page</title>
-        <link href="../css/page_styling.css" rel="stylesheet">
-        <link href="../lib/mocha/mocha.css" rel="stylesheet">
-    </head>
-    <body>
-        <div id="mocha"></div>
-        <h1>Chartstack Google Charts Test Page</h1>
-        <ul class="menu">
-            <li><a href="../">Go back</a></li>
-        </ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Chartstack Google Charts Test Page</title>
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <link href="../bower_components/mocha/mocha.css" rel="stylesheet">
+</head>
+<body>
 
-        <div>
-        <section>
-            <piechart title="Yay browsers!" width="400px" height="400px" dataset="../api/universal/piechart.json"></piechart>
-        </section>
+  <div id="mocha"></div>
 
-        <section>
-            <barchart width="600px" height="300px" dataset="../api/universal/barchart.json"></barchart>
-        </section>
+  <div class="container">
+    <ul class="menu">
+        <li><a href="../">Back to Main</a></li>
+    </ul>
+    <div class="page-header">
+      <h1>Chartstack Google Charts Test Page</h1>
+    </div>
 
-        <section>
-            <linechart width="600px" height="300px" dataset="../api/universal/linechart.json"></linechart>
-        </section>
+    <div class="row">
+      <div class="col-xs-6">
+        <h4 class="text-center">DOM API</h4>
+      </div>
+      <div class="col-xs-6">
+        <h4 class="text-center">JS API</h4>
+      </div>
+    </div>
+    <hr>
+
+
+    <h5 class="text-muted">Number widget</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <metric title="Fluid DOM Subtitle" height="300" dataset="../api/universal/metric.json"></metric>
+
+          </div>
         </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
 
-        <script src="https://www.google.com/jsapi"></script>
-        <script src="../dist/chartstack.min.js"></script>
+            <!-- CONTAINER -->
+            <div id="metric-js"></div>
 
-       <!-- tests -->
-        <script src="../lib/mocha/mocha.js"></script>
-        <script src="../lib/chai/chai.js"></script>
-        <script src="tests.js"></script>
-    </body>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h5 class="text-muted">Pie chart</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <piechart title="Pie Chart" height="300" dataset="../api/universal/piechart.json"></piechart>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER -->
+            <div id="pie-js"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <h5 class="text-muted">Area chart</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <areachart title="Area chart" isStacked="true" dateformat="MMM D" height="300" dataset="../api/universal/barchart.json"></areachart>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER -->
+            <div id="area-js"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <h5 class="text-muted">Line chart</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <linechart title="Line chart" dateformat="MM-DD" height="300" dataset="../api/universal/barchart.json"></linechart>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER -->
+            <div id="line-js"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <h5 class="text-muted">Bar chart</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <barchart title="Bar chart" dateformat="MM/DD" height="300" dataset="../api/universal/barchart.json"></barchart>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER -->
+            <div id="bar-js"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <h5 class="text-muted">Column chart</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <columnchart title="Column chart" isStacked="true" dateformat="MM-DD" height="300" dataset="../api/universal/multilinechart.json"></columnchart>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER -->
+            <div id="column-js"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <h5 class="text-muted">Table</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <datatable title="Table" dateformat="MM-DD" dataset="../api/universal/barchart.json"></datatable>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER -->
+            <div id="table-js"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!--// .container //-->
+
+  <script src="https://www.google.com/jsapi"></script>
+  <script src="../dist/chartstack.min.js"></script>
+
+  <script src="../bower_components/mocha/mocha.js"></script>
+  <script src="../bower_components/chai/chai.js"></script>
+  <script src="tests.js"></script>
+
+  <script src="../bower_components/momentjs/min/langs.min.js"></script>
+  <script>
+    moment.lang('en');
+  </script>
+
+  <script>
+    chartstack.ready(function(){
+
+      var metric = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+          url: '../api/universal/metric.json'
+        }),
+        view: new chartstack.Keen.Metric({
+          el: document.getElementById('metric-js'),
+          chartOptions: {
+            title: 'JS API with fixed width',
+            height: '300',
+            width: '400'
+          }
+        })
+      });
+
+      var pie = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+          url: '../api/universal/piechart.json'
+        }),
+        view: new chartstack.GoogleCharts.PieChart({
+          el: document.getElementById('pie-js'),
+          chartOptions: {
+            title: 'Pie chart',
+            height: '300',
+            pieHole: 0.35
+          }
+        })
+      });
+
+      var area = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+
+          dateformat: 'MMM D',
+          url: '../api/universal/barchart.json'
+        }),
+        view: new chartstack.GoogleCharts.AreaChart({
+          el: document.getElementById('area-js'),
+          chartOptions: {
+            title: 'Area chart',
+            height: '300',
+            isStacked: true
+          }
+        })
+      });
+
+      var line = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+
+          //dateformat: 'MM-DD',
+          url: '../api/universal/barchart.json'
+        }),
+        view: new chartstack.GoogleCharts.LineChart({
+          el: document.getElementById('line-js'),
+          chartOptions: {
+            title: 'Line chart',
+            height: '300',
+            lineWidth: 5,
+            curveType: 'function',
+            hAxis: {
+              viewWindowMode: 'maximized'
+            }
+          }
+        })
+      });
+
+      var bar = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+
+          dateformat: 'MM/DD',
+          url: '../api/universal/barchart.json'
+        }),
+        view: new chartstack.GoogleCharts.BarChart({
+          el: document.getElementById('bar-js'),
+          chartOptions: {
+            title: 'Bar chart',
+            height: '300'
+          }
+        })
+      });
+
+      var column = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+
+          dateformat: 'MM-DD',
+          url: '../api/universal/multilinechart.json'
+        }),
+        view: new chartstack.GoogleCharts.ColumnChart({
+          el: document.getElementById('column-js'),
+          chartOptions: {
+            title: 'Column chart',
+            height: '300',
+            isStacked: true
+          }
+        })
+      });
+
+      var table = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+
+          dateformat: 'MMM DD',
+          url: '../api/universal/barchart.json'
+        }),
+        view: new chartstack.GoogleCharts.DataTable({
+          el: document.getElementById('table-js'),
+          chartOptions: {
+            title: 'DataTable',
+            sortColumn: 1
+          }
+        })
+      });
+
+    });
+  </script>
+</body>
 </html>

@@ -24,6 +24,42 @@
     </div>
     <hr>
 
+    <h5 class="text-muted">Funnel demo</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT -->
+            <barchart title="Highly Stylized Funnel"
+              bar="{'groupWidth':'97%'}"
+              chartArea="{'left':'20%','width':'75%'}"
+              colors="['red']"
+              fontName="Georgia"
+              fontSize="13"
+              legend="{'position':'none'}"
+              hAxis="{'baselineColor':'red'}"
+              dateformat="MM/DD"
+              height="300"
+              dataset="../api/keen/funnel.json">
+            </barchart>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER -->
+            <div id="funnel-js"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <h5 class="text-muted">Number widget</h5>
     <div class="row">
       <div class="col-sm-6">
@@ -48,7 +84,32 @@
       </div>
     </div>
 
-    <h5 class="text-muted">Pie chart</h5>
+    <h5 class="text-muted">UDF Demos</h5>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- DOM ELEMENT
+            <piechart title="Pie Chart" height="300" dataset="../api/universal/piechart.json"></piechart>
+            -->
+
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+
+            <!-- CONTAINER
+            <div id="udf-pie-js"></div>
+            -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h5 class="text-muted">Keen Pie chart</h5>
     <div class="row">
       <div class="col-sm-6">
         <div class="panel panel-default">
@@ -180,7 +241,7 @@
           <div class="panel-body">
 
             <!-- DOM ELEMENT -->
-            <datatable title="Table" dateformat="MM-DD" adapter="keen-io" dataset="../api/keen/barchart.json"></datatable>
+            <datatable dateformat="MM-DD" adapter="keen-io" dataset="../api/keen/barchart.json"></datatable>
 
           </div>
         </div>
@@ -202,20 +263,30 @@
   <script src="https://www.google.com/jsapi"></script>
   <script src="../dist/chartstack.min.js"></script>
 
-  <script src="../lib/momentjs/min/langs.min.js"></script>
+  <script src="../assets/momentjs/min/langs.min.js"></script>
   <script>
     moment.lang('en');
   </script>
 
-  <!--<script src="../../src/chartstack.js"></script>
-  <script src="../../src/util/chartstack.dataform.js"></script>
-  <script src="../../src/util/chartstack.moment.js"></script>
-
-  <script src="../../src/adapter/chartstack.keen.universal.adapter.js"></script>
-  <script src="../../src/renderset/cs.googlecharts.js"></script>-->
-
   <script>
     chartstack.ready(function(){
+
+      //console.log(chartstack.adapters['keen-io']);
+      chartstack.addAdapter('default', chartstack.adapters['keen-io']);
+
+      var funnel = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+          url: '../api/keen/funnel.json'
+        }),
+        view: new chartstack.GoogleCharts.BarChart({
+          el: document.getElementById('funnel-js'),
+          title: 'Funnnnnels',
+          height: '300',
+          chartOptions: {
+            legend: { position: 'none' }
+          }
+        })
+      });
 
       var metric = new chartstack.Chart({
         dataset: new chartstack.Dataset({
@@ -224,11 +295,9 @@
         }),
         view: new chartstack.Keen.Metric({
           el: document.getElementById('metric-js'),
-          chartOptions: {
-            title: 'JS API with fixed width',
-            height: '300',
-            width: '400'
-          }
+          title: 'JS API with fixed width',
+          height: '300',
+          width: '400'
         })
       });
 
@@ -239,13 +308,27 @@
         }),
         view: new chartstack.GoogleCharts.PieChart({
           el: document.getElementById('pie-js'),
+          title: 'Pie chart',
+          height: '300',
           chartOptions: {
-            title: 'Pie chart',
-            height: '300',
             pieHole: 0.35
           }
         })
       });
+
+      /*var udf_pie = new chartstack.Chart({
+        dataset: new chartstack.Dataset({
+          url: '../api/universal/piechart.json'
+        }),
+        view: new chartstack.GoogleCharts.PieChart({
+          el: document.getElementById('udf-pie-js'),
+          chartOptions: {
+            title: 'UDF Pie chart',
+            height: '300',
+            pieHole: 0.35
+          }
+        })
+      });*/
 
       var area = new chartstack.Chart({
         dataset: new chartstack.Dataset({
@@ -255,9 +338,9 @@
         }),
         view: new chartstack.GoogleCharts.AreaChart({
           el: document.getElementById('area-js'),
+          title: 'Area chart',
+          height: '300',
           chartOptions: {
-            title: 'Area chart',
-            height: '300',
             isStacked: true
           }
         })
@@ -271,9 +354,9 @@
         }),
         view: new chartstack.GoogleCharts.LineChart({
           el: document.getElementById('line-js'),
+          title: 'Line chart',
+          height: '300',
           chartOptions: {
-            title: 'Line chart',
-            height: '300',
             lineWidth: 5,
             curveType: 'function',
             hAxis: {
@@ -291,10 +374,8 @@
         }),
         view: new chartstack.GoogleCharts.BarChart({
           el: document.getElementById('bar-js'),
-          chartOptions: {
-            title: 'Bar chart',
-            height: '300'
-          }
+          title: 'Bar chart',
+          height: '300'
         })
       });
 
@@ -306,9 +387,9 @@
         }),
         view: new chartstack.GoogleCharts.ColumnChart({
           el: document.getElementById('column-js'),
+          title: 'Column chart',
+          height: '300',
           chartOptions: {
-            title: 'Column chart',
-            height: '300',
             isStacked: true
           }
         })
@@ -323,7 +404,6 @@
         view: new chartstack.GoogleCharts.DataTable({
           el: document.getElementById('table-js'),
           chartOptions: {
-            title: 'DataTable',
             sortColumn: 1
           }
         })
