@@ -32,6 +32,8 @@ module.exports = function(grunt) {
             '<%= chartstack.scriptPath %>/libraries/chartstack.googlecharts.js',
             //'<%= chartstack.scriptPath %>/renderset/chartstack.nvd3.renderset.js',
             //'<%= chartstack.scriptPath %>/renderset/chartstack.highcharts.renderset.js'
+            '<%= chartstack.bowerPath %>/simg/src/simg.js',
+            '<%= chartstack.scriptPath %>/utils/simg.noconflict.js',
             '<%= chartstack.bowerPath %>/momentjs/min/moment.min.js'
         ],
         dest: '<%= chartstack.distPath %>/chartstack.min.js'
@@ -51,6 +53,7 @@ module.exports = function(grunt) {
       ]
     },
 
+
     connect: {
       demo: {
         options: {
@@ -62,8 +65,7 @@ module.exports = function(grunt) {
         options: {
           port: 9001,
           base: './<%= chartstack.testPath %>/_site/',
-          open: true,
-          keepalive: true
+          keepalive: false
         }
       },
     },
@@ -96,9 +98,14 @@ module.exports = function(grunt) {
     },
 
     mocha_phantomjs: {
-      all: ['./<%= chartstack.testPath %>/_site/test*/index.html'],
-      options:{
-        base: './test'
+      all: {
+        options:{
+          //base: './test',
+          urls: [
+            'http://localhost:9001/test-core/',
+            'http://localhost:9001/test-google-charts/'
+          ]
+        }
       }
     },
 
@@ -134,7 +141,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build', ['jshint', 'uglify']);
   grunt.registerTask('serve', ['build', 'connect:demo', 'watch:scripts']);
   // Testing via command-line and CI.
-  grunt.registerTask('test', ['copy:test', 'jekyll:dist', 'mocha_phantomjs']);
+  grunt.registerTask('test', ['copy:test', 'jekyll:dist', 'connect:test', 'mocha_phantomjs']);
   // Testing via browser and visually.
   grunt.registerTask('test:dev', ['copy:test', 'jekyll:serve']);
   grunt.registerTask('default', ['build']);

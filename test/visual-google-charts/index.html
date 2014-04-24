@@ -1,0 +1,116 @@
+---
+layout: page
+title: Visual Google Charts
+test: true
+---
+<section>
+  <h3>Default Pie chart</h3>
+  <img src="pie.png" />
+  <div id="pie" class="chart"></div>
+</section>
+
+<section>
+  <h3>Default Bar chart</h3>
+  <img src="bar.png" />
+  <div id="bar" class="chart"></div>
+</section>
+
+
+<style>
+  @media (min-width: 75rem){
+   .container {
+     max-width: 90%;
+   }
+  }
+
+  section{
+    background-color: #f9f9f9;
+    border: solid 1px gray;
+    margin: 5px;
+    padding: 15px;
+    border: 1px solid #eee;
+    word-wrap: break-word;
+    border-bottom-color: #ddd;
+    -webkit-border-radius: 3px;
+    -webkit-box-shadow: 0 1px 3px #eee;
+    -moz-border-radius: 3px;
+    -moz-box-shadow: 0 1px 3px #eee;
+    border-radius: 3px;
+  }
+
+  section img{
+    float: left;
+    padding-right: 2rem;
+  }
+
+  section div.chart{
+    display: inline-block;
+  }
+</style>
+
+<script src="https://www.google.com/jsapi"></script>
+<script src="../public/dist/chartstack.min.js"></script>
+<script src="../public/lib/momentjs/min/langs.min.js"></script>
+<script>
+    moment.lang('en');
+</script>
+
+<script>
+describe('Google Charts', function(){
+  it('should have Google loaded', function(){
+    expect(google).is.an('object');
+  });
+
+  chartstack.ready(function(){
+    var pie = new chartstack.Chart({
+      dataset: new chartstack.Dataset({
+        adapter: 'keen-io',
+        url: '../api/keen/piechart.json'
+      }),
+      view: new chartstack.GoogleCharts.PieChart({
+        title: 'Pie chart',
+        el: document.getElementById('pie'),
+      })
+    });
+
+    var bar = new chartstack.Chart({
+      dataset: new chartstack.Dataset({
+        adapter: 'keen-io',
+        url: '../api/keen/barchart.json'
+      }),
+      view: new chartstack.GoogleCharts.BarChart({
+        title: 'Bar chart',
+        el: document.getElementById('bar'),
+      })
+    });
+
+    //https://github.com/ariya/phantomjs/issues/10534
+    describe('pie chart visual', function(){
+      it('should match our visual spec', function(done){
+        setTimeout(function(){
+          var svg = document.getElementById('pie').getElementsByTagName('svg')[0];
+          var c = new chartstack.Simg(svg);
+          // c.replace();
+          c.toBinaryBlob(function(blob){
+            // Same image pie.png
+            // Test diff image pie2.png
+            url2blob('pie.png', function(blob2){
+              var diff = resemble(blob).compareTo(blob2).ignoreColors().onComplete(function(data){
+                expect(data.isSameDimensions).to.be.true;
+                expect(data.misMatchPercentage).to.equal("0.00");
+                done();
+              });
+            });
+          });
+
+        },50);
+
+      });
+    });
+
+    done();
+  });
+
+});
+
+</script>

@@ -1,0 +1,1 @@
+chartstack.Simg = Simg.noConflict();

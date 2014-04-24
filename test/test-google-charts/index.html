@@ -36,37 +36,30 @@ describe('Google Charts', function(){
         })
       });
 
-      expect(chartstack.charts.length).to.equal(1);
+      describe('new chart properties', function(){
+        it('shoudl have dataset property', function(){
+          expect(chartstack.charts[0].view).to.exist;
+          expect(chartstack.charts[0].view.el).to.exist;
+        });
 
-      chartstack.each([
-        'dataset',
-        'view'
-      ], function(item){
-        expect(chartRender[item]).to.exist;
+        it('should have view property', function(done){
+          setTimeout(function(){
+            expect(chartstack.charts[0].dataset).to.exist;
+            expect(chartstack.charts[0].dataset.data).to.exist;
+            expect(chartstack.charts[0].dataset.data[0]).to.deep.equal([
+              ['platform', 'result'],
+              ['Mobile', 946],
+              ['Web', 229]
+            ]);
+            done();
+          },30);
+        });
+
       });
     });
     done();
   });
 
-  it('should match our visual spec', function(done){
-      chartstack.ready(function(){
-        setTimeout(function(){
-          var svg = document.getElementById('pie').getElementsByTagName('svg')[0];
-          var img = document.getElementById('test');
-
-          var c = new Simg(svg);
-          c.toBinaryBlob(function(blob){
-            url2blob('pie.png', function(blob2){
-              var diff = resemble(blob).compareTo(blob2).ignoreColors().onComplete(function(data){
-                expect(data.isSameDimensions).to.be.true;
-                expect(data.misMatchPercentage).to.equal("0.00");
-                done();
-              });
-            });
-          });
-        },50);
-      });
-  });
 });
 
 </script>

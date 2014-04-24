@@ -232,6 +232,7 @@
       self.update.apply(this, arguments);
     });
 
+
     // Let's kick it off!
     this.initialize();
   };
@@ -430,10 +431,33 @@
     }
 
     setup();
+
+    $chart.on("download", function(){
+      var c;
+      var svg = this.view.el.getElementsByTagName('svg');
+
+      if (svg.length){
+        svg = svg[0];
+        c = new chartstack.Simg(svg);
+        c.download();
+      }
+    });
+
+    $chart.on("replace", function(cb){
+      var c;
+      var svg = this.view.el.getElementsByTagName('svg');
+      cb = cb || function(){};
+
+      if (svg.length){
+        svg = svg[0];
+        c = new chartstack.Simg(svg);
+        c.replace(cb);
+      }
+    });
+
   };
 
   Chart.prototype = {
-
     show : function(){
       this.trigger('show');
       return this;
@@ -479,7 +503,21 @@
     parseParams: parseParams,
     buildQueryString: buildQueryString,
     getAjax : getAjax,
-    getJSONP: getJSONP
+    getJSONP: getJSONP,
+    // Attach event for every chart we have.
+    on: function(){
+      var args = arguments;
+      each(this.charts, function(chart){
+        chart.on.apply(chart, args);
+      });
+    },
+    // Trigger event for every chart we have.
+    trigger: function(){
+      var args = arguments;
+      each(this.charts, function(chart){
+        chart.trigger.apply(chart, args);
+      });
+    }
   });
 
 

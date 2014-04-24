@@ -70,15 +70,18 @@ describe('Testing .noConflict', function(){
 
 describe('Testing core events', function(){
   it('should support .on, .trigger, and .trigger with arguments', function(done){
-    chartstack.on('banana', function(response1, response2){
+    var e = {};
+    chartstack.extend(e, chartstack.Events);
+
+    e.on('banana', function(response1, response2){
       expect(response1).to.equal('a');
       expect(response2).to.equal('monkey');
       done();
     });
 
-    expect(chartstack.listeners.banana).to.exist;
-    expect(chartstack.listeners.banana.length).to.equal(1);
-    chartstack.trigger('banana', 'a', 'monkey');
+    expect(e.listeners.banana).to.exist;
+    expect(e.listeners.banana.length).to.equal(1);
+    e.trigger('banana', 'a', 'monkey');
   });
 });
 
