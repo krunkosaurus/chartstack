@@ -105,6 +105,7 @@
         this[option] = config[option];
       }
     }
+    this.state = 'initialized';
     this.configure();
   };
 
@@ -137,14 +138,14 @@
   // DataResource class
   // -----------------------------
 
-  chartstack.Dataset = function(config){
-    var resources = [], options = config || {};
-    if (options instanceof Array) {
-      each(options, function(source){
-        resources.push(new chartstack.DataResource(source));
+  chartstack.Dataset = function(resource){
+    var resources = [];
+    if (resource instanceof Array) {
+      each(resource, function(instance){
+        resources.push(new chartstack.DataResource(instance));
       });
     } else {
-      resources.push(new chartstack.DataResource(options));
+      resources.push(new chartstack.DataResource(resource));
     }
     this.resources = resources;
     return;
@@ -159,7 +160,9 @@
       self.responses = [];
 
       var finish = function(response, index){
-        self.responses[index] = JSON.parse(response);
+        self.resources[index].response = (is(response, 'string')) ? JSON.parse(response) : response;
+        self.resources[index].state = 'synced';
+        self.responses[index] = self.resources[index].response;
         completions++;
         if (completions == self.resources.length){
           self.transform();
@@ -172,12 +175,20 @@
       };
 
       each(self.resources, function(resource, index){
+
         if (resource.url) {
           var url = resource.url + buildQueryString(resource.params);
           var successSequencer = function(response){
             finish(response, index);
           };
-          chartstack.getAjax(url, successSequencer, error);
+
+          if (resource.state == 'initialized' && resource.response !== void 0) {
+            finish(resource.response, index);
+          } else {
+            chartstack.getAjax(url, successSequencer, error);
+          }
+
+          //chartstack.getAjax(url, successSequencer, error);
           //chartstack.getJSONP(url, successSequencer);
         } else {
           error();
@@ -449,7 +460,10 @@
         $chart.view.data = this.data;
         $chart.view.trigger("update", data);
       });
-      $chart.dataset.fetch();
+      if (options.autoFetch || options.autoFetch == void 0) {
+        $chart.dataset.fetch();
+      }
+      //
     }
 
     setup();
