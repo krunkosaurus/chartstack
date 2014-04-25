@@ -6,55 +6,53 @@ test: true
 
 <div id="pie"></div>
 
-<script src="https://www.google.com/jsapi"></script>
 <script src="../public/dist/chartstack.min.js"></script>
 
 <script>
-describe('Google Charts', function(){
-  it('should have Google loaded', function(){
-    expect(google).is.an('object');
-  });
+  describe('Google Charts', function(){
 
-  it('should render JS chart', function(done){
-    chartstack.ready(function(){
-      var chartRender = new chartstack.Chart({
-        dataset: new chartstack.Dataset({
-          adapter: 'keen-io',
-          url: '../api/keen/piechart.json'
-        }),
-        view: new chartstack.GoogleCharts.PieChart({
-          //title: 'Pie chart',
-          el: document.getElementById('pie'),
-          height: '300',
-          chartOptions: {
-            //pieHole: 0.35
-          }
-        })
-      });
-
-      describe('new chart properties', function(){
-        it('shoudl have dataset property', function(){
-          expect(chartstack.charts[0].view).to.exist;
-          expect(chartstack.charts[0].view.el).to.exist;
+    before(function(done){
+      chartstack.ready(function(){
+        var chartRender = new chartstack.Chart({
+          dataset: new chartstack.Dataset({
+            adapter: 'keen-io',
+            url: '../api/keen/piechart.json'
+          }),
+          view: new chartstack.GoogleCharts.PieChart({
+            //title: 'Pie chart',
+            el: document.getElementById('pie'),
+            height: '300',
+            chartOptions: {
+              //pieHole: 0.35
+            }
+          })
         });
-
-        it('should have view property', function(done){
-          setTimeout(function(){
-            expect(chartstack.charts[0].dataset).to.exist;
-            expect(chartstack.charts[0].dataset.data).to.exist;
-            expect(chartstack.charts[0].dataset.data[0]).to.deep.equal([
-              ['platform', 'result'],
-              ['Mobile', 946],
-              ['Web', 229]
-            ]);
-            done();
-          },60);
-        });
-
+        done();
       });
     });
-    done();
+
+    it('should have Google loaded', function(){
+      expect(google).is.an('object');
+    });
+
+    it('should have dataset property', function(){
+      expect(chartstack.charts[0].view).to.exist;
+      expect(chartstack.charts[0].view.el).to.exist;
+    });
+
+    it('should have view property', function(done){
+      setTimeout(function(){
+        expect(chartstack.charts[0].dataset).to.exist;
+        expect(chartstack.charts[0].dataset.data).to.exist;
+        expect(chartstack.charts[0].dataset.data[0]).to.deep.equal([
+          ['platform', 'result'],
+          ['Mobile', 946],
+          ['Web', 229]
+        ]);
+        done();
+      },60);
+
+    });
   });
-});
 
 </script>
