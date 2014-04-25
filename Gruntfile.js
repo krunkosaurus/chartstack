@@ -37,6 +37,9 @@ module.exports = function(grunt) {
 
     uglify: {
       options : {
+        sourceMap: true,
+        sourceMapIncludeSources: true,
+        report: 'gzip',
         beautify : {
           ascii_only : true
         }
