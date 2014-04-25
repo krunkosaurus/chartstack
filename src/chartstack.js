@@ -541,6 +541,7 @@
     buildQueryString: buildQueryString,
     getAjax : getAjax,
     getJSONP: getJSONP,
+    addLibrary: addLibrary,
     // Attach event for every chart we have.
     on: function(){
       var args = arguments;
@@ -682,6 +683,23 @@
 
       });
     }
+  }
+
+  // Add a chart rendering library.
+  function addLibrary(obj){
+    // Create new chart namespace.
+    var namespace = chartstack[obj.namespace] = {};
+    var libList = {};
+
+    // For each chart type add it to the namespace.
+    each(obj.charts, function(chart){
+      namespace[chart.type] = chartstack.Visualization.extend(chart.events);
+      libList[chart.type.toLowerCase()] = namespace[chart.type];
+    });
+
+    chartstack.Visualization.register(obj.windowNamespace, libList, {
+      attributes: obj.attributes
+    });
   }
 
   // Parse the DOM and search for valid charting elements to turn to classes.
