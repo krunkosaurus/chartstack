@@ -156,9 +156,9 @@ module.exports = function(grunt) {
   grunt.registerTask('serve', ['build', 'connect:demo', 'watch:scripts']);
 
   // Testing via command-line and CI.
-  grunt.registerTask('test', ['copy:test', 'jekyll:dist', 'connect:test', 'mocha_phantomjs']);
+  grunt.registerTask('test', ['build', 'copy:test', 'jekyll:dist', 'connect:test', 'mocha_phantomjs']);
   // Testing via browser and visually.
-  grunt.registerTask('test:dev', ['copy:test', 'jekyll:serve']);
+  grunt.registerTask('test:dev', ['build', 'copy:test', 'jekyll:serve']);
   grunt.registerTask('default', ['build']);
 
   // Optional aliases
