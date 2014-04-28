@@ -620,7 +620,7 @@
 
   // Called when DOM and chart libs are loaded and ready.
   function bootstrap (){
-o    // If graph library isn't set in defaults, match provider to the first graph
+    // If graph library isn't set in defaults, match provider to the first graph
     // lib found on the page that we have an adapter for.
     if (chartstack.defaults.library){
       chartstack.library = chartstack.defaults.library;
