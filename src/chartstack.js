@@ -1,4 +1,4 @@
-/* global google */
+/* jshint evil: true */
 (function(root) {
   var previousChartstack = root.chartstack;
   var chartstack = root.chartstack = {};
@@ -532,6 +532,7 @@
     is : is,
     each : each,
     extend : extend,
+    bootstrap : bootstrap,
     loadScript : loadScript,
     noConflict : noConflict,
     ready: ready,
@@ -860,12 +861,8 @@
     };
   }
 
-  loadScript('https://www.google.com/jsapi', function(){
-    google.load('visualization', '1.0', {
-      packages: ['corechart', 'table'],
-      callback: bootstrap
-    });
-  });
   // TODO: Hard-coded support for Google Analytics for now.
   // document.addEventListener("DOMContentLoaded", bootstrap);
+  document.write('\x3Cscript type="text/javascript" src="https://www.google.com/jsapi?autoload=' + encodeURIComponent('{"modules":[{"name":"visualization","version":"1","packages":["corechart","table"],callback: chartstack.bootstrap}]}') + '">\x3C/script>');
+
 })(this);
