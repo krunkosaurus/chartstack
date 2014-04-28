@@ -201,7 +201,7 @@
     transform: function() {
       var self = this;
       each(self.resources, function(resource, index){
-        var adapter = resource.adapter || 'default' || false;
+        var adapter = resource.adapter || chartstack.adapters.default;
         var response = self.responses[index];
         if (adapter) {
           self.data[index] = chartstack.adapters[adapter].call(resource, response);
@@ -862,6 +862,7 @@
   }
 
   // TODO: Hard-coded support for Google Analytics for now.
+  // document.addEventListener("DOMContentLoaded", bootstrap);
   document.write('\x3Cscript type="text/javascript" src="https://www.google.com/jsapi?autoload=' + encodeURIComponent('{"modules":[{"name":"visualization","version":"1","packages":["corechart","table"],callback: chartstack.bootstrap}]}') + '">\x3C/script>');
 
 })(this);
