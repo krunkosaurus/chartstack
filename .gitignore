@@ -6,3 +6,4 @@ lib
 test/_site
 demo/bower_components
 test/public/dist
+test/api

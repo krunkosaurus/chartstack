@@ -98,6 +98,11 @@ module.exports = function(grunt) {
     copy: {
       test: {
         files: [{
+          cwd: '<%= chartstack.appPath %>/api/',
+          src: ['**'],
+          dest: '<%= chartstack.testPath %>/api',
+          expand: true
+        },{
           src: ['<%= chartstack.bowerPath %>/**'],
           dest: '<%= chartstack.testPath %>/public',
           expand: true
