@@ -81,7 +81,6 @@
   extend(chartstack, Events);
 
 
-
   // -----------------------------
   // DataResource class
   // -----------------------------
@@ -201,7 +200,7 @@
     transform: function() {
       var self = this;
       each(self.resources, function(resource, index){
-        var adapter = resource.adapter || 'default' || false;
+        var adapter = resource.adapter || chartstack.adapters.default;
         var response = self.responses[index];
         if (adapter) {
           self.data[index] = chartstack.adapters[adapter].call(resource, response);
@@ -621,7 +620,7 @@
 
   // Called when DOM and chart libs are loaded and ready.
   function bootstrap (){
-    // If graph library isn't set in defaults, match provider to the first graph
+o    // If graph library isn't set in defaults, match provider to the first graph
     // lib found on the page that we have an adapter for.
     if (chartstack.defaults.library){
       chartstack.library = chartstack.defaults.library;
