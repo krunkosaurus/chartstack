@@ -103,11 +103,9 @@ describe('Testing method .transformers', function(){
 
 describe('Testing .ready', function(){
   var arrayOrder = [];
-  var r = false;
+
   it('should work', function(done){
     chartstack.ready(function(){
-      r = true;
-      expect(r).to.be.true;
       done();
     });
   });
