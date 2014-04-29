@@ -469,8 +469,7 @@
     setup();
 
     $chart.on("download", function(){
-      var c;
-      var svg = this.view.el.getElementsByTagName('svg');
+      var c, svg = this.view.el.getElementsByTagName('svg');
 
       if (svg.length){
         svg = svg[0];
@@ -480,8 +479,7 @@
     });
 
     $chart.on("freeze", function(cb){
-      var c;
-      var svg = this.view.el.getElementsByTagName('svg');
+      var c, svg = this.view.el.getElementsByTagName('svg');
       cb = cb || function(){};
 
       if (svg.length){
@@ -694,8 +692,12 @@
 
     // For each chart type add it to the namespace.
     each(obj.charts, function(chart){
-      namespace[chart.type] = chartstack.Visualization.extend(chart.events);
-      libList[chart.type.toLowerCase()] = namespace[chart.type];
+      var chartType = chart.type.toLowerCase();
+      var obj = extend(chart.events,{
+        type: chartType
+      });
+      namespace[chart.type] = chartstack.Visualization.extend(obj);
+      libList[chartType] = namespace[chart.type];
     });
 
     chartstack.Visualization.register(obj.windowNamespace, libList, {
