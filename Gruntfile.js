@@ -96,6 +96,17 @@ module.exports = function(grunt) {
     },
 
     copy: {
+
+      build: {
+        src: './<%= chartstack.bowerPath %>/dataform/dist/dataform.js',
+        dest: './<%= chartstack.scriptPath %>/utils/chartstack.dataform.js',
+        options: {
+          process: function (content, path) {
+            return content.replace("\'Dataform\', this", "\'Dataform\', chartstack");
+          }
+        }
+      },
+
       test: {
         files: [{
           cwd: '<%= chartstack.appPath %>/api/',
@@ -157,7 +168,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Build and Serve
-  grunt.registerTask('build', ['jshint', 'concat', 'uglify']);
+  grunt.registerTask('build', ['copy:build', 'jshint', 'concat', 'uglify']);
   grunt.registerTask('serve', ['build', 'connect:demo', 'watch:scripts']);
 
   // Testing via command-line and CI.
