@@ -64,7 +64,6 @@ module.exports = function(grunt) {
       ]
     },
 
-
     connect: {
       demo: {
         options: {
@@ -73,6 +72,13 @@ module.exports = function(grunt) {
         }
       },
       test: {
+        options: {
+          port: 4000,
+          base: './<%= chartstack.testPath %>/_site/',
+        }
+      },
+      /* Used during command-line/CI testing only. */
+      'test-ci': {
         options: {
           port: 5000,
           base: './<%= chartstack.testPath %>/_site/',
@@ -88,14 +94,16 @@ module.exports = function(grunt) {
       },
       test: {
         files: [
-          "<%= chartstack.testPath %>/index.html",
-          "<%= chartstack.testPath %>/**/*.html"
+          '<%= chartstack.scriptPath %>/**/*.js',
+          '<%= chartstack.testPath %>/visual-*/*.html',
+          '<%= chartstack.testPath %>/test-*/*.html'
         ],
-        tasks: ['jekyll:dist']
+        tasks: ['build', 'copy:test', 'jekyll:dist']
       }
     },
 
     copy: {
+      // Copy files to /test folder for testing.
       test: {
         files: [{
           cwd: '<%= chartstack.appPath %>/api/',
@@ -113,6 +121,7 @@ module.exports = function(grunt) {
       }
     },
 
+    // Command-line / CI testing.
     mocha_phantomjs: {
       all: {
         options:{
@@ -155,15 +164,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-phantomjs');
   grunt.loadNpmTasks('grunt-jekyll');
   grunt.loadNpmTasks('grunt-contrib-copy');
-
   // Build and Serve
   grunt.registerTask('build', ['jshint', 'concat', 'uglify']);
   grunt.registerTask('serve', ['build', 'connect:demo', 'watch:scripts']);
 
   // Testing via command-line and CI.
-  grunt.registerTask('test', ['build', 'copy:test', 'jekyll:dist', 'connect:test', 'mocha_phantomjs']);
+  grunt.registerTask('test', ['build', 'copy:test', 'jekyll:dist', 'connect:test-ci', 'mocha_phantomjs']);
   // Testing via browser and visually.
-  grunt.registerTask('test:dev', ['build', 'copy:test', 'jekyll:serve']);
+  grunt.registerTask('test:dev', ['build', 'copy:test', 'jekyll:dist', 'connect:test', 'watch:test']);
   grunt.registerTask('default', ['build']);
 
   // Optional aliases
