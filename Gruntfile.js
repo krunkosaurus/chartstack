@@ -22,14 +22,15 @@ module.exports = function(grunt) {
       all: {
         src: [
           '<%= chartstack.scriptPath %>/chartstack.js',
+          '<%= chartstack.bowerPath %>/momentjs/moment.js',
           '<%= chartstack.scriptPath %>/utils/chartstack.dataform.js',
           '<%= chartstack.scriptPath %>/utils/chartstack.csv.js',
           '<%= chartstack.scriptPath %>/adapters/chartstack.keen-io.js',
           '<%= chartstack.scriptPath %>/libraries/chartstack.keen-widgets.js',
           '<%= chartstack.scriptPath %>/libraries/chartstack.googlecharts.js',
           '<%= chartstack.bowerPath %>/simg/src/simg.js',
-          '<%= chartstack.scriptPath %>/utils/simg.noconflict.js',
-          '<%= chartstack.bowerPath %>/momentjs/moment.js'
+          '<%= chartstack.scriptPath %>/utils/simg.noconflict.js'
+          //'<%= chartstack.bowerPath %>/momentjs/moment.js'
         ],
         dest: '<%= chartstack.distPath %>/chartstack.js'
       }

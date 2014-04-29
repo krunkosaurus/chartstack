@@ -45,7 +45,7 @@
     update: function(){
       this.el.innerHTML = '' +
         '<div class="cs-widget cs-number" style="width:' + parseInt(this.width) + 'px;">' +
-          '<span class="cs-widget-title">' + this.data[0][1][1] + '</span>' +
+          '<span class="cs-widget-title">' + this.data[0].table[1] + '</span>' +
           '<span class="cs-widget-subtitle">' + (this.title || 'Result') + '</span>' +
         '</div>';
     }

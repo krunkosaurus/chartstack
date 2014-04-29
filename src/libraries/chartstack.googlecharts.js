@@ -32,7 +32,7 @@
           this._chart = this._chart || new google.visualization.AreaChart(this.el);
         },
         update: function(){
-          var data = google.visualization.arrayToDataTable(this.data[0]);
+          var data = google.visualization.arrayToDataTable(this.data[0].table);
           var options = extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
@@ -52,7 +52,7 @@
           this._chart = this._chart || new google.visualization.BarChart(this.el);
         },
         update: function(){
-          var data = google.visualization.arrayToDataTable(this.data[0]);
+          var data = google.visualization.arrayToDataTable(this.data[0].table);
           var options = extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
@@ -73,7 +73,7 @@
           //this.chart.draw(data, options);
         },
         update: function(){
-          var data = google.visualization.arrayToDataTable(this.data[0]);
+          var data = google.visualization.arrayToDataTable(this.data[0].table);
           var options = extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
@@ -92,7 +92,7 @@
           this._chart = this._chart || new google.visualization.LineChart(this.el);
         },
         update: function(){
-          var data = google.visualization.arrayToDataTable(this.data[0]);
+          var data = google.visualization.arrayToDataTable(this.data[0].table);
           var options = extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
@@ -111,7 +111,7 @@
           this._chart = this._chart || new google.visualization.PieChart(this.el);
         },
         update: function(){
-          var data = google.visualization.arrayToDataTable(this.data[0]);
+          var data = google.visualization.arrayToDataTable(this.data[0].table);
           var options = extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
@@ -131,7 +131,7 @@
           //this.chart.draw(data, options);
         },
         update: function(){
-          var data = google.visualization.arrayToDataTable(this.data[0]);
+          var data = google.visualization.arrayToDataTable(this.data[0].table);
           var options = extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
