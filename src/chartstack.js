@@ -200,7 +200,7 @@
     transform: function() {
       var self = this;
       each(self.resources, function(resource, index){
-        var adapter = resource.adapter || chartstack.adapters.default;
+        var adapter = resource.adapter || 'default'; //chartstack.adapters.default;
         var response = self.responses[index];
         if (adapter) {
           self.data[index] = chartstack.adapters[adapter].call(resource, response);
@@ -237,7 +237,8 @@
     extend(self, config);
 
     self.chartOptions = self.chartOptions || {};
-    self.width = self.width || self.el.offsetWidth;
+    self.height = self.height || chartstack.defaults.height || 400;
+    self.width = self.width || chartstack.defaults.width || self.el.offsetWidth;
 
     // Set default event handlers
     self.on("error", function(){

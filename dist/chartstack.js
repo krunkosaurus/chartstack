@@ -81,7 +81,6 @@
   extend(chartstack, Events);
 
 
-
   // -----------------------------
   // DataResource class
   // -----------------------------
@@ -201,7 +200,7 @@
     transform: function() {
       var self = this;
       each(self.resources, function(resource, index){
-        var adapter = resource.adapter || chartstack.adapters.default;
+        var adapter = resource.adapter || 'default'; //chartstack.adapters.default;
         var response = self.responses[index];
         if (adapter) {
           self.data[index] = chartstack.adapters[adapter].call(resource, response);
@@ -238,7 +237,8 @@
     extend(self, config);
 
     self.chartOptions = self.chartOptions || {};
-    self.width = self.width || self.el.offsetWidth;
+    self.height = self.height || chartstack.defaults.height || 400;
+    self.width = self.width || chartstack.defaults.width || self.el.offsetWidth;
 
     // Set default event handlers
     self.on("error", function(){
@@ -470,8 +470,7 @@
     setup();
 
     $chart.on("download", function(){
-      var c;
-      var svg = this.view.el.getElementsByTagName('svg');
+      var c, svg = this.view.el.getElementsByTagName('svg');
 
       if (svg.length){
         svg = svg[0];
@@ -481,8 +480,7 @@
     });
 
     $chart.on("freeze", function(cb){
-      var c;
-      var svg = this.view.el.getElementsByTagName('svg');
+      var c, svg = this.view.el.getElementsByTagName('svg');
       cb = cb || function(){};
 
       if (svg.length){
@@ -695,8 +693,12 @@
 
     // For each chart type add it to the namespace.
     each(obj.charts, function(chart){
-      namespace[chart.type] = chartstack.Visualization.extend(chart.events);
-      libList[chart.type.toLowerCase()] = namespace[chart.type];
+      var chartType = chart.type.toLowerCase();
+      var obj = extend(chart.events,{
+        type: chartType
+      });
+      namespace[chart.type] = chartstack.Visualization.extend(obj);
+      libList[chartType] = namespace[chart.type];
     });
 
     chartstack.Visualization.register(obj.windowNamespace, libList, {
@@ -1313,7 +1315,6 @@
           border-radius: 4px; \
           color: #fff; \
           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; \
-          margin: 0 auto; \
           padding: 10px 0; \
           text-align: center; \
         } \
@@ -1328,6 +1329,7 @@
           font-size: 24px; \
           font-weight: 200; \
         }";
+        // margin: 0 auto; \
       document.body.appendChild(css);
 
       this.render();
@@ -1335,9 +1337,9 @@
     //render: function(){},
     update: function(){
       this.el.innerHTML = '' +
-        '<div class="cs-widget cs-number" style="width:' + parseInt(this.chartOptions.width) + 'px;">' +
+        '<div class="cs-widget cs-number" style="width:' + parseInt(this.width) + 'px;">' +
           '<span class="cs-widget-title">' + this.data[0][1][1] + '</span>' +
-          '<span class="cs-widget-subtitle">' + (this.chartOptions.title || 'Result') + '</span>' +
+          '<span class="cs-widget-subtitle">' + (this.title || 'Result') + '</span>' +
         '</div>';
     }
   });
