@@ -1,26 +1,20 @@
 /* global google, chartstack */
 (function(cs){
-  var each = cs.each;
-  var extend = cs.extend;
-
-  cs.addLibrary({
-    namespace: 'GoogleCharts',
-    windowNamespace: 'google',
-    attributes: [
-      "animation",
-      "backgroundColor",
-      "bar",
-      "chartArea",
-      "fontName",
-      "fontSize",
-      "isStacked",
-      "hAxis",
-      "legend",
-      "orientation",
-      "titleTextStyle",
-      "tooltip",
-      "vAxis"
-    ],
+  cs.registerLibrary({
+    name: 'GoogleCharts',
+    namespace: 'google',
+    attributes: ['animation', 'backgroundColor', 'bar', 'chartArea', 'fontName', 'fontSize', 'isStacked', 'hAxis', 'legend', 'orientation', 'titleTextStyle', 'tooltip', 'vAxis'],
+    // If loadLib exists it is called to load the graphic library.
+    // Must execute passed callback when the library is loaded.
+    // If loadLib does not exist, we assume the user loaded the library before
+    // chartstack.js already (most cases).
+    loadLib: function(cb){
+      cs.googleLoaded = function(){
+        cb();
+        delete cs.googleLoaded;
+      }
+      document.write('\x3Cscript type="text/javascript" src="https://www.google.com/jsapi?autoload=' + encodeURIComponent('{"modules":[{"name":"visualization","version":"1","packages":["corechart","table"],callback: chartstack.googleLoaded}]}') + '">\x3C/script>');
+    },
     charts: [{
       type : 'AreaChart',
       events: {
@@ -33,7 +27,7 @@
         },
         update: function(){
           var data = google.visualization.arrayToDataTable(this.data[0]);
-          var options = extend(this.chartOptions, {
+          var options = cs.extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
             width: parseInt(this.width)
@@ -53,7 +47,7 @@
         },
         update: function(){
           var data = google.visualization.arrayToDataTable(this.data[0]);
-          var options = extend(this.chartOptions, {
+          var options = cs.extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
             width: parseInt(this.width)
@@ -74,7 +68,7 @@
         },
         update: function(){
           var data = google.visualization.arrayToDataTable(this.data[0]);
-          var options = extend(this.chartOptions, {
+          var options = cs.extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
             width: parseInt(this.width)
@@ -93,7 +87,7 @@
         },
         update: function(){
           var data = google.visualization.arrayToDataTable(this.data[0]);
-          var options = extend(this.chartOptions, {
+          var options = cs.extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
             width: parseInt(this.width)
@@ -112,7 +106,7 @@
         },
         update: function(){
           var data = google.visualization.arrayToDataTable(this.data[0]);
-          var options = extend(this.chartOptions, {
+          var options = cs.extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
             width: parseInt(this.width)
@@ -132,7 +126,7 @@
         },
         update: function(){
           var data = google.visualization.arrayToDataTable(this.data[0]);
-          var options = extend(this.chartOptions, {
+          var options = cs.extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
             width: parseInt(this.width)
