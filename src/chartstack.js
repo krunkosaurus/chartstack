@@ -616,6 +616,7 @@
     }
   }
 
+/*
   function preBootstrap(){
     setTimeout(function(){
       //console.log('chartstack.libraries', chartstack.libraries);
@@ -623,6 +624,7 @@
     // TODO: Hard-coded support for Google Analytics for now.
     // document.addEventListener("DOMContentLoaded", bootstrap);
   }
+*/
 
   // Called when DOM and chart libs are loaded and ready.
   function bootstrap (){
