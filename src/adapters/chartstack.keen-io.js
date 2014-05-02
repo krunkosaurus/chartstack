@@ -4,9 +4,8 @@
   var each = cs.each;
 
   cs.addAdapter('keen-io', function(response){
-    var self = this, data; //, output;
+    var self = this, data;
     var schema = self.schema || false;
-    //var response = { result: 2450 };
 
     // Default Response Map
     if (!schema) {
@@ -84,7 +83,7 @@
               path: "result",
               type: "number",
               label: "Metric",
-              format: "1,000.00"
+              format: "1,000"
             }
           ]
         }
@@ -94,27 +93,10 @@
 
     if (schema) {
       data = new cs.Dataform(response, schema);
-      //output = data;
+    } else {
+      data = { table: [] };
     }
 
-    // data = new cs.dataform(response, schema);
-    // output = data.table;
-
-    // Date formatting
-    /*
-    if (chartstack.moment) {
-      each(output, function(row, i){
-        each(row, function(cell, j){
-          if (j == 0) {
-            if (moment(cell).isValid()) {
-              output[i][j] = (self.dateformat) ? chartstack.moment(cell).format(self.dateformat) : new Date(cell);
-            }
-          }
-        });
-      });
-    }
-    */
-    //console.log(data);
     return data;
   });
 

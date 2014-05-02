@@ -48,10 +48,6 @@
           index: false,
           value: false,
           label: false
-        },
-        sort: {
-          index: false,
-          value: false
         }
       }, self.schema);
       options = _optHash(options);
@@ -78,8 +74,10 @@
 
   function _select(options){
     //console.log('Selecting', options);
+
     var self = this,
-        target_set = [];
+        target_set = [],
+        unique_keys = [];
 
     var root = (function(){
       var root, parsed;
@@ -99,18 +97,29 @@
       target_set.push(property.path.split(" -> "));
     });
 
-    // Parse each record
-    each(root, function(record, interval){
-      var property_set = [];
-      each(target_set, function(target, i){
-        var result = parse.apply(self, [record].concat(target));
-        property_set.push(result[0]);
-        if (interval == 0) {
-          self.table[0].push(target[target.length-1]);
+    // Retrieve keys found in asymmetrical collections
+    if (target_set.length == 0) {
+      each(root, function(record, interval){
+        var flat = flatten(record);
+        for (var key in flat) {
+          if (flat.hasOwnProperty(key) && unique_keys.indexOf(key) == -1) {
+            unique_keys.push(key);
+            target_set.push([key]);
+          }
         }
       });
-      each(property_set, function(row, i){
-        self.table.push(property_set);
+    }
+
+    // Parse each record
+    each(root, function(record, interval){
+      var flat = flatten(record);
+      self.table.push([]);
+      each(target_set, function(target, i){
+        var flat_target = target.join(".");
+        if (interval == 0) {
+          self.table[0].push(flat_target);
+        }
+        self.table[interval+1].push(flat[flat_target] || null)
       });
     });
 
@@ -131,15 +140,14 @@
     var value_set = (options.unpack.value) ? options.unpack.value.path.split(" -> ") : false,
         label_set = (options.unpack.label) ? options.unpack.label.path.split(" -> ") : false,
         index_set = (options.unpack.index) ? options.unpack.index.path.split(" -> ") : false;
+    //console.log(index_set, label_set, value_set);
 
     var value_desc = (value_set[value_set.length-1] !== "") ? value_set[value_set.length-1] : "Value",
         label_desc = (label_set[label_set.length-1] !== "") ? label_set[label_set.length-1] : "Label",
         index_desc = (index_set[index_set.length-1] !== "") ? index_set[index_set.length-1] : "Index";
 
-    var sort_index = (options.sort.index) ? options.sort.index : false,
-        sort_value = (options.sort.value) ? options.sort.value : false;
-
-    //console.log(index_set, label_set, value_set);
+    var sort_index = (options.sort && options.sort.index) ? options.sort.index : false,
+        sort_value = (options.sort && options.sort.value) ? options.sort.value : false;
 
     // Prepare root for parsing
     var root = (function(){
@@ -168,7 +176,6 @@
       var plucked_value = (value_set) ? parse.apply(self, [record].concat(value_set)) : false,
           plucked_label = (label_set) ? parse.apply(self, [record].concat(label_set)) : false,
           plucked_index = (index_set) ? parse.apply(self, [record].concat(index_set)) : false;
-
       //console.log(plucked_index, plucked_label, plucked_value);
 
       // Inject row for each index
@@ -230,12 +237,6 @@
 
       // Append values
       if (plucked_value) {
-        /*each(self.table, function(row, i){
-          if (i > 0) {
-            self.table[i].push(plucked_value[i-1]);
-          }
-        })*/
-
         // Correct for odd root cases
         if (root.length < self.table.length-1) {
           if (interval == 0) {
@@ -250,30 +251,6 @@
             self.table[interval+1].push(value);
           });
         }
-
-        /*each(plucked_value, function(value, i){
-
-          if (plucked_index) {
-            if (plucked_label) {
-
-            } else {
-
-            }
-          }
-
-          if ((plucked_index && !plucked_label) || (!plucked_index && plucked_label)) {
-          }
-          if (plucked_index && plucked_label) {
-          }
-          if (!plucked_index && !plucked_label) {
-          }
-
-          if (self.table.length == plucked_value.length) {
-
-          }
-          //console.log(value, interval, plucked_value.length, self.table.length-1);
-          self.table[interval+1].push(value);
-        });*/
       }
 
     });
@@ -319,12 +296,12 @@
 
       each(args, function(el){
 
-        //console.log('here', (target == ""), el, root[el]);
-        if (target == "" && typeof el == "number") {
-          //console.log('here', typeof(el), el);
-          return result.push(el);
+        // Grab the numbers and nulls
+        if (target == "") {
+          if (typeof el == "number" || el == null) {
+            return result.push(el);
+          }
         }
-        //
 
         if (el[target] || el[target] === 0 || el[target] !== void 0) {
           // Easy grab!
@@ -371,10 +348,27 @@
     return loop.apply(this, arguments);
   }
 
-
-
   // Utilities
   // --------------------------------------
+
+  // Awesomeness in code form, by Will Rayner (penguinboy)
+  // https://gist.github.com/penguinboy/762197
+  function flatten(ob) {
+    var toReturn = {};
+    for (var i in ob) {
+      if (!ob.hasOwnProperty(i)) continue;
+      if ((typeof ob[i]) == 'object') {
+        var flatObject = flatten(ob[i]);
+        for (var x in flatObject) {
+          if (!flatObject.hasOwnProperty(x)) continue;
+          toReturn[i + '.' + x] = flatObject[x];
+        }
+      } else {
+        toReturn[i] = ob[i];
+      }
+    }
+    return toReturn;
+  }
 
   // via: https://github.com/spocke/punymce
   function is(o, t){
@@ -411,7 +405,7 @@
     return 1;
   }
 
-  // Adapter to exclude null values
+  // Adapted to exclude null values
   function extend(o, e){
     each(e, function(v, n){
       if (is(o[n], 'object') && is(v, 'object')){
@@ -426,7 +420,8 @@
   extend(Dataform, {
     each: each,
     extend: extend,
-    is: is
+    is: is,
+    flatten: flatten
   });
 
 
@@ -441,7 +436,7 @@ Dataform.prototype.format = function(opts){
 
     var defaults = {
       'number': {
-        format: '1,000.00',
+        format: '0', // 1,000.00
         prefix: '',
         suffix: ''
         //modifier: '*1'
@@ -472,7 +467,7 @@ Dataform.prototype.format = function(opts){
         // Replace labels
         if (i == 0) {
           each(row, function(cell, j){
-            if (options[j].label) {
+            if (options[j] && options[j].label) {
               self.table[i][j] = options[j].label;
             }
           });
@@ -575,6 +570,14 @@ function _applyFormat(value, opts){
     }
   }
 
+  if (options.replace) {
+    each(options.replace, function(value, key){
+      if (output == key || String(output) == String(key) || parseFloat(output) == parseFloat(key)) {
+        output = value;
+      }
+    });
+  }
+
   if (options.type && options.type == 'date') {
 
     if (options.format && moment && moment(value).isValid()) {
@@ -606,18 +609,13 @@ function _applyFormat(value, opts){
       }
     }
 
-    if (options.replace) {
-      each(options.replace, function(value, key){
-        if (output == key) {
-          output = value;
-        }
-      });
-    }
-
   }
 
   if (options.type && options.type == 'number') {
-    if (options.format) {
+
+    if (options.format && !isNaN(parseFloat(output))) {
+
+      output = parseFloat(output);
 
       // Set decimals
       if (options.format.indexOf('.') !== -1) {
@@ -631,10 +629,11 @@ function _applyFormat(value, opts){
       // Set commas
       if (options.format.indexOf(',') !== -1) {
         output = (function(num){
-          while (/(\d+)(\d{3})/.test(num.toString())){
-            num = num.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+          var split = String(num).split(".");
+          while (/(\d+)(\d{3})/.test(split[0])){
+            split[0] = split[0].replace(/(\d+)(\d{3})/, '$1'+','+'$2');
           }
-          return num;
+          return split.join(".");
         })(output);
       }
 

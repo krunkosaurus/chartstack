@@ -292,7 +292,10 @@
               },
               value: {
                 path: "result -> ",
-                type: "number"
+                type: "number",
+                replace: {
+                  42: 75
+                }
               }
             }
           }
@@ -402,7 +405,7 @@
         dataset: new chartstack.Dataset({
           adapter: 'keen-io',
           dateformat: 'MM-DD',
-          url: '../api/keen/multilinechart.json'
+          url: '../api/keen/linechart.json'
         }),
         view: new chartstack.GoogleCharts.ColumnChart({
           el: document.getElementById('column-js'),

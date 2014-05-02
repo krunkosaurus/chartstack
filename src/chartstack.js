@@ -200,9 +200,10 @@
     transform: function() {
       var self = this;
       each(self.resources, function(resource, index){
-        var adapter = resource.adapter || 'default'; //chartstack.adapters.default;
+        var adapter = resource.adapter || 'default';
         var response = self.responses[index];
-        if (adapter) {
+
+        if (adapter && chartstack.adapters[adapter]) {
           self.data[index] = chartstack.adapters[adapter].call(resource, response);
         } else {
           self.data[index] = response.data;
@@ -237,7 +238,7 @@
     extend(self, config);
 
     self.chartOptions = self.chartOptions || {};
-    self.height = self.height || chartstack.defaults.height || 400;
+    self.height = self.height || chartstack.defaults.height;
     self.width = self.width || chartstack.defaults.width || self.el.offsetWidth;
 
     // Set default event handlers
@@ -451,7 +452,7 @@
 
       } else if (typeof setupData.dataset == 'string'){
         $chart.dataset = new chartstack.Dataset(setupData.dataset.replace(/(\r\n|\n|\r|\ )/g,""));
-        $chart.dataset.resources[0].adapter = setupData.adapter || false;
+        $chart.dataset.resources[0].adapter = setupData.adapter || 'default';
         $chart.dataset.resources[0].dataformat = setupData.dataformat || 'json';
         $chart.dataset.resources[0].dateformat = setupData.dateformat || false;
       }
