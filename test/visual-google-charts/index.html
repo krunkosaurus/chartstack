@@ -15,6 +15,11 @@ test: true
   <div id="bar" class="chart"></div>
 </section>
 
+<section>
+  <h3>Default Funnel</h3>
+  <img src="funnel.png" />
+  <div id="funnel" class="chart"></div>
+</section>
 
 <style>
   @media (min-width: 75rem){
@@ -83,31 +88,48 @@ describe('Google Charts', function(){
       })
     });
 
+    var funnel = new chartstack.Chart({
+      dataset: new chartstack.Dataset({
+        adapter: 'keen-io',
+        url: '../api/keen/funnel.json'
+      }),
+      view: new chartstack.GoogleCharts.BarChart({
+        el: document.getElementById('funnel'),
+        title: 'Funnnnnels'
+      })
+    });
+
     //https://github.com/ariya/phantomjs/issues/10534
-    describe('pie chart visual', function(){
-      it('should match our visual spec', function(done){
-        setTimeout(function(){
-          var svg = document.getElementById('pie').getElementsByTagName('svg')[0];
-          var c = new chartstack.Simg(svg);
-          // c.replace();
-          c.toBinaryBlob(function(blob){
-            // Same image pie.png
-            // Test diff image pie2.png
-            url2blob('pie.png', function(blob2){
-              var diff = resemble(blob).compareTo(blob2).ignoreColors().onComplete(function(data){
-                expect(data.isSameDimensions).to.be.true;
-                expect(data.misMatchPercentage).to.equal("0.00");
-                done();
+    describe('Test visuals', function(){
+      chartstack.each(chartstack.charts, function(chart){
+        var chartType = chart.view.type;
+
+        it(chartType + 'should match our visual spec', function(done){
+
+          setTimeout(function(){
+            var svg = chart.view.el.getElementsByTagName('svg')[0];
+            var c = new chartstack.Simg(svg);
+            c.toBinaryBlob(function(blob){
+              // Same image pie.png
+              // Test diff image pie2.png
+              url2blob(chartType, function(blob2){
+                var diff = resemble(blob).compareTo(blob2).ignoreColors().onComplete(function(data){
+                  expect(data.isSameDimensions).to.be.true;
+                  expect(data.misMatchPercentage).to.equal("0.00");
+                  done();
+                });
               });
             });
-          });
+            done();
+          },50);
 
-        },50);
+        });
+
+
 
       });
     });
 
-    done();
   });
 
 });
