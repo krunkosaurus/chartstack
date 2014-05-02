@@ -17,24 +17,3 @@ Select a test from the menu to proceed.
 
 * [Github project page](https://github.com/keenlabs/chartstack)
 * [Travis CI page](https://magnum.travis-ci.com/keenlabs/chartstack)
-
-
-### Example code
-
-This is a placeholder to show how we can use Jekyll's code syntax highlighting for future documentation:
-
-{% highlight js %}
-      var column = new chartstack.Chart({
-        dataset: new chartstack.Dataset({
-          adapter: 'keen-io',
-          dateformat: 'MM-DD',
-          url: '../api/keen/multilinechart.json'
-        }),
-        view: new chartstack.GoogleCharts.ColumnChart({
-          title: 'Column chart',
-          el: document.getElementById('column-js'),
-          height: '300',
-          stacked: true
-        })
-      });
-{% endhighlight %}

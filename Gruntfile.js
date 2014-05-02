@@ -96,7 +96,8 @@ module.exports = function(grunt) {
         files: [
           '<%= chartstack.scriptPath %>/**/*.js',
           '<%= chartstack.testPath %>/visual-*/*.html',
-          '<%= chartstack.testPath %>/test-*/*.html'
+          '<%= chartstack.testPath %>/test-*/*.html',
+          '<%= chartstack.testPath %>/_posts/*.*'
         ],
         tasks: ['build', 'copy:test', 'jekyll:dist']
       }
