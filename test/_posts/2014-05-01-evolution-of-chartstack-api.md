@@ -171,7 +171,10 @@ var data = chartstack.Dataset({
   .on('error', function(){
     this.view.trigger('freeze');
     this.view.popNotice('API down.');
-  }
+  })
+  .on('update', function(){
+    this.view.draw();
+  });
 
 var chart = chartstack.columnChart({
   title: 'Column chart',
@@ -187,4 +190,6 @@ document.getElementById(trafficTab').addEventListener('click', function(){
 {% endhighlight %}
 <center>Figure 9: _Final embed code (super complex example 1)_</center>
 
-That's concludes the idea of further evolving the Chartstack API into its final form.  Let me know your thoughts.
+Note here that our `Data` object also doesn't just request data as soon as it's instantiated. It has a `.fetch`. We don't see it here because when the `Data` object is passed to `columnChart` it internally calls fetch on it's data when `chart.draw()` is called.
+
+That concludes the idea of further evolving the Chartstack API into its final form.  Let me know your thoughts.
