@@ -741,7 +741,6 @@
 
     }else{
       namespace.loaded = true;
-      console.log('namespace', namespace);
     }
   }
 
