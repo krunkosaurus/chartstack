@@ -276,7 +276,29 @@
 
       var funnel = new chartstack.Chart({
         dataset: new chartstack.Dataset({
-          url: '../api/keen/funnel.json'
+          url: '../api/keen/funnel.json',
+          schema: {
+            unpack: {
+              index: {
+                path: "steps -> event_collection",
+                type: "string",
+                replace: {
+                  "pageview": "Visit",
+                  "signup": "Join",
+                  "return-login": "Return",
+                  "create-post": "Create",
+                  "send-invite": "Invite"
+                }
+              },
+              value: {
+                path: "result -> ",
+                type: "number",
+                replace: {
+                  42: 75
+                }
+              }
+            }
+          }
         }),
         view: new chartstack.GoogleCharts.BarChart({
           el: document.getElementById('funnel-js'),
@@ -383,7 +405,7 @@
         dataset: new chartstack.Dataset({
           adapter: 'keen-io',
           dateformat: 'MM-DD',
-          url: '../api/keen/multilinechart.json'
+          url: '../api/keen/linechart.json'
         }),
         view: new chartstack.GoogleCharts.ColumnChart({
           el: document.getElementById('column-js'),

@@ -175,20 +175,24 @@
 
       each(self.resources, function(resource, index){
 
-        if (resource.url) {
+        if (resource.state == 'initialized' && resource.response !== void 0) {
+          return finish(resource.response, index);
+
+        } else if (resource.url) {
           var url = resource.url + buildQueryString(resource.params);
           var successSequencer = function(response){
             finish(response, index);
           };
 
           if (resource.state == 'initialized' && resource.response !== void 0) {
-            finish(resource.response, index);
+            //finish(resource.response, index);
           } else {
             chartstack.getAjax(url, successSequencer, error);
           }
 
           //chartstack.getAjax(url, successSequencer, error);
           //chartstack.getJSONP(url, successSequencer);
+
         } else {
           error();
         }
@@ -200,9 +204,9 @@
     transform: function() {
       var self = this;
       each(self.resources, function(resource, index){
-        var adapter = resource.adapter || chartstack.adapters.default;
+        var adapter = resource.adapter || 'default';
         var response = self.responses[index];
-        if (adapter) {
+        if (adapter && chartstack.adapters[adapter]) {
           self.data[index] = chartstack.adapters[adapter].call(resource, response);
         } else {
           self.data[index] = response.data;
@@ -237,7 +241,8 @@
     extend(self, config);
 
     self.chartOptions = self.chartOptions || {};
-    self.width = self.width || self.el.offsetWidth;
+    self.height = self.height || chartstack.defaults.height;
+    self.width = self.width || chartstack.defaults.width || self.el.offsetWidth;
 
     // Set default event handlers
     self.on("error", function(){
@@ -448,9 +453,15 @@
       if (options.dataset instanceof chartstack.Dataset) {
         $chart.dataset = options.dataset;
 
+      } else if (typeof options.dataset == 'string') {
+        $chart.dataset = new chartstack.Dataset(options.dataset.replace(/(\r\n|\n|\r|\ )/g,""));
+        $chart.dataset.resources[0].adapter = options.adapter || 'default';
+        $chart.dataset.resources[0].dataformat = options.dataformat || 'json';
+        $chart.dataset.resources[0].dateformat = options.dateformat || false;
+
       } else if (typeof setupData.dataset == 'string'){
         $chart.dataset = new chartstack.Dataset(setupData.dataset.replace(/(\r\n|\n|\r|\ )/g,""));
-        $chart.dataset.resources[0].adapter = setupData.adapter || false;
+        $chart.dataset.resources[0].adapter = setupData.adapter || 'default';
         $chart.dataset.resources[0].dataformat = setupData.dataformat || 'json';
         $chart.dataset.resources[0].dateformat = setupData.dateformat || false;
       }

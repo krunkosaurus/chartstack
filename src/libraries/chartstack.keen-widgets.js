@@ -22,7 +22,6 @@
           border-radius: 4px; \
           color: #fff; \
           font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; \
-          margin: 0 auto; \
           padding: 10px 0; \
           text-align: center; \
         } \
@@ -37,6 +36,7 @@
           font-size: 24px; \
           font-weight: 200; \
         }";
+        // margin: 0 auto; \
       document.body.appendChild(css);
 
       this.render();
@@ -44,9 +44,9 @@
     //render: function(){},
     update: function(){
       this.el.innerHTML = '' +
-        '<div class="cs-widget cs-number" style="width:' + parseInt(this.chartOptions.width) + 'px;">' +
-          '<span class="cs-widget-title">' + this.data[0][1][1] + '</span>' +
-          '<span class="cs-widget-subtitle">' + (this.chartOptions.title || 'Result') + '</span>' +
+        '<div class="cs-widget cs-number" style="width:' + parseInt(this.width) + 'px;">' +
+          '<span class="cs-widget-title">' + this.data[0].table[1] + '</span>' +
+          '<span class="cs-widget-subtitle">' + (this.title || 'Result') + '</span>' +
         '</div>';
     }
   });
