@@ -184,7 +184,7 @@ var chart = chartstack.columnChart({
   dataset: data
 })
 
-document.getElementById(trafficTab').addEventListener('click', function(){
+document.getElementById('trafficTab').addEventListener('click', function(){
    chart.draw();
 });
 {% endhighlight %}
