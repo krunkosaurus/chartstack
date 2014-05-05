@@ -81,7 +81,6 @@
   extend(chartstack, Events);
 
 
-
   // -----------------------------
   // DataResource class
   // -----------------------------
@@ -176,20 +175,24 @@
 
       each(self.resources, function(resource, index){
 
-        if (resource.url) {
+        if (resource.state == 'initialized' && resource.response !== void 0) {
+          return finish(resource.response, index);
+
+        } else if (resource.url) {
           var url = resource.url + buildQueryString(resource.params);
           var successSequencer = function(response){
             finish(response, index);
           };
 
           if (resource.state == 'initialized' && resource.response !== void 0) {
-            finish(resource.response, index);
+            //finish(resource.response, index);
           } else {
             chartstack.getAjax(url, successSequencer, error);
           }
 
           //chartstack.getAjax(url, successSequencer, error);
           //chartstack.getJSONP(url, successSequencer);
+
         } else {
           error();
         }
@@ -201,9 +204,9 @@
     transform: function() {
       var self = this;
       each(self.resources, function(resource, index){
-        var adapter = resource.adapter || chartstack.adapters.default;
+        var adapter = resource.adapter || 'default';
         var response = self.responses[index];
-        if (adapter) {
+        if (adapter && chartstack.adapters[adapter]) {
           self.data[index] = chartstack.adapters[adapter].call(resource, response);
         } else {
           self.data[index] = response.data;
@@ -238,7 +241,8 @@
     extend(self, config);
 
     self.chartOptions = self.chartOptions || {};
-    self.width = self.width || self.el.offsetWidth;
+    self.height = self.height || chartstack.defaults.height;
+    self.width = self.width || chartstack.defaults.width || self.el.offsetWidth;
 
     // Set default event handlers
     self.on("error", function(){
@@ -449,9 +453,15 @@
       if (options.dataset instanceof chartstack.Dataset) {
         $chart.dataset = options.dataset;
 
+      } else if (typeof options.dataset == 'string') {
+        $chart.dataset = new chartstack.Dataset(options.dataset.replace(/(\r\n|\n|\r|\ )/g,""));
+        $chart.dataset.resources[0].adapter = options.adapter || 'default';
+        $chart.dataset.resources[0].dataformat = options.dataformat || 'json';
+        $chart.dataset.resources[0].dateformat = options.dateformat || false;
+
       } else if (typeof setupData.dataset == 'string'){
         $chart.dataset = new chartstack.Dataset(setupData.dataset.replace(/(\r\n|\n|\r|\ )/g,""));
-        $chart.dataset.resources[0].adapter = setupData.adapter || false;
+        $chart.dataset.resources[0].adapter = setupData.adapter || 'default';
         $chart.dataset.resources[0].dataformat = setupData.dataformat || 'json';
         $chart.dataset.resources[0].dateformat = setupData.dateformat || false;
       }
@@ -470,8 +480,7 @@
     setup();
 
     $chart.on("download", function(){
-      var c;
-      var svg = this.view.el.getElementsByTagName('svg');
+      var c, svg = this.view.el.getElementsByTagName('svg');
 
       if (svg.length){
         svg = svg[0];
@@ -481,8 +490,7 @@
     });
 
     $chart.on("freeze", function(cb){
-      var c;
-      var svg = this.view.el.getElementsByTagName('svg');
+      var c, svg = this.view.el.getElementsByTagName('svg');
       cb = cb || function(){};
 
       if (svg.length){
@@ -543,7 +551,7 @@
     buildQueryString: buildQueryString,
     getAjax : getAjax,
     getJSONP: getJSONP,
-    addLibrary: addLibrary,
+    registerLibrary: registerLibrary,
     // Attach event for every chart we have.
     on: function(){
       var args = arguments;
@@ -619,6 +627,16 @@
     }
   }
 
+/*
+  function preBootstrap(){
+    setTimeout(function(){
+      //console.log('chartstack.libraries', chartstack.libraries);
+    },0);
+    // TODO: Hard-coded support for Google Analytics for now.
+    // document.addEventListener("DOMContentLoaded", bootstrap);
+  }
+*/
+
   // Called when DOM and chart libs are loaded and ready.
   function bootstrap (){
     // If graph library isn't set in defaults, match provider to the first graph
@@ -687,21 +705,44 @@
     }
   }
 
-  // Add a chart rendering library.
-  function addLibrary(obj){
+  // Register library to viz and data components.
+  function registerLibrary(obj){
     // Create new chart namespace.
-    var namespace = chartstack[obj.namespace] = {};
-    var libList = {};
+    var namespace = chartstack[obj.name] = {};
+    var vizCharts = {};
 
     // For each chart type add it to the namespace.
     each(obj.charts, function(chart){
-      namespace[chart.type] = chartstack.Visualization.extend(chart.events);
-      libList[chart.type.toLowerCase()] = namespace[chart.type];
+      var chartLow = chart.type.toLowerCase();
+      var obj = extend(chart.events,{
+        type: chartLow
+      });
+      // Instantiate new visualization object per chart.
+      namespace[chart.type] = chartstack.Visualization.extend(obj);
+      // Queue chart types to create new Visualization.
+      vizCharts[chartLow] = namespace[chart.type];
     });
 
-    chartstack.Visualization.register(obj.windowNamespace, libList, {
+    // Register Visualization.
+    chartstack.Visualization.register(obj.namespace, vizCharts, {
       attributes: obj.attributes
     });
+
+    // If loadLib method exists it is called to load the graphic library.
+    // Must execute passed callback when the library is loaded.
+    // If loadLib does not exist, we assume the user loaded the library before
+    // chartstack.js already (most cases).
+    if ('loadLib' in obj){
+      namespace.loaded = false;
+      obj.loadLib(function(){
+        namespace.loaded = true;
+        chartstack.bootstrap();
+      });
+
+    }else{
+      namespace.loaded = true;
+      console.log('namespace', namespace);
+    }
   }
 
   function loadScript(url, cb) {
@@ -861,772 +902,8 @@
     };
   }
 
-  // TODO: Hard-coded support for Google Analytics for now.
-  // document.addEventListener("DOMContentLoaded", bootstrap);
-  document.write('\x3Cscript type="text/javascript" src="https://www.google.com/jsapi?autoload=' + encodeURIComponent('{"modules":[{"name":"visualization","version":"1","packages":["corechart","table"],callback: chartstack.bootstrap}]}') + '">\x3C/script>');
-
+  // preBootstrap();
 })(this);
-
-/* global chartstack */
-/* jshint camelcase: false */
-(function(cs){
-  var proto;
-  var each = chartstack.each;
-
-  cs.dataform = function(data, map) {
-    this.build(data, map);
-  };
-
-  proto = cs.dataform.prototype;
-
-  proto.build = function(data, map) {
-
-    // map.root
-    // map.each.index
-    // map.each.label
-    // map.each.value
-
-    var self = this, _root;
-    // root = data[map.root];
-    if (map.root == "") {
-      _root = [[data]];
-      //console.log('root', _root[0])
-    } else {
-      _root = parse.apply(self, [data].concat(map.root.split(" -> ")));
-    }
-    self.root = _root[0],
-    self.map = map,
-    self.table = [],
-    self.series = [],
-    self.raw = data;
-
-    self.cols = (function(){
-      var split_index, split_value, output = { fixed: [] };
-
-      split_value = self.map.each.value.split(" -> ");
-      split_index =  (self.map.each.index) ? self.map.each.index.split(" -> ") : self.map.each.value.split(" -> ");
-      output.fixed.push(split_index[split_index.length-1]);
-
-      if (self.map.each.label) {
-        output.cells = self.map.each.label.split(" -> ");
-      } else {
-        output.fixed.push(split_value[split_value.length-1])
-      }
-      return output;
-
-      /*
-      if (self.map.each.index) {
-        split_index = self.map.each.index.split(" -> ");
-        output.fixed.push(split_index[split_index.length-1]);
-      } else {
-        output.fixed.push('result');
-      }*/
-
-      /*var split_index = self.map.each.index.split(" -> ");
-      var split_value = self.map.each.value.split(" -> ");
-      var output = {
-        fixed: [split_index[split_index.length-1]]
-      };
-      if (self.map.each.label) {
-        output.cells = self.map.each.label.split(" -> ");
-      } else {
-        output.fixed.push(split_value[split_value.length-1]);
-      }
-      return output;*/
-    })();
-
-
-    self.rows = {
-      index: (self.map.each.index) ? self.map.each.index.split(" -> ") : ['result'],
-      cells: (self.map.each.value) ? self.map.each.value.split(" -> ") : []
-    };
-
-    self.order = (function(){
-      var output = {};
-      if (self.map.sort) {
-        output.rows = self.map.sort.index || 'asc';
-        output.cols = self.map.sort.label || 'desc';
-      }
-      return output;
-    })();
-
-    // SORT ROWS
-    if (self.order.rows.length > 0) {
-      if (self.root instanceof Array) {
-        self.root.sort(function(a, b){
-          var aIndex = parse.apply(self, [a].concat(self.rows.index));
-          var bIndex = parse.apply(self, [b].concat(self.rows.index));
-
-          if (self.order.rows == 'asc') {
-            if (aIndex > bIndex){return 1;}
-            if (aIndex < bIndex){return -1;}
-            return 0;
-          } else {
-            if (aIndex > bIndex){return -1;}
-            if (aIndex < bIndex){return 1;}
-            return 0;
-          }
-
-          return false;
-        });
-      }
-    }
-
-    // ADD SERIES
-    (function(){
-      //var fixed, cells, output;
-      //self.cols.label = (self.cols.fixed.length > 0) ? self.cols.fixed[0] : 'series';
-      if (self.cols.fixed && self.cols.fixed[self.cols.fixed.length-1] == "") {
-        self.cols.label = self.cols.fixed[self.cols.fixed.length-1];
-        fixed = self.cols.fixed;
-        fixed.splice((fixed.length-1),1);
-      } else {
-        self.cols.label = fixed = self.cols.fixed[0];
-        fixed = self.cols.fixed;
-      }
-
-      //var fixed = (self.cols.fixed) ? self.cols.fixed : [];
-      var cells = (self.cols.cells) ? parse.apply(self, [self.root[0]].concat(self.cols.cells)) : [];
-      var output = fixed.concat(cells);
-      if (output.length > 1) {
-        output.splice(0,1);
-      }
-      each(output, function(el, i){
-        self.series.push({ key: el, values: [] });
-      });
-    })();
-
-    // ADD SERIES' RECORDS
-    if (self.root instanceof Array || typeof self.root == 'object') {
-      each(self.root, function(el){
-        var index = parse.apply(self, [el].concat(self.rows.index));
-        var cells = parse.apply(self, [el].concat(self.rows.cells));
-        //console.log(index, cells);
-        if (index.length > 1) {
-          each(index, function(key, j){
-            var output = {};
-            output[self.cols.label] = key;
-            output.value = cells[j];
-            self.series[0].values.push(output);
-          });
-        } else {
-          each(cells, function(cell, j){
-            var output = {};
-            output[self.cols.label] = index[0];
-            output.value = cell;
-            self.series[j].values.push(output);
-          });
-        }
-      });
-    } else {
-      (function(){
-        var output = {};
-        output[self.cols.label] = 'result';
-        output.value = self.root;
-        self.series[0].values.push(output);
-      })();
-    }
-
-
-    // SORT COLUMNS
-    if (self.order.cols.length > 0) {
-      self.series = self.series.sort(function(a, b){
-        var aTotal = 0;
-        var bTotal = 0;
-        each(a.values, function(record){
-          aTotal += record.value;
-        });
-        each(b.values, function(record){
-          bTotal += record.value;
-        });
-
-        if (self.order.cols == 'asc') {
-          return aTotal - bTotal;
-        } else {
-          return bTotal - aTotal;
-        }
-      });
-    }
-
-    // BUILD TABLE
-    self.table = [];
-
-    //console.log(self.cols.fixed, self.cols.index);
-    //if (self.cols.index) {
-      self.table.push([self.cols.label]);
-      each(self.series[0].values, function(value){
-        self.table.push([value[self.cols.label]]);
-      });
-    /*} else {
-      self.table.push([]);
-      each(self.series[0].values, function(value){
-        self.table.push([]);
-      });
-    }*/
-
-    each(self.series, function(series){
-      self.table[0].push(series.key);
-      each(series.values, function(record, j){
-        self.table[j+1].push(record.value);
-      });
-    });
-
-    // COLUMN TRANSFORMS
-    /*
-    if (setup.cols.transform) {
-      for (var transform in setup.cols.transform) {
-        if (transform == 'all') {
-          each(self.table[0], function(column, index){
-            if (index > 0) {
-              self.table[0][index] = setup.cols.transform[transform](self.table[0][index]);
-            }
-          });
-        } else {
-          transform = parseInt(transform);
-          if (self.table[0].length > transform) {
-            self.table[0][transform] = setup.cols.transform[transform](self.table[0][transform]);
-          }
-        }
-      }
-    }*/
-
-    // ROW TRANSFORMS
-    /*
-    if (setup.rows.transform) {
-      each(self.table, function(row, index){
-        if (index > 0) {
-          for (var transform in setup.rows.transform) {
-            self.table[index][transform] = setup.rows.transform[transform](self.table[index][transform]);
-          }
-        }
-      });
-    }*/
-
-    return this;
-  };
-
-  function parse() {
-    var result = [];
-    var loop = function() {
-      var root = arguments[0];
-      var args = Array.prototype.slice.call(arguments, 1);
-      var target = args.pop();
-
-      if (args.length === 0) {
-        if (root instanceof Array) {
-          args = root;
-        } else if (typeof root === 'object') {
-          args.push(root);
-        }
-      }
-
-      each(args, function(el){
-
-
-        if (target == "" && typeof el == "number") {
-          //console.log(typeof(el), el);
-          return result.push(el);
-        }
-        //
-
-        if (el[target] || el[target] === 0 || el[target] !== void 0) {
-          // Easy grab!
-          if (el[target] === null) {
-            return result.push('');
-          } else {
-            return result.push(el[target]);
-          }
-
-        } else if (root[el]){
-          if (root[el] instanceof Array) {
-            // dive through each array item
-
-            each(root[el], function(n, i) {
-              var splinter = [root[el]].concat(root[el][i]).concat(args.slice(1)).concat(target);
-              return loop.apply(this, splinter);
-            });
-
-          } else {
-            if (root[el][target]) {
-              // grab it!
-              return result.push(root[el][target]);
-
-            } else {
-              // dive down a level!
-              return loop.apply(this, [root[el]].concat(args.splice(1)).concat(target));
-
-            }
-          }
-
-        } else {
-          // dive down a level!
-          return loop.apply(this, [el].concat(args.splice(1)).concat(target));
-
-        }
-
-        return;
-
-      });
-      if (result.length > 0) {
-        return result;
-      }
-    };
-    return loop.apply(this, arguments);
-  }
-
-})(chartstack);
-
-/* global chartstack */
-// Data normalizing adaper for keen.io API.
-(function(cs){
-  var each = cs.each;
-
-  cs.addAdapter('keen-io', function(response){
-    var self = this, data, output;
-    var map = self.map || false;
-    //var response = { result: 2450 };
-
-    // Default Response Map
-    if (!map) {
-
-      map = {
-        root: "result",
-        each: {},
-        sort: {
-          index: 'asc',
-          label: 'desc'
-        }
-      };
-
-      if (response.result instanceof Array) {
-
-        if (response.result.length > 0 && response.result[0]['value'] !== void 0){
-
-          if (response.result[0]['value'] instanceof Array) {
-            // Interval + Group_by
-
-            // Get value (interval result)
-            map.each.value = "value -> result";
-
-            // Get label (group_by field)
-            for (var key in response.result[0]['value'][0]){
-              if (key !== "result") {
-                map.each.label = "value -> " + key;
-                break;
-              }
-            }
-
-          } else {
-            // Interval, no Group_by
-            // Get value
-            map.each.value = "value";
-          }
-        }
-
-        if (response.result.length > 0 && response.result[0]['timeframe']) {
-          // Get index (start time)
-          map.each.index = "timeframe -> start";
-        }
-
-        if (response.result.length > 0 && response.result[0]['result']) {
-          // Get value (group_by)
-          map.each.value = "result";
-          for (var key in response.result[0]){
-            if (key !== "result") {
-              map.each.index = key;
-              break;
-            }
-          }
-        }
-
-        if (response.result.length > 0 && typeof response.result[0] == "number") {
-          map.root = "";
-          map.each.index = "steps -> event_collection";
-          map.each.value = "result -> ";
-        }
-
-        if (response.result.length == 0) {
-          map = false;
-          //data
-        }
-
-
-      } else {
-        // Metric: { result: 2450 } -> [['result'],[2450]]
-        /*data = {
-          table: [['result'], [response.result]],
-          series: [{ key: 'result', values: [{ value: response.result }] }]
-        };
-        output = data.table;*/
-        map.each.value = 'result';
-      }
-
-    }
-
-    if (map) {
-      data = new cs.dataform(response, map);
-      output = data.table;
-    }
-
-    // data = new cs.dataform(response, map);
-    // output = data.table;
-
-    // Date formatting
-    if (chartstack.moment) {
-      each(output, function(row, i){
-        each(row, function(cell, j){
-          if (j == 0) {
-            if (moment(cell).isValid()) {
-              output[i][j] = (self.dateformat) ? chartstack.moment(cell).format(self.dateformat) : new Date(cell);
-            }
-          }
-        });
-      });
-    }
-    //console.log(data);
-    return output;
-  });
-
-})(chartstack);
-
-/* global google, chartstack */
-(function(cs){
-  var each = cs.each;
-  var extend = cs.extend;
-
-  // -----------------------------
-  // Library Namespace
-  // -----------------------------
-
-  cs.Keen = cs.Keen || {};
-
-  // -----------------------------
-  // Type: Number
-  // -----------------------------
-
-  cs.Keen.Metric = cs.Visualization.extend({
-    initialize: function(){
-      var css = document.createElement("style");
-      css.type = "text/css";
-      css.innerHTML = ".cs-widget { \
-          background: #49c5b1; \
-          border-radius: 4px; \
-          color: #fff; \
-          font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; \
-          margin: 0 auto; \
-          padding: 10px 0; \
-          text-align: center; \
-        } \
-        .cs-widget-title { \
-          display: block; \
-          font-size: 84px; \
-          font-weight: 700; \
-          line-height: 84px; \
-        } \
-        .cs-widget-subtitle { \
-          display: block; \
-          font-size: 24px; \
-          font-weight: 200; \
-        }";
-      document.body.appendChild(css);
-
-      this.render();
-    },
-    //render: function(){},
-    update: function(){
-      this.el.innerHTML = '' +
-        '<div class="cs-widget cs-number" style="width:' + parseInt(this.chartOptions.width) + 'px;">' +
-          '<span class="cs-widget-title">' + this.data[0][1][1] + '</span>' +
-          '<span class="cs-widget-subtitle">' + (this.chartOptions.title || 'Result') + '</span>' +
-        '</div>';
-    }
-  });
-
-
-  // -----------------------------
-  // Register Methods
-  // -----------------------------
-
-  cs.Visualization.register("keen-io", {
-    "metric": cs.Keen.Metric
-  });
-
-})(chartstack);
-
-/* global google, chartstack */
-(function(cs){
-  var each = cs.each;
-  var extend = cs.extend;
-
-  cs.addLibrary({
-    namespace: 'GoogleCharts',
-    windowNamespace: 'google',
-    attributes: [
-      "animation",
-      "backgroundColor",
-      "bar",
-      "chartArea",
-      "fontName",
-      "fontSize",
-      "isStacked",
-      "hAxis",
-      "legend",
-      "orientation",
-      "titleTextStyle",
-      "tooltip",
-      "vAxis"
-    ],
-    charts: [{
-      type : 'AreaChart',
-      events: {
-        initialize: function(){
-          //this.trigger('error', 'testing pie errors');
-          this.render();
-        },
-        render: function(){
-          this._chart = this._chart || new google.visualization.AreaChart(this.el);
-        },
-        update: function(){
-          var data = google.visualization.arrayToDataTable(this.data[0]);
-          var options = extend(this.chartOptions, {
-            title: this.title || '',
-            height: parseInt(this.height),
-            width: parseInt(this.width)
-          });
-          this._chart.draw(data, options);
-        }
-      }
-    }, {
-      type : 'BarChart',
-      events: {
-        initialize: function(){
-          //console.log('bar!', this);
-          this.render();
-        },
-        render: function(){
-          this._chart = this._chart || new google.visualization.BarChart(this.el);
-        },
-        update: function(){
-          var data = google.visualization.arrayToDataTable(this.data[0]);
-          var options = extend(this.chartOptions, {
-            title: this.title || '',
-            height: parseInt(this.height),
-            width: parseInt(this.width)
-          });
-          this._chart.draw(data, options);
-        }
-      }
-    }, {
-      type : 'ColumnChart',
-      events: {
-        initialize: function(){
-          //console.log('bar!', this);
-          this.render();
-        },
-        render: function(){
-          this._chart = this._chart || new google.visualization.ColumnChart(this.el);
-          //this.chart.draw(data, options);
-        },
-        update: function(){
-          var data = google.visualization.arrayToDataTable(this.data[0]);
-          var options = extend(this.chartOptions, {
-            title: this.title || '',
-            height: parseInt(this.height),
-            width: parseInt(this.width)
-          });
-          this._chart.draw(data, options);
-        }
-      }
-    }, {
-      type : 'LineChart',
-      events: {
-        initialize: function(){
-          this.render();
-        },
-        render: function(){
-          this._chart = this._chart || new google.visualization.LineChart(this.el);
-        },
-        update: function(){
-          var data = google.visualization.arrayToDataTable(this.data[0]);
-          var options = extend(this.chartOptions, {
-            title: this.title || '',
-            height: parseInt(this.height),
-            width: parseInt(this.width)
-          });
-          this._chart.draw(data, options);
-        }
-      }
-    }, {
-      type : 'PieChart',
-      events: {
-        initialize: function(){
-          this.render();
-        },
-        render: function(){
-          this._chart = this._chart || new google.visualization.PieChart(this.el);
-        },
-        update: function(){
-          var data = google.visualization.arrayToDataTable(this.data[0]);
-          var options = extend(this.chartOptions, {
-            title: this.title || '',
-            height: parseInt(this.height),
-            width: parseInt(this.width)
-          });
-          this._chart.draw(data, options);
-        }
-      }
-    }, {
-      type : 'DataTable',
-      events: {
-        initialize: function(){
-          this.render();
-        },
-        render: function(){
-          this._chart = this._chart || new google.visualization.Table(this.el);
-          //this.chart.draw(data, options);
-        },
-        update: function(){
-          var data = google.visualization.arrayToDataTable(this.data[0]);
-          var options = extend(this.chartOptions, {
-            title: this.title || '',
-            height: parseInt(this.height),
-            width: parseInt(this.width)
-          });
-          this._chart.draw(data, options);
-        }
-      }
-    }]
-  });
-
-})(chartstack);
-
-(function(root){
-  var previousSimg = root.Simg;
-  var Simg = root.Simg = function(svg){
-    this.svg = svg;
-  };
-
-  Simg.noConflict = function(){
-    root.Simg = previousSimg;
-    return this;
-  };
-
-  Simg.getBase64Image = function(img) {
-    // From: http://stackoverflow.com/questions/934012/get-image-data-in-javascript
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-    var dataURL = canvas.toDataURL("image/png");
-
-    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-  };
-
-  Simg.prototype = {
-    // Return SVG text.
-    toString: function(svg){
-      if (!svg){
-        throw new Error('.toString: No SVG found.');
-      }
-
-      [
-        ['version', 1.1],
-        ['xmlns', "http://www.w3.org/2000/svg"],
-      ].forEach(function(item){
-        svg.setAttribute(item[0], item[1]);
-      });
-      return svg.parentNode.innerHTML;
-    },
-
-    // Return canvas with this SVG drawn inside.
-    toCanvas: function(cb){
-      this.toSvgImage(function(img){
-        var canvas = document.createElement('canvas');
-        var context = canvas.getContext("2d");
-
-        canvas.width = img.width;
-        canvas.height = img.height;
-
-        context.drawImage(img, 0, 0);
-        cb(canvas);
-      });
-    },
-
-    toSvgImage: function(cb){
-      var str = this.toString(this.svg);
-      var img = document.createElement('img');
-
-      if (cb){
-        img.onload = function(){
-          cb(img);
-        };
-      }
-
-      // Make the new img's source an SVG image.
-      img.setAttribute('src', 'data:image/svg+xml;base64,'+ btoa(str));
-    },
-
-    // Returns callback to new img from SVG.
-    // Call with no arguments to return svg image element.
-    // Call with callback to return png image element.
-    toImg: function(cb){
-      this.toCanvas(function(canvas){
-        var canvasData = canvas.toDataURL("image/png");
-        var img = document.createElement('img');
-
-        img.onload = function(){
-          cb(img);
-        };
-
-        // Make pngImg's source the canvas data.
-        img.setAttribute('src', canvasData);
-      });
-    },
-
-    // Replace SVG with PNG img.
-    replace: function(cb){
-      var self = this;
-      this.toImg(function(img){
-        var parentNode = self.svg.parentNode;
-        parentNode.replaceChild(img, self.svg);
-        if (cb){
-          cb();
-        }
-      });
-    },
-
-    // Converts canvas to binary blob.
-    toBinaryBlob: function(cb){
-      this.toCanvas(function(canvas){
-        var dataUrl = canvas.toDataURL().replace(/^data:image\/(png|jpg);base64,/, "");
-        var byteString = atob(dataUrl);
-        // write the bytes of the string to an ArrayBuffer
-        var ab = new ArrayBuffer(byteString.length);
-        var ia = new Uint8Array(ab);
-        for (var i = 0; i < byteString.length; i++) {
-          ia[i] = byteString.charCodeAt(i);
-        }
-        var dataView = new DataView(ab);
-        var blob = new Blob([dataView], {type: "image/png"});
-        cb(blob);
-      });
-    },
-
-    // Trigger download of image.
-    download: function(){
-      this.toImg(function(img){
-        var a = document.createElement("a");
-        a.download = "chart.png";
-        a.href = img.getAttribute('src');
-        a.click();
-      });
-    }
-  };
-})(this);
-
-chartstack.Simg = Simg.noConflict();
 
 //! moment.js
 //! version : 2.6.0
@@ -4117,3 +3394,1233 @@ chartstack.Simg = Simg.noConflict();
         makeGlobal();
     }
 }).call(this);
+
+// Source: src/lib/_intro.js
+!function (name, context, definition) {
+
+  if (typeof module != 'undefined' && module.exports) {
+    module.exports = definition();
+  }
+  else if (typeof define == 'function' && define.amd) {
+    define(definition);
+  }
+  else {
+    context[name] = definition();
+  }
+
+}('Dataform', chartstack, function() {
+  'use strict';
+
+// Source: src/dataform.js
+  /*!
+    * ----------------
+    * Dataform.js
+    * ----------------
+    */
+
+  function Dataform(raw, schema) {
+    this.configure(raw, schema);
+  }
+
+  Dataform.prototype.configure = function(raw, schema){
+    var self = this, options;
+
+    self.raw = self.raw || raw,
+    self.schema = self.schema || schema || {},
+    self.table = [[]];
+
+    if (self.schema.collection && is(self.schema.collection, 'string') == false) {
+      throw new Error('schema.collection must be a string');
+    }
+
+    if (self.schema.unpack && self.schema.select) {
+      throw new Error('schema.unpack and schema.select cannot be used together');
+    }
+
+    if (self.schema.unpack) {
+      this.action = 'unpack';
+      options = extend({
+        collection: "",
+        unpack: {
+          index: false,
+          value: false,
+          label: false
+        }
+      }, self.schema);
+      options = _optHash(options);
+      _unpack.call(this, options);
+    }
+
+    if (self.schema.select) {
+      this.action = 'select';
+      options = extend({
+        collection: "",
+        select: true
+      }, self.schema);
+      options = _optHash(options);
+      _select.call(this, options);
+    }
+
+    return this;
+  };
+
+
+
+  // Select
+  // --------------------------------------
+
+  function _select(options){
+    //console.log('Selecting', options);
+
+    var self = this,
+        target_set = [],
+        unique_keys = [];
+
+    var root = (function(){
+      var root, parsed;
+      if (options.collection == "") {
+        root = self.raw;
+      } else {
+        parsed = parse.apply(self, [self.raw].concat(options.collection.split(" -> ")));
+        root = parsed[0];
+      }
+      if (Object.prototype.toString.call(root) !== '[object Array]') {
+        root = [root];
+      }
+      return root;
+    })();
+
+    each(options.select, function(property, i){
+      target_set.push(property.path.split(" -> "));
+    });
+
+    // Retrieve keys found in asymmetrical collections
+    if (target_set.length == 0) {
+      each(root, function(record, interval){
+        var flat = flatten(record);
+        for (var key in flat) {
+          if (flat.hasOwnProperty(key) && unique_keys.indexOf(key) == -1) {
+            unique_keys.push(key);
+            target_set.push([key]);
+          }
+        }
+      });
+    }
+
+    // Parse each record
+    each(root, function(record, interval){
+      var flat = flatten(record);
+      self.table.push([]);
+      each(target_set, function(target, i){
+        var flat_target = target.join(".");
+        if (interval == 0) {
+          self.table[0].push(flat_target);
+        }
+        self.table[interval+1].push(flat[flat_target] || null)
+      });
+    });
+
+    self.format(options.select);
+    self.sort(options.sort);
+    return self;
+  }
+
+
+
+  // Unpack
+  // --------------------------------------
+
+  function _unpack(options){
+    // console.log('Unpacking', options);
+    var self = this;
+
+    var value_set = (options.unpack.value) ? options.unpack.value.path.split(" -> ") : false,
+        label_set = (options.unpack.label) ? options.unpack.label.path.split(" -> ") : false,
+        index_set = (options.unpack.index) ? options.unpack.index.path.split(" -> ") : false;
+    //console.log(index_set, label_set, value_set);
+
+    var value_desc = (value_set[value_set.length-1] !== "") ? value_set[value_set.length-1] : "Value",
+        label_desc = (label_set[label_set.length-1] !== "") ? label_set[label_set.length-1] : "Label",
+        index_desc = (index_set[index_set.length-1] !== "") ? index_set[index_set.length-1] : "Index";
+
+    var sort_index = (options.sort && options.sort.index) ? options.sort.index : false,
+        sort_value = (options.sort && options.sort.value) ? options.sort.value : false;
+
+    // Prepare root for parsing
+    var root = (function(){
+      var root;
+      if (options.collection == "") {
+        root = [self.raw];
+      } else {
+        root = parse.apply(self, [self.raw].concat(options.collection.split(" -> ")));
+      }
+      return root[0];
+    })();
+
+    if (root instanceof Array == false) {
+      root = [root];
+    }
+
+    // Inject data rows
+    each(root, function(){
+      //self.table.push([]);
+    });
+
+    // Parse each record
+    each(root, function(record, interval){
+      //console.log('record', record);
+
+      var plucked_value = (value_set) ? parse.apply(self, [record].concat(value_set)) : false,
+          plucked_label = (label_set) ? parse.apply(self, [record].concat(label_set)) : false,
+          plucked_index = (index_set) ? parse.apply(self, [record].concat(index_set)) : false;
+      //console.log(plucked_index, plucked_label, plucked_value);
+
+      // Inject row for each index
+      if (plucked_index) {
+        each(plucked_index, function(){
+          self.table.push([]);
+        });
+      } else {
+        self.table.push([]);
+      }
+
+      // Build index column
+      if (plucked_index) {
+
+        // Build index/label on first interval
+        if (interval == 0) {
+
+          // Push last index property to 0,0
+          self.table[0].push(index_desc);
+
+          // Build subsequent series headers (1:N)
+          if (plucked_label) {
+            each(plucked_label, function(value, i){
+              self.table[0].push(value);
+            });
+
+          } else {
+            self.table[0].push(value_desc);
+          }
+        }
+
+        // Correct for odd root cases
+        if (root.length < self.table.length-1) {
+          if (interval == 0) {
+            each(self.table, function(row, i){
+              if (i > 0) {
+                self.table[i].push(plucked_index[i-1]);
+              }
+            });
+          }
+        } else {
+          self.table[interval+1].push(plucked_index[0]);
+        }
+      }
+
+      // Build label column
+      if (!plucked_index && plucked_label) {
+        if (interval == 0) {
+          self.table[0].push(label_desc);
+          self.table[0].push(value_desc);
+        }
+        self.table[interval+1].push(plucked_label[0]);
+      }
+
+      if (!plucked_index && !plucked_label) {
+        // [REVISIT]
+        self.table[0].push('');
+      }
+
+      // Append values
+      if (plucked_value) {
+        // Correct for odd root cases
+        if (root.length < self.table.length-1) {
+          if (interval == 0) {
+            each(self.table, function(row, i){
+              if (i > 0) {
+                self.table[i].push(plucked_value[i-1]);
+              }
+            });
+          }
+        } else {
+          each(plucked_value, function(value){
+            self.table[interval+1].push(value);
+          });
+        }
+      }
+
+    });
+
+    self.format(options.unpack);
+    self.sort(options.sort);
+    return this;
+  }
+
+
+
+  // String configs to hash paths
+  // --------------------------------------
+
+  function _optHash(options){
+    each(options.unpack, function(value, key, object){
+      if (value && is(value, 'string')) {
+        options.unpack[key] = { path: options.unpack[key] };
+      }
+    });
+    return options;
+  }
+
+
+
+  // ♫♩♬ Holy Diver! ♬♩♫
+  // --------------------------------------
+
+  function parse() {
+    var result = [];
+    var loop = function() {
+      var root = arguments[0];
+      var args = Array.prototype.slice.call(arguments, 1);
+      var target = args.pop();
+
+      if (args.length === 0) {
+        if (root instanceof Array) {
+          args = root;
+        } else if (typeof root === 'object') {
+          args.push(root);
+        }
+      }
+
+      each(args, function(el){
+
+        // Grab the numbers and nulls
+        if (target == "") {
+          if (typeof el == "number" || el == null) {
+            return result.push(el);
+          }
+        }
+
+        if (el[target] || el[target] === 0 || el[target] !== void 0) {
+          // Easy grab!
+          if (el[target] === null) {
+            return result.push('');
+          } else {
+            return result.push(el[target]);
+          }
+
+        } else if (root[el]){
+          if (root[el] instanceof Array) {
+            // dive through each array item
+
+            each(root[el], function(n, i) {
+              var splinter = [root[el]].concat(root[el][i]).concat(args.slice(1)).concat(target);
+              return loop.apply(this, splinter);
+            });
+
+          } else {
+            if (root[el][target]) {
+              // grab it!
+              return result.push(root[el][target]);
+
+            } else {
+              // dive down a level!
+              return loop.apply(this, [root[el]].concat(args.splice(1)).concat(target));
+
+            }
+          }
+
+        } else {
+          // dive down a level!
+          return loop.apply(this, [el].concat(args.splice(1)).concat(target));
+
+        }
+
+        return;
+
+      });
+      if (result.length > 0) {
+        return result;
+      }
+    };
+    return loop.apply(this, arguments);
+  }
+
+  // Utilities
+  // --------------------------------------
+
+  // Awesomeness in code form, by Will Rayner (penguinboy)
+  // https://gist.github.com/penguinboy/762197
+  function flatten(ob) {
+    var toReturn = {};
+    for (var i in ob) {
+      if (!ob.hasOwnProperty(i)) continue;
+      if ((typeof ob[i]) == 'object') {
+        var flatObject = flatten(ob[i]);
+        for (var x in flatObject) {
+          if (!flatObject.hasOwnProperty(x)) continue;
+          toReturn[i + '.' + x] = flatObject[x];
+        }
+      } else {
+        toReturn[i] = ob[i];
+      }
+    }
+    return toReturn;
+  }
+
+  // via: https://github.com/spocke/punymce
+  function is(o, t){
+    o = typeof(o);
+    if (!t){
+      return o != 'undefined';
+    }
+    return o == t;
+  }
+
+  function each(o, cb, s){
+    var n;
+    if (!o){
+      return 0;
+    }
+    s = !s ? o : s;
+    if (is(o.length)){
+      // Indexed arrays, needed for Safari
+      for (n=0; n<o.length; n++) {
+        if (cb.call(s, o[n], n, o) === false){
+          return 0;
+        }
+      }
+    } else {
+      // Hashtables
+      for (n in o){
+        if (o.hasOwnProperty(n)) {
+          if (cb.call(s, o[n], n, o) === false){
+            return 0;
+          }
+        }
+      }
+    }
+    return 1;
+  }
+
+  // Adapted to exclude null values
+  function extend(o, e){
+    each(e, function(v, n){
+      if (is(o[n], 'object') && is(v, 'object')){
+        o[n] = extend(o[n], v);
+      } else if (v !== null) {
+        o[n] = v;
+      }
+    });
+    return o;
+  }
+
+  extend(Dataform, {
+    each: each,
+    extend: extend,
+    is: is,
+    flatten: flatten
+  });
+
+
+  // Configure moment.js if present
+  if (moment) {
+    moment.suppressDeprecationWarnings = true;
+  }
+
+// Source: src/lib/format.js
+Dataform.prototype.format = function(opts){
+  var self = this, options;
+
+    var defaults = {
+      'number': {
+        format: '0', // 1,000.00
+        prefix: '',
+        suffix: ''
+        //modifier: '*1'
+      },
+      'date': {
+        //format: 'MMM DD, YYYY'
+      },
+      'string': {
+        //format: 'capitalize',
+        prefix: '',
+        suffix: ''
+      }
+    };
+
+    if (self.action == 'select') {
+      options = [];
+      each(opts, function(option){
+        var copy = {}, output;
+        each(defaults, function(hash, key){
+          copy[key] = extend({}, hash);
+        });
+        output = (copy[option.type]) ? extend(copy[option.type], option) : option;
+        options.push(output);
+      });
+
+      each(self.table, function(row, i){
+
+        // Replace labels
+        if (i == 0) {
+          each(row, function(cell, j){
+            if (options[j] && options[j].label) {
+              self.table[i][j] = options[j].label;
+            }
+          });
+
+        } else {
+
+          each(row, function(cell, j){
+            self.table[i][j] = _applyFormat(self.table[i][j], options[j]);
+          });
+        }
+
+      });
+
+    }
+
+
+  //////////////////////////////////
+
+
+  if (self.action == 'unpack') {
+    options = {};
+    each(opts, function(option, key){
+      var copy = {}, output;
+      each(defaults, function(hash, key){
+        copy[key] = extend({}, hash);
+      });
+      options[key] = (copy[key]) ? extend(copy[key], option) : option;
+    });
+
+    if (options.index) {
+      each(self.table, function(row, i){
+        if (i == 0) {
+          if (options.index.label) {
+            self.table[i][0] = options.index.label;
+          }
+        } else {
+          self.table[i][0] = _applyFormat(self.table[i][0], options.index);
+        }
+      });
+    }
+
+    if (options.label) {
+      if (options.index) {
+        each(self.table, function(row, i){
+          each(row, function(cell, j){
+            if (i == 0 && j > 0) {
+              self.table[i][j] = _applyFormat(self.table[i][j], options.label);
+            }
+          });
+        });
+      } else {
+        each(self.table, function(row, i){
+          if (i > 0) {
+            self.table[i][0] = _applyFormat(self.table[i][0], options.label);
+          }
+        });
+        //console.log('label, NO index');
+      }
+    }
+
+    if (options.value) {
+      if (options.index) {
+        // start > 0
+        each(self.table, function(row, i){
+          each(row, function(cell, j){
+            if (i > 0 && j > 0) {
+              self.table[i][j] = _applyFormat(self.table[i][j], options.value);
+            }
+          });
+        });
+      } else {
+        // start @ 0
+        each(self.table, function(row, i){
+          each(row, function(cell, j){
+            if (i > 0) {
+              self.table[i][j] = _applyFormat(self.table[i][j], options.value);
+            }
+          });
+        });
+      }
+    }
+
+  }
+
+  //console.log(self.table);
+  return self;
+};
+
+function _applyFormat(value, opts){
+  var output = value,
+      options = opts || {};
+
+  if (options.method) {
+    var copy = output;
+    try {
+      output = eval(options.method).apply(null, [output, options]);
+    }
+    catch (e) {
+      output = copy;
+    }
+  }
+
+  if (options.replace) {
+    each(options.replace, function(value, key){
+      if (output == key || String(output) == String(key) || parseFloat(output) == parseFloat(key)) {
+        output = value;
+      }
+    });
+  }
+
+  if (options.type && options.type == 'date') {
+
+    if (options.format && moment && moment(value).isValid()) {
+      output = moment(value).format(options.format);
+    } else {
+      output = new Date(value); //.toISOString();
+    }
+
+  }
+
+  if (options.type && options.type == 'string') {
+
+    if (options.format) {
+      switch (options.format) {
+        case 'capitalize':
+          // via: http://stackoverflow.com/a/15150510/2511985
+          output = output.replace(/[^\s]+/g, function(word) {
+            return word.replace(/^./, function(first) {
+              return first.toUpperCase();
+            });
+          });
+          break;
+        case 'uppercase':
+          output = output.toUpperCase();
+          break;
+        case 'lowercase':
+          output = output.toLowerCase();
+          break;
+      }
+    }
+
+  }
+
+  if (options.type && options.type == 'number') {
+
+    if (options.format && !isNaN(parseFloat(output))) {
+
+      output = parseFloat(output);
+
+      // Set decimals
+      if (options.format.indexOf('.') !== -1) {
+        output = (function(num){
+          var chop = options.format.split('.');
+          var length = chop[chop.length-1].length;
+          return num.toFixed(length);
+        })(output);
+      }
+
+      // Set commas
+      if (options.format.indexOf(',') !== -1) {
+        output = (function(num){
+          var split = String(num).split(".");
+          while (/(\d+)(\d{3})/.test(split[0])){
+            split[0] = split[0].replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+          }
+          return split.join(".");
+        })(output);
+      }
+
+    }
+  }
+
+  if (options.prefix) {
+    output = String(options.prefix) + output;
+  }
+
+  if (options.suffix) {
+    output = output + String(options.suffix);
+  }
+
+  return output;
+}
+
+// dataform.format(index, options);
+
+// Source: src/lib/sort.js
+Dataform.prototype.sort = function(opts){
+  var self = this, options;
+
+  if (self.action == 'unpack') {
+
+    options = extend({
+      index: false,
+      value: false
+    }, opts);
+
+    // Sort records by index
+    if (options.index) {
+      !function(){
+        var header = self.table[0],
+            body = self.table.splice(1);
+
+        body.sort(function(a, b) {
+          if (options.index == 'asc') {
+            if (a[0] > b[0]) {
+              return 1;
+            } else {
+              return -1
+            }
+          } else if (options.index == 'desc') {
+            if (a[0] > b[0]) {
+              return -1;
+            } else {
+              return 1
+            }
+          }
+          return false;
+        });
+
+        self.table = [header].concat(body);
+      }();
+    }
+
+    // Sort columns (labels) by total values
+    if (options.value && self.schema.unpack.label && self.table[0].length > 2) {
+      !function(){
+        var header = self.table[0],
+            body = self.table.splice(1),
+            series = [],
+            table = [],
+            index_cell = (self.schema.unpack.index) ? 0 : -1;
+
+        each(header, function(cell, i){
+          if (i > index_cell) {
+            series.push({ label: cell, values: [], total: 0 });
+          }
+        });
+
+        each(body, function(row, i){
+          each(row, function(cell, j){
+            if (j > index_cell) {
+              if (is(cell, 'number')) {
+                series[j-1].total += cell;
+              }
+              series[j-1].values.push(cell);
+            }
+          });
+        });
+
+        if (self.schema.unpack.label.type == 'number' || is(body[0][1], 'number')) {
+          series.sort(function(a, b) {
+            //console.log(options, self.schema, options.value, a.total, b.total);
+            if (options.value == 'asc') {
+              if (a.total > b.total) {
+                return 1;
+              } else {
+                return -1
+              }
+            } else if (options.value == 'desc') {
+              if (a.total > b.total) {
+                return -1;
+              } else {
+                return 1
+              }
+            }
+            return false;
+          });
+        }
+
+        each(series, function(column, i){
+          header[index_cell+1+i] = series[i].label;
+          each(body, function(row, j){
+            row[index_cell+1+i] = series[i].values[j];
+          });
+        });
+
+        self.table = [header].concat(body);
+
+      }();
+    }
+  }
+
+  if (self.action == 'select') {
+
+    options = extend({
+      column: 0,
+      order: false
+    }, opts);
+
+    !function(){
+      var header = self.table[0],
+          body = self.table.splice(1);
+
+      body.sort(function(a, b){
+        //console.log(a[options.column], b[options.column]);
+        if (options.order == 'asc') {
+          if (a[options.column] > b[options.column]) {
+            return 1;
+          } else {
+            return -1
+          }
+        } else if (options.order == 'desc') {
+          if (a[options.column] > b[options.column]) {
+            return -1;
+          } else {
+            return 1
+          }
+        }
+        return false;
+      });
+
+      self.table = [header].concat(body);
+
+    }();
+  }
+
+  return self;
+};
+
+// Source: src/lib/_outro.js
+  return Dataform;
+});
+
+/* global chartstack */
+// Data normalizing adaper for keen.io API.
+(function(cs){
+  var each = cs.each;
+
+  cs.addAdapter('keen-io', function(response){
+    var self = this, data;
+    var schema = self.schema || false;
+
+    // Default Response Map
+    if (!schema) {
+
+      schema = {
+        collection: "result",
+        unpack: {}
+      };
+
+      if (response.result instanceof Array) {
+
+        if (response.result.length > 0 && response.result[0]['value'] !== void 0){
+
+          if (response.result[0]['value'] instanceof Array) {
+            // Interval + Group_by
+
+            // Get value (interval result)
+            schema.unpack.value = "value -> result";
+
+            // Get label (group_by field)
+            for (var key in response.result[0]['value'][0]){
+              if (key !== "result") {
+                schema.unpack.label = "value -> " + key;
+                break;
+              }
+            }
+
+          } else {
+            // Interval, no Group_by
+            // Get value
+            schema.unpack.value = "value";
+          }
+        }
+
+        if (response.result.length > 0 && response.result[0]['timeframe']) {
+          // Get index (start time)
+          schema.unpack.index = {
+            path: "timeframe -> start",
+            type: "date",
+            //format: "MMM DD"
+            method: "moment"
+          };
+        }
+
+        if (response.result.length > 0 && response.result[0]['result']) {
+          // Get value (group_by)
+          schema.unpack.value = "result";
+          for (var key in response.result[0]){
+            if (key !== "result") {
+              schema.unpack.index = key;
+              break;
+            }
+          }
+        }
+
+        if (response.result.length > 0 && typeof response.result[0] == "number") {
+          schema.collection = "";
+          schema.unpack.index = "steps -> event_collection";
+          schema.unpack.value = "result -> ";
+        }
+
+        if (response.result.length == 0) {
+          schema = false;
+          //data
+        }
+
+
+      } else {
+        // Metric: { result: 2450 } -> [['result'],[2450]]
+        delete schema.unpack;
+        schema = {
+          collection: "",
+          select: [
+            {
+              path: "result",
+              type: "number",
+              label: "Metric",
+              format: "1,000"
+            }
+          ]
+        }
+      }
+
+    }
+
+    if (schema) {
+      data = new cs.Dataform(response, schema);
+    } else {
+      data = { table: [] };
+    }
+
+    return data;
+  });
+
+})(chartstack);
+
+/* global google, chartstack */
+(function(cs){
+  var each = cs.each;
+  var extend = cs.extend;
+
+  // -----------------------------
+  // Library Namespace
+  // -----------------------------
+
+  cs.Keen = cs.Keen || {};
+
+  // -----------------------------
+  // Type: Number
+  // -----------------------------
+
+  cs.Keen.Metric = cs.Visualization.extend({
+    initialize: function(){
+      var css = document.createElement("style");
+      css.type = "text/css";
+      css.innerHTML = ".cs-widget { \
+          background: #49c5b1; \
+          border-radius: 4px; \
+          color: #fff; \
+          font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; \
+          padding: 10px 0; \
+          text-align: center; \
+        } \
+        .cs-widget-title { \
+          display: block; \
+          font-size: 84px; \
+          font-weight: 700; \
+          line-height: 84px; \
+        } \
+        .cs-widget-subtitle { \
+          display: block; \
+          font-size: 24px; \
+          font-weight: 200; \
+        }";
+        // margin: 0 auto; \
+      document.body.appendChild(css);
+
+      this.render();
+    },
+    //render: function(){},
+    update: function(){
+      this.el.innerHTML = '' +
+        '<div class="cs-widget cs-number" style="width:' + parseInt(this.width) + 'px;">' +
+          '<span class="cs-widget-title">' + this.data[0].table[1] + '</span>' +
+          '<span class="cs-widget-subtitle">' + (this.title || 'Result') + '</span>' +
+        '</div>';
+    }
+  });
+
+
+  // -----------------------------
+  // Register Methods
+  // -----------------------------
+
+  cs.Visualization.register("keen-io", {
+    "metric": cs.Keen.Metric
+  });
+
+})(chartstack);
+
+/* global google, chartstack */
+(function(cs){
+  cs.registerLibrary({
+    name: 'GoogleCharts',
+    namespace: 'google',
+    attributes: ['animation', 'backgroundColor', 'bar', 'chartArea', 'fontName', 'fontSize', 'isStacked', 'hAxis', 'legend', 'orientation', 'titleTextStyle', 'tooltip', 'vAxis'],
+    // If loadLib exists it is called to load the graphic library.
+    // Must execute passed callback when the library is loaded.
+    // If loadLib does not exist, we assume the user loaded the library before
+    // chartstack.js already (most cases).
+    loadLib: function(cb){
+      cs.googleLoaded = function(){
+        cb();
+        delete cs.googleLoaded;
+      }
+      document.write('\x3Cscript type="text/javascript" src="https://www.google.com/jsapi?autoload=' + encodeURIComponent('{"modules":[{"name":"visualization","version":"1","packages":["corechart","table"],callback: chartstack.googleLoaded}]}') + '">\x3C/script>');
+    },
+    charts: [{
+      type : 'AreaChart',
+      events: {
+        initialize: function(){
+          //this.trigger('error', 'testing pie errors');
+          this.render();
+        },
+        render: function(){
+          this._chart = this._chart || new google.visualization.AreaChart(this.el);
+        },
+        update: function(){
+          var data = google.visualization.arrayToDataTable(this.data[0].table);
+          var options = cs.extend(this.chartOptions, {
+            title: this.title || '',
+            height: parseInt(this.height),
+            width: parseInt(this.width)
+          });
+          this._chart.draw(data, options);
+        }
+      }
+    }, {
+      type : 'BarChart',
+      events: {
+        initialize: function(){
+          //console.log('bar!', this);
+          this.render();
+        },
+        render: function(){
+          this._chart = this._chart || new google.visualization.BarChart(this.el);
+        },
+        update: function(){
+          var data = google.visualization.arrayToDataTable(this.data[0].table);
+          var options = cs.extend(this.chartOptions, {
+            title: this.title || '',
+            height: parseInt(this.height),
+            width: parseInt(this.width)
+          });
+          this._chart.draw(data, options);
+        }
+      }
+    }, {
+      type : 'ColumnChart',
+      events: {
+        initialize: function(){
+          //console.log('bar!', this);
+          this.render();
+        },
+        render: function(){
+          this._chart = this._chart || new google.visualization.ColumnChart(this.el);
+          //this.chart.draw(data, options);
+        },
+        update: function(){
+          var data = google.visualization.arrayToDataTable(this.data[0].table);
+          var options = cs.extend(this.chartOptions, {
+            title: this.title || '',
+            height: parseInt(this.height),
+            width: parseInt(this.width)
+          });
+          this._chart.draw(data, options);
+        }
+      }
+    }, {
+      type : 'LineChart',
+      events: {
+        initialize: function(){
+          this.render();
+        },
+        render: function(){
+          this._chart = this._chart || new google.visualization.LineChart(this.el);
+        },
+        update: function(){
+          var data = google.visualization.arrayToDataTable(this.data[0].table);
+          var options = cs.extend(this.chartOptions, {
+            title: this.title || '',
+            height: parseInt(this.height),
+            width: parseInt(this.width)
+          });
+          this._chart.draw(data, options);
+        }
+      }
+    }, {
+      type : 'PieChart',
+      events: {
+        initialize: function(){
+          this.render();
+        },
+        render: function(){
+          this._chart = this._chart || new google.visualization.PieChart(this.el);
+        },
+        update: function(){
+          var data = google.visualization.arrayToDataTable(this.data[0].table);
+          var options = cs.extend(this.chartOptions, {
+            title: this.title || '',
+            height: parseInt(this.height),
+            width: parseInt(this.width)
+          });
+          this._chart.draw(data, options);
+        }
+      }
+    }, {
+      type : 'DataTable',
+      events: {
+        initialize: function(){
+          this.render();
+        },
+        render: function(){
+          this._chart = this._chart || new google.visualization.Table(this.el);
+          //this.chart.draw(data, options);
+        },
+        update: function(){
+          var data = google.visualization.arrayToDataTable(this.data[0].table);
+          var options = cs.extend(this.chartOptions, {
+            title: this.title || '',
+            height: parseInt(this.height),
+            width: parseInt(this.width)
+          });
+          this._chart.draw(data, options);
+        }
+      }
+    }]
+  });
+
+})(chartstack);
+
+(function(root){
+  var previousSimg = root.Simg;
+  var Simg = root.Simg = function(svg){
+    this.svg = svg;
+  };
+
+  Simg.noConflict = function(){
+    root.Simg = previousSimg;
+    return this;
+  };
+
+  Simg.getBase64Image = function(img) {
+    // From: http://stackoverflow.com/questions/934012/get-image-data-in-javascript
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    var dataURL = canvas.toDataURL("image/png");
+
+    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+  };
+
+  Simg.prototype = {
+    // Return SVG text.
+    toString: function(svg){
+      if (!svg){
+        throw new Error('.toString: No SVG found.');
+      }
+
+      [
+        ['version', 1.1],
+        ['xmlns', "http://www.w3.org/2000/svg"],
+      ].forEach(function(item){
+        svg.setAttribute(item[0], item[1]);
+      });
+      return svg.parentNode.innerHTML;
+    },
+
+    // Return canvas with this SVG drawn inside.
+    toCanvas: function(cb){
+      this.toSvgImage(function(img){
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext("2d");
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        context.drawImage(img, 0, 0);
+        cb(canvas);
+      });
+    },
+
+    toSvgImage: function(cb){
+      var str = this.toString(this.svg);
+      var img = document.createElement('img');
+
+      if (cb){
+        img.onload = function(){
+          cb(img);
+        };
+      }
+
+      // Make the new img's source an SVG image.
+      img.setAttribute('src', 'data:image/svg+xml;base64,'+ btoa(str));
+    },
+
+    // Returns callback to new img from SVG.
+    // Call with no arguments to return svg image element.
+    // Call with callback to return png image element.
+    toImg: function(cb){
+      this.toCanvas(function(canvas){
+        var canvasData = canvas.toDataURL("image/png");
+        var img = document.createElement('img');
+
+        img.onload = function(){
+          cb(img);
+        };
+
+        // Make pngImg's source the canvas data.
+        img.setAttribute('src', canvasData);
+      });
+    },
+
+    // Replace SVG with PNG img.
+    replace: function(cb){
+      var self = this;
+      this.toImg(function(img){
+        var parentNode = self.svg.parentNode;
+        parentNode.replaceChild(img, self.svg);
+        if (cb){
+          cb();
+        }
+      });
+    },
+
+    // Converts canvas to binary blob.
+    toBinaryBlob: function(cb){
+      this.toCanvas(function(canvas){
+        var dataUrl = canvas.toDataURL().replace(/^data:image\/(png|jpg);base64,/, "");
+        var byteString = atob(dataUrl);
+        // write the bytes of the string to an ArrayBuffer
+        var ab = new ArrayBuffer(byteString.length);
+        var ia = new Uint8Array(ab);
+        for (var i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
+        }
+        var dataView = new DataView(ab);
+        var blob = new Blob([dataView], {type: "image/png"});
+        cb(blob);
+      });
+    },
+
+    // Trigger download of image.
+    download: function(){
+      this.toImg(function(img){
+        var a = document.createElement("a");
+        a.download = "chart.png";
+        a.href = img.getAttribute('src');
+        a.click();
+      });
+    }
+  };
+})(this);
+
+chartstack.Simg = Simg.noConflict();
