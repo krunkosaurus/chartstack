@@ -1,0 +1,23 @@
+/* iPhone portrait */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 568px) {
+  html{
+    font-size: 50px;
+  }
+
+  .masthead {
+    margin-bottom: 1rem;
+  }
+
+  .masthead img{
+    display: none;
+  }
+  .container {
+    max-width: none;
+  }
+
+  pre{
+      font-size: .6em;
+  }
+}
