@@ -551,7 +551,7 @@
     buildQueryString: buildQueryString,
     getAjax : getAjax,
     getJSONP: getJSONP,
-    addLibrary: addLibrary,
+    registerLibrary: registerLibrary,
     // Attach event for every chart we have.
     on: function(){
       var args = arguments;
@@ -627,6 +627,16 @@
     }
   }
 
+/*
+  function preBootstrap(){
+    setTimeout(function(){
+      //console.log('chartstack.libraries', chartstack.libraries);
+    },0);
+    // TODO: Hard-coded support for Google Analytics for now.
+    // document.addEventListener("DOMContentLoaded", bootstrap);
+  }
+*/
+
   // Called when DOM and chart libs are loaded and ready.
   function bootstrap (){
     // If graph library isn't set in defaults, match provider to the first graph
@@ -695,25 +705,44 @@
     }
   }
 
-  // Add a chart rendering library.
-  function addLibrary(obj){
+  // Register library to viz and data components.
+  function registerLibrary(obj){
     // Create new chart namespace.
-    var namespace = chartstack[obj.namespace] = {};
-    var libList = {};
+    var namespace = chartstack[obj.name] = {};
+    var vizCharts = {};
 
     // For each chart type add it to the namespace.
     each(obj.charts, function(chart){
-      var chartType = chart.type.toLowerCase();
+      var chartLow = chart.type.toLowerCase();
       var obj = extend(chart.events,{
-        type: chartType
+        type: chartLow
       });
+      // Instantiate new visualization object per chart.
       namespace[chart.type] = chartstack.Visualization.extend(obj);
-      libList[chartType] = namespace[chart.type];
+      // Queue chart types to create new Visualization.
+      vizCharts[chartLow] = namespace[chart.type];
     });
 
-    chartstack.Visualization.register(obj.windowNamespace, libList, {
+    // Register Visualization.
+    chartstack.Visualization.register(obj.namespace, vizCharts, {
       attributes: obj.attributes
     });
+
+    // If loadLib method exists it is called to load the graphic library.
+    // Must execute passed callback when the library is loaded.
+    // If loadLib does not exist, we assume the user loaded the library before
+    // chartstack.js already (most cases).
+    if ('loadLib' in obj){
+      namespace.loaded = false;
+      obj.loadLib(function(){
+        namespace.loaded = true;
+        chartstack.bootstrap();
+      });
+
+    }else{
+      namespace.loaded = true;
+      console.log('namespace', namespace);
+    }
   }
 
   function loadScript(url, cb) {
@@ -873,8 +902,5 @@
     };
   }
 
-  // TODO: Hard-coded support for Google Analytics for now.
-  // document.addEventListener("DOMContentLoaded", bootstrap);
-  document.write('\x3Cscript type="text/javascript" src="https://www.google.com/jsapi?autoload=' + encodeURIComponent('{"modules":[{"name":"visualization","version":"1","packages":["corechart","table"],callback: chartstack.bootstrap}]}') + '">\x3C/script>');
-
+  // preBootstrap();
 })(this);
