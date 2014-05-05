@@ -36,7 +36,6 @@ and (max-device-width : 568px) {
   }
 }
 
-
 body #mocha{
     font: 1.5rem/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin: 3rem;
@@ -52,4 +51,8 @@ body #mocha h1{
 
 body #mocha .test.pass::before{
     font-size: 1rem;
+}
+
+body #mocha .test.pass .duration{
+    font-size: 0.70rem;
 }

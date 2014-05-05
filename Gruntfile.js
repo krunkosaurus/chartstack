@@ -96,6 +96,7 @@ module.exports = function(grunt) {
       test: {
         files: [
           '<%= chartstack.scriptPath %>/**/*.js',
+          '<%= chartstack.testPath %>/public/css/*.css',
           '<%= chartstack.testPath %>/visual-*/*.html',
           '<%= chartstack.testPath %>/test-*/*.html',
           '<%= chartstack.testPath %>/_posts/*.*'
