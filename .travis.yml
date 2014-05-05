@@ -13,10 +13,10 @@ install:
     - npm install -g bower
     - npm install
 
-cache:
-  directories:
-    - node_modules
-    - lib
+#cache:
+#  directories:
+#    - node_modules
+#    - lib
 
 before_script:
     - bower install
