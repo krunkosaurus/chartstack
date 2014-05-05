@@ -96,7 +96,6 @@
     } else {
       data = { table: [] };
     }
-
     return data;
   });
 

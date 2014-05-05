@@ -442,6 +442,9 @@
         $chart.dataset = setupData.dataset;
       } else if (typeof setupData.dataset == 'string'){
         $chart.dataset = new chartstack.Dataset(setupData.dataset.replace(/(\r\n|\n|\r|\ )/g,""));
+        $chart.dataset.resources[0].adapter = setupData.adapter || 'default';
+        $chart.dataset.resources[0].dataformat = setupData.dataformat || 'json';
+        $chart.dataset.resources[0].dateformat = setupData.dateformat || false;
       } else {
         $chart.dataset = new chartstack.Dataset({
           response: setupData.dataset
@@ -4268,7 +4271,6 @@ Dataform.prototype.sort = function(opts){
     } else {
       data = { table: [] };
     }
-
     return data;
   });
 
