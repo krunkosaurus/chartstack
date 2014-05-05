@@ -27,7 +27,7 @@
         },
         update: function(){
           var data = google.visualization.arrayToDataTable(this.data[0].table);
-          var options = extend(this.chartOptions, {
+          var options = cs.extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
             width: parseInt(this.width)
@@ -47,7 +47,7 @@
         },
         update: function(){
           var data = google.visualization.arrayToDataTable(this.data[0].table);
-          var options = extend(this.chartOptions, {
+          var options = cs.extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
             width: parseInt(this.width)
@@ -68,7 +68,7 @@
         },
         update: function(){
           var data = google.visualization.arrayToDataTable(this.data[0].table);
-          var options = extend(this.chartOptions, {
+          var options = cs.extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
             width: parseInt(this.width)
@@ -87,7 +87,7 @@
         },
         update: function(){
           var data = google.visualization.arrayToDataTable(this.data[0].table);
-          var options = extend(this.chartOptions, {
+          var options = cs.extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
             width: parseInt(this.width)
@@ -106,7 +106,7 @@
         },
         update: function(){
           var data = google.visualization.arrayToDataTable(this.data[0].table);
-          var options = extend(this.chartOptions, {
+          var options = cs.extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
             width: parseInt(this.width)
@@ -126,7 +126,7 @@
         },
         update: function(){
           var data = google.visualization.arrayToDataTable(this.data[0].table);
-          var options = extend(this.chartOptions, {
+          var options = cs.extend(this.chartOptions, {
             title: this.title || '',
             height: parseInt(this.height),
             width: parseInt(this.width)
