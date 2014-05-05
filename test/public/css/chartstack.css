@@ -20,4 +20,36 @@ and (max-device-width : 568px) {
   pre{
       font-size: .6em;
   }
+
+  body #mocha{
+    margin: 0 !important;
+  }
+
+  #mocha-stats{
+    position: relative !important;
+  }
+
+  #mocha-stats,
+  #mocha .test pre,
+  #mocha .test.pass .duration{
+    font-size: 0.8rem !important;
+  }
+}
+
+
+body #mocha{
+    font: 1.5rem/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 3rem;
+}
+
+body #mocha h2{
+    font-size: 0.8rem;
+}
+
+body #mocha h1{
+    margin-bottom: 0.2rem;
+}
+
+body #mocha .test.pass::before{
+    font-size: 1rem;
 }
