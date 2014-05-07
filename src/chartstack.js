@@ -153,6 +153,19 @@
 
   chartstack.Dataset.prototype = {
 
+    // TODO: Dataset is a collection of DataResources.  Dataset.fetch should
+    // just trigger .fetch on its own models (DataResouce objects). That way the
+    // collection is not tightly coupled to the models and the models can be
+    // useful at a more granular level.  This also enables us to refetch at the
+    // model level without refetching the whole collection each time.
+
+    // TODO: Currently a .fetch also triggers a transform automatically.
+    // Perhaps this should be optional so that a user can fetch, modify data,
+    // and then trigger a transform after.
+
+    // This would also open us up to be more flexible events like "fetchComplete"
+    // and "transformComplete".
+
     fetch: function(){
       var self = this, completions = 0, error, finish;
 
@@ -201,6 +214,7 @@
           self.data[index] = response.data;
         }
       });
+
       self.trigger("complete", self.data[0]);
       return self;
     },
