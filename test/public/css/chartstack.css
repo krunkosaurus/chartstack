@@ -56,3 +56,16 @@ body #mocha .test.pass::before{
 body #mocha .test.pass .duration{
     font-size: 0.70rem;
 }
+
+body .sidebar-nav h3{
+    color: white;
+    margin: 0;
+}
+
+body .sidebar-nav h3 a{
+    display: block;
+}
+
+body .sidebar-nav h3 a:hover{
+    text-decoration: none;
+}

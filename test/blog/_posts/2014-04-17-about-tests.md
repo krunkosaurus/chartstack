@@ -1,9 +1,7 @@
 ---
 layout: post
-title: About tests
+title: About Test Suite
 ---
-
-[![Build Status](https://magnum.travis-ci.com/keenlabs/chartstack.svg?token=wfasM9dDfjzGTx53pqzt&branch=master)](https://magnum.travis-ci.com/keenlabs/chartstack)
 
 Chartstack tests are built using [Jekyll](http://jekyllrb.com) and [Grunt-mocha-phantomjs](https://github.com/jdcataldo/grunt-mocha-phantomjs) allowing us to run tests both visually in the browser or via command-line with ci integration.
 

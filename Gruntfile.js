@@ -74,6 +74,7 @@ module.exports = function(grunt) {
       },
       test: {
         options: {
+          hostname: '*',
           port: 4000,
           base: './<%= chartstack.testPath %>/_site/',
         }
@@ -99,6 +100,8 @@ module.exports = function(grunt) {
           '<%= chartstack.testPath %>/public/css/*.css',
           '<%= chartstack.testPath %>/visual-*/*.html',
           '<%= chartstack.testPath %>/test-*/*.html',
+          '<%= chartstack.testPath %>/_includes/*.html',
+          '<%= chartstack.testPath %>/blog/*.html',
           '<%= chartstack.testPath %>/_posts/*.*'
         ],
         tasks: ['build', 'copy:test', 'jekyll:dist']
