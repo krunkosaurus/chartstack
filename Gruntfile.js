@@ -142,6 +142,7 @@ module.exports = function(grunt) {
           //base: './test',
           urls: [
             'http://localhost:5000/test-core/',
+            'http://localhost:5000/test-data/',
             'http://localhost:5000/test-google-charts/'
           ]
         }
