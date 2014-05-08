@@ -4,6 +4,8 @@ title: Test Dataset and DataResource Class
 test: true
 ---
 
+<div id="traffic-growth"></div>
+
 <script src="../public/dist/chartstack.js"></script>
 <script>
   function checkExposed(obj, done){
@@ -126,6 +128,25 @@ test: true
 
     it('dataset should support `at` after fetch', function(){
       expect(dataset.at(1)).to.deep.equal(dataset.resources[1]);
+    });
+
+    it('manually fetched dataset should be able to be used in new view', function(done){
+      chartstack.ready(function(){
+        var chart = new chartstack.Chart({
+          dataset: dataset,
+          view: new chartstack.GoogleCharts.ColumnChart({
+            title: 'Column chart',
+            el: document.getElementById('traffic-growth'),
+            height: '300',
+            isStacked: true
+          })
+        });
+
+        setTimeout(function(){
+          expect(document.querySelector('svg')).to.exist;
+          done();
+        }, 100);
+      });
     });
   });
 
