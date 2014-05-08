@@ -131,6 +131,9 @@ test: true
     });
 
     it('manually fetched dataset should be able to be used in new view', function(done){
+      dataset.on('complete', function(){
+        done('The view should not refetch the dataset if its already fetched!');
+      });
       chartstack.ready(function(){
         var chart = new chartstack.Chart({
           dataset: dataset,

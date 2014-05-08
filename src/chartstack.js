@@ -215,6 +215,8 @@
         }
       });
 
+      // TODO: Currently only returns the first result. We should think about  more workflows
+      // in supporting multiple data requests.
       self.trigger("complete", self.data[0]);
       return self;
     },
@@ -465,16 +467,23 @@
         });
       }
 
+      // Whenever data is fetched and transformed on the dataset trigger a view
+      // update.
       $chart.dataset.on("complete", function(data){
-        //console.log('data', this.data);
         $chart.view.data = this.data;
         $chart.view.trigger("update", data);
       });
 
-      if (options.autoFetch || options.autoFetch == void 0) {
-        $chart.dataset.fetch();
+      // If this dataset already contains fetched data then don't fetch again
+      // on our view's init.
+      if (!$chart.dataset.responses){
+        if (options.autoFetch || options.autoFetch == void 0) {
+          $chart.dataset.fetch();
+        }
+      }else{
+        $chart.view.data = $chart.dataset.data;
+        $chart.view.trigger("update");
       }
-
     }
 
     setup();
