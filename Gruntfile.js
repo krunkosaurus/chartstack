@@ -149,6 +149,15 @@ module.exports = function(grunt) {
       }
     },
 
+    jsdoc : {
+        dist : {
+            src: ['src/chartstack2.js'],
+            options: {
+                destination: 'doc'
+            }
+        }
+    },
+
     jekyll: {
       options: {
         src : './<%= chartstack.testPath %>',
@@ -179,6 +188,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-phantomjs');
   grunt.loadNpmTasks('grunt-jekyll');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-jsdoc');
+
   // Build and Serve
   grunt.registerTask('build', ['copy:build', 'jshint', 'concat', 'uglify']);
   grunt.registerTask('serve', ['build', 'connect:demo', 'watch:scripts']);
