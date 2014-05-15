@@ -204,7 +204,17 @@
    * @static
    * @constructor
    */
-  chartstack.Chart = function(options){
+  chartstack.View = function(options){
+    //
+  };
+
+  /**
+   * Class that handles all data in Chartstack.  Can be used to fetch and normalize data as well as convert it to various formats acceptable by chart views.
+   * @memberof chartstack
+   * @static
+   * @constructor
+   */
+  chartstack.Model = function(options){
     //
   };
 
