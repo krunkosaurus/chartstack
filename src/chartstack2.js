@@ -7,7 +7,6 @@
    */
   var chartstack = root.chartstack = {};
 
-
   /**
    * Utility method for comparing types between two arguments. Internally uses JavaScript's typeof.
    * @example
@@ -98,6 +97,106 @@
   }
 
   /**
+   * Mixin that can be added to any object to enable event support. Events are scoped to the object this mixin is extending.  chartstack.view and chartstack.model instances use this mixin to trigger certain events you can subscribe to.
+   * @memberof chartstack
+   * @static
+   * @mixin
+   */
+  var Events = chartstack.Events = {
+    /**
+     * Method for subscribing to an event and executing a callback.
+     * @example
+     * bob = {};
+     * chartstack.extend(bob, chartstack.Event);
+     * bob.on('talk', function(words){
+     *    console.log(words);
+     * });
+     * bob.trigger('talk', 'Hello there!');
+     * @param {Sting} name - The event to subscribe to. If the event does not exist it will be created.
+     * @param {Function} callback - The function to be executed when this event is triggered.  The event is triggered in the context (scope) of the object that this  method is attached to.
+     * @returns {object} Returns the object this method is attached to.
+     * @memberof chartstack.Events
+     * @method
+     * @static
+     */
+    on: function(name, callback) {
+      this.listeners || (this.listeners = {});
+      var events = this.listeners[name] || (this.listeners[name] = []);
+      events.push({callback: callback});
+      return this;
+    },
+
+    /**
+     * Method for unsubscribing to an event.
+     * @example
+     * bob = {};
+     * chartstack.extend(bob, chartstack.Event);
+     * bob.on('talk', function(words){
+     *    console.log(words);
+     * });
+     * bob.trigger('talk', 'Hello there!');
+     * prints: Hello there!
+     * bob.off('talk');
+     * bob.trigger('talk', 'Hello there!');
+     * // Outputs nothing.
+     * @param {Sting} [name] - The event to unsubscribe to. If no event name is passed then all events and their associated callbacks are removed from this object.
+     * @param {Function} [callback] - The optional callback to be removed. If no callback is passed then all callbacks queued for this event are removed from this object.
+     * @returns {object} Returns the object this method is attached to.
+     * @memberof chartstack.Events
+     * @method
+     * @static
+     */
+    off: function(name, callback) {
+      if (!name && !callback) {
+        this.listeners = void 0;
+        delete this.listeners;
+        return this;
+      }
+      var events = this.listeners[name] || [];
+      for (var i = events.length; i--;) {
+        if (callback && callback == events[i].callback) {
+          this.listeners[name].splice(i, 1);
+        }
+        if (!callback || events.length === 0) {
+          this.listeners[name] = void 0;
+          delete this.listeners[name];
+        }
+      }
+      return this;
+    },
+
+    /**
+     * Method for triggering an event.  An unlimited number of arguments can be passed after the first agument which will be passed to every callbacks subscribed to this object's event.
+     * @example
+     * bob = {};
+     * chartstack.extend(bob, chartstack.Event);
+     * bob.on('talk', function(words){
+     *    console.log(words);
+     * });
+     * bob.trigger('talk', 'Hello there!');
+     * prints: Hello there!
+     * @param {Sting} [name] - The name of the event to trigger.
+     * @param {...*} [*] - An unlimited number of optional arguments.
+     * @returns {object} Returns the object this method is attached to.
+     * @memberof chartstack.Events
+     * @method
+     * @static
+     */
+    trigger: function(name) {
+      if (!this.listeners) {
+        return this;
+      }
+      var args = Array.prototype.slice.call(arguments, 1);
+      var events = this.listeners[name] || [];
+      for (var i = 0; i < events.length; i++) {
+        events[i].callback.apply(this, args);
+      }
+      return this;
+    }
+
+  };
+
+  /**
    * Base class of all chart views. To be extended but not instantiated directly.
    * @param {object} options - Options object contains various data to instantiate a chart.
    * @classdesc This class is subclassed to create a new type of view class.
@@ -113,15 +212,6 @@
     root.chartstack = previousChartstack;
     return this;
   };
-
-  /**
-   * Event class of all chart views. To be extended but not instantiated directly.
-   * @param {object} options - Options object contains data to instantiate the chart.
-   * @memberof chartstack
-   * @static
-   * @mixin
-   */
-  chartstack.Events = {};
 
   chartstack.addView = function(options){
     //
