@@ -105,6 +105,12 @@ module.exports = function(grunt) {
           '<%= chartstack.testPath %>/_posts/*.*'
         ],
         tasks: ['build', 'copy:test', 'jekyll:dist']
+      },
+      docs: {
+        files: [
+          '<%= chartstack.scriptPath %>/chartstack2.js'
+        ],
+        tasks: ['jsdoc']
       }
     },
 
@@ -193,6 +199,9 @@ module.exports = function(grunt) {
   // Build and Serve
   grunt.registerTask('build', ['copy:build', 'jshint', 'concat', 'uglify']);
   grunt.registerTask('serve', ['build', 'connect:demo', 'watch:scripts']);
+
+  // generate and watch docs
+  grunt.registerTask('docs', ['watch:docs', 'jsdoc']);
 
   // Testing via command-line and CI.
   grunt.registerTask('test', ['build', 'copy:test', 'jekyll:dist', 'connect:test-ci', 'mocha_phantomjs']);
