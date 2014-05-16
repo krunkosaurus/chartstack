@@ -13,7 +13,7 @@
    * // returns true
    * chartstack.is({a:1}, 'object');
    * @param {*} o - The object we want to check the type of.
-   * @param {string} [t='undefined'] - The type we want to check against.
+   * @param {String} [t='undefined'] - The type we want to check against.
    * @returns {Boolean} Boolean of whether o is of type t.
    * @static
    * @memberof chartstack
@@ -47,7 +47,7 @@
    * @param {Object|Array} o - The type we want to check against.
    * @param {Function} cb - The callback to execute for each item in the array or object.
    * @param {Object} [s] - The scope to call the callback with. Defaults to o.
-   * @returns {boolean} Returns 1 if operation is successful and 0 if not.
+   * @returns {Boolean} Returns 1 if operation is successful and 0 if not.
    * @static
    * @memberof chartstack
    */
@@ -112,7 +112,7 @@
      *    console.log(words);
      * });
      * bob.trigger('talk', 'Hello there!');
-     * @param {Sting} name - The event to subscribe to. If the event does not exist it will be created.
+     * @param {String} name - The event to subscribe to. If the event does not exist it will be created.
      * @param {Function} callback - The function to be executed when this event is triggered.  The event is triggered in the context (scope) of the object that this  method is attached to.
      * @returns {object} Returns the object this method is attached to.
      * @memberof chartstack.Events
@@ -139,7 +139,7 @@
      * bob.off('talk');
      * bob.trigger('talk', 'Hello there!');
      * // Outputs nothing.
-     * @param {Sting} [name] - The event to unsubscribe to. If no event name is passed then all events and their associated callbacks are removed from this object.
+     * @param {String} [name] - The event to unsubscribe to. If no event name is passed then all events and their associated callbacks are removed from this object.
      * @param {Function} [callback] - The optional callback to be removed. If no callback is passed then all callbacks queued for this event are removed from this object.
      * @returns {object} Returns the object this method is attached to.
      * @memberof chartstack.Events
@@ -175,7 +175,7 @@
      * });
      * bob.trigger('talk', 'Hello there!');
      * prints: Hello there!
-     * @param {Sting} [name] - The name of the event to trigger.
+     * @param {String} [name] - The name of the event to trigger.
      * @param {...*} [*] - An unlimited number of optional arguments.
      * @returns {object} Returns the object this method is attached to.
      * @memberof chartstack.Events
