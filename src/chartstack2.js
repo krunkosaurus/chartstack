@@ -8,6 +8,22 @@
   var chartstack = root.chartstack = {};
 
   /**
+   * Global options object that is passed to chart instance constructors for settings defaults such as color and chart width/height.  You can override this object before the DOM-ready event.  Chart specific config objects override these defaults.
+   * @static
+   * @memberof chartstack
+   * @namespace
+   * @property {Object}  defaults
+   * @property {Boolean} [default.labels] - If set to true all charts try to use labels.
+   * @property {String} [default.library] - The default charting Library to use if none specified.
+   * @property {Array} [default.colors] - The colors of each item in each data series.  Affects all chart types from piecharts to barcharts.
+   */
+  var defaults = root.defaults = {
+    labels: true,
+    library: 'Google Charts',
+    colors: ['red', 'yellow', 'blue', 'green', 'purple']
+  }
+
+  /**
    * Utility method for comparing types between two arguments. Internally uses JavaScript's typeof.
    * @example
    * // returns true
@@ -195,6 +211,7 @@
     }
 
   };
+  chartstack.extend(this, chartstack.Events);
 
   /**
    * Base class of all chart views. To be extended but not instantiated directly.
