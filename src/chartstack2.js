@@ -118,15 +118,18 @@
    * // {a: 1, b: 2, c: 3}
    * chartstack.extend({a:1,b:2},{c:3});
    * @param {object} o - The object to be extended.
-   * @param {object} e - The object that will be extended on to the first object.
+   * @param {...object} [*] - An unlimited list of object that will be extended on to the first object.  Extending happens right to left so that the properties in last argument overwrites properties of the same name from the second-to-last, etc.
    * @returns {object} Returns original first object with the second object extended on to it.
    * @memberof chartstack
    * @static
    * @function
    */
-  function extend(o, e){
-    each(e, function(v, n){
-      o[n] = v;
+  function extend(o){
+    var args = [].slice.call(arguments, 0).slice(1);
+    each(args, function(v, k, all){
+      each(all[k], function(v, k){
+        o[k] = v;
+      });
     });
     return o;
   }
