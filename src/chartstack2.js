@@ -231,11 +231,17 @@
       }
       return this;
     }
-
   };
 
   // Enable the main chartstack namespace to function as a global event bus.
   extend(chartstack, Events);
+
+  // Internal boolean to check if the ready event has fired.
+  var _readyFired = false;
+  // Set the _readyFired internal variable to true when the ready event is fired.
+  chartstack.on('ready', function(){
+    _readyFired = true;
+  });
 
   /**
    * Method for queueing a callback to trigger when Chartstack has fully loaded and the DOM is ready.  Is actually just a shortcut for chartstack.on('ready', cb);
@@ -245,9 +251,12 @@
    * @method
    * @static
    */
-  // Shortcut for chartstack.on('ready', cb);
   var ready = chartstack.ready = function(cb){
-    chartstack.on('ready', cb);
+    if (_readyFired){
+      cb();
+    }else{
+      chartstack.on('ready', cb);
+    }
     return chartstack;
   };
 

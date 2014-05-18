@@ -18,6 +18,39 @@ describe('Chartstack defaults', function(){
   });
 })
 
+describe('Chartstack structure', function(){
+  it('should support document.createElement', function(){
+    expect(document.createElement).to.be.a('function');
+  });
+
+  it('should have chartstack', function(){
+    expect(chartstack).to.be.an('object');
+  });
+
+  it('should have .each,.is,.extend,.ready', function(){
+    expect(chartstack.is).to.be.an('function');
+    expect(chartstack.each).to.be.an('function');
+    expect(chartstack.extend).to.be.an('function');
+    expect(chartstack.ready).to.be.an('function');
+  });
+
+  xit('should have these properties exposed (AR)', function(done){
+    chartstack.each([
+      'adapters', 'transformers',
+      'charts',
+      'Events',
+      'DataResource', 'Dataset', 'Visualization',
+      'libraries',
+      'Chart',
+      'is', 'each', 'extend',
+      'parseDOM', 'parseParams',
+      'buildQueryString', 'getAjax', 'getJSONP'], function(str){
+        expect(chartstack[str]).to.exist;
+      });
+     done();
+  });
+});
+
 describe('.extend tests', function(){
   var a = {a: 1, z: 3};
   var b = {b: 6, d: 5};
@@ -40,36 +73,61 @@ describe('.extend tests', function(){
   });
 });
 
-describe('Chartstack structure', function(){
-  it('should support document.createElement', function(){
-    expect(document.createElement).to.be.a('function');
+describe('testing .ready', function(){
+  var readyFired = false;
+  var arrayOrder = [];
+  var secondReady = false;
+
+  chartstack.ready(function(){
+    readyFired = true;
   });
 
-    it('should have chartstack', function(){
-      expect(chartstack).to.be.an('object');
+  chartstack.ready(function(){
+    secondReady = true;
+  });
+
+  it('should execute in order queued', function(done){
+    var count = 0;
+    var check = function(){
+      if (count == 3){
+        if (arrayOrder[0] == 'a' && arrayOrder[1] == 'b' && arrayOrder[2] == 'c'){
+          done();
+        }else{
+          throw new Error('.ready Out of order');
+        }
+      }
+    }
+
+    chartstack.ready(function(){
+      count++;
+      arrayOrder.push('a');
+      check();
     });
 
-    it('should have .each,.is,.extend,.ready', function(){
-      expect(chartstack.is).to.be.an('function');
-      expect(chartstack.each).to.be.an('function');
-      expect(chartstack.extend).to.be.an('function');
-      expect(chartstack.ready).to.be.an('function');
+    chartstack.ready(function(){
+      count++;
+      arrayOrder.push('b');
+      check();
     });
 
-  xit('should have these properties exposed (AR)', function(done){
-    chartstack.each([
-      'adapters', 'transformers',
-      'charts',
-      'Events',
-      'DataResource', 'Dataset', 'Visualization',
-      'libraries',
-      'Chart',
-      'is', 'each', 'extend',
-      'parseDOM', 'parseParams',
-      'buildQueryString', 'getAjax', 'getJSONP'], function(str){
-        expect(chartstack[str]).to.exist;
-      });
-     done();
+    chartstack.ready(function(){
+      count++;
+      arrayOrder.push('c');
+      check();
+    });
+  });
+
+  chartstack.trigger('ready');
+  it('should have fired ready event', function(){
+    expect(readyFired).to.equal(true);
+  });
+
+  it('should have fired second queued event', function(){
+    expect(secondReady).to.equal(true);
+  });
+
+  it('should trigger all ready events instantly after first trigger', function(done){
+    chartstack.ready(done);
   });
 });
 
@@ -134,49 +192,6 @@ describe('Testing method .transformers', function(){
     expect(a1.b).to.equal('c');
     expect(a2.a).to.equal(1);
   });
-});
-
-describe('Testing .ready', function(){
-  var arrayOrder = [];
-
-  it('should work', function(done){
-    chartstack.ready(function(){
-      done();
-    });
-  });
-
-  it('should execute in order queued', function(done){
-    var count = 0;
-    var check = function(){
-      if (count == 3){
-        if (arrayOrder[0] == 'a' && arrayOrder[1] == 'b' && arrayOrder[2] == 'c'){
-          done();
-        }else{
-          throw new Error('.ready Out of order');
-        }
-      }
-    }
-
-    chartstack.ready(function(){
-      count++;
-      arrayOrder.push('a');
-      check();
-    });
-
-    chartstack.ready(function(){
-      count++;
-      arrayOrder.push('b');
-      check();
-    });
-
-    chartstack.ready(function(){
-      count++;
-      arrayOrder.push('c');
-      check();
-    });
-
-  });
-
 });
 
 xdescribe('Test DOM parsing', function(){
