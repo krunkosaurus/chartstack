@@ -293,8 +293,7 @@
     }
 
     // Add static properties to the constructor function, if supplied.
-    extend(child, extend(parent, staticProps));
-    //extend(child, parent, staticProps);
+    extend(child, parent, staticProps);
 
     // Set the prototype chain to inherit from `parent`, without calling
     // `parent`'s constructor function.
@@ -317,6 +316,15 @@
     return child;
   };
 
+  /**
+   * No conflict method similiar to jQuery.noConflict that allows you to move the chartstack namespace to another variable.
+   * @example
+   * var companyName = {};
+   * companyName.chartstack = chartstack.noConflict();
+   * @memberof chartstack
+   * @function
+   * @static
+   */
   chartstack.noConflict = function(){
     root.chartstack = previousChartstack;
     return this;
