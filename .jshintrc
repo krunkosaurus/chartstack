@@ -9,5 +9,7 @@
   "newcap": true,
   "curly": true,
   "camelcase": true,
-  "freeze": true
+  "freeze": true,
+  "-W058": false,
+  "unused": false
 }
