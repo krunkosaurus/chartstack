@@ -6,7 +6,7 @@ test: true
 
 <piechart title="Pie Chart" height="300" adapter="keen-io" dataset="../api/keen/piechart.json"></piechart>
 
-<script src="../public/dist/chartstack.js"></script>
+<script src="../public/chartstack2.js"></script>
 <script>
 describe('Chartstack defaults', function(){
   it('should have default object', function(){
@@ -34,7 +34,7 @@ describe('Chartstack structure', function(){
       expect(chartstack.ready).to.be.an('function');
     });
 
-  it('should have these properties exposed', function(done){
+  xit('should have these properties exposed (AR)', function(done){
     chartstack.each([
       'adapters', 'transformers',
       'charts',
@@ -69,7 +69,19 @@ describe('Testing .noConflict', function(){
 });
 
 describe('Testing core events', function(){
-  it('should support .on, .trigger, and .trigger with arguments', function(done){
+  it('Events: should support .on, .trigger, and .trigger with arguments', function(done){
+    chartstack.on('banana', function(response1, response2){
+      expect(response1).to.equal('a');
+      expect(response2).to.equal('monkey');
+      done();
+    });
+
+    expect(chartstack.listeners.banana).to.exist;
+    expect(chartstack.listeners.banana.length).to.equal(1);
+    chartstack.trigger('banana', 'a', 'monkey');
+  });
+
+  it('Events mixin: should support .on, .trigger, and .trigger with arguments', function(done){
     var e = {};
     chartstack.extend(e, chartstack.Events);
 
@@ -145,7 +157,7 @@ describe('Testing .ready', function(){
 
 });
 
-describe('Test DOM parsing', function(){
+xdescribe('Test DOM parsing', function(){
   var p = document.getElementsByTagName('piechart')[0];
   it('should have piechart element on page', function(){
     expect(p).to.exist;
