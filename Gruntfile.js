@@ -23,7 +23,7 @@ module.exports = function(grunt) {
         src: [
           '<%= chartstack.scriptPath %>/chartstack2.js'
         ],
-        dest: '<%= chartstack.distPath %>/chartstack.js'
+        dest: '<%= chartstack.distPath %>/chartstack2.js'
       }
     },
 
@@ -38,7 +38,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          '<%= chartstack.distPath %>/chartstack.min.js': '<%= chartstack.distPath %>/chartstack.js'
+          '<%= chartstack.distPath %>/chartstack2.min.js': '<%= chartstack.distPath %>/chartstack2.js'
         }
       }
     },
@@ -49,9 +49,7 @@ module.exports = function(grunt) {
       },
       all: [
         // Manual designation, omit 3rd party scripts
-        '<%= chartstack.scriptPath %>/chartstack.js',
-        '<%= chartstack.scriptPath %>/util/chartstack.dataform.js',
-        '<%= chartstack.scriptPath %>/util/chartstack.csv.js'
+        '<%= chartstack.scriptPath %>/chartstack2.js'
         //'<%= chartstack.scriptPath %>/*.js', '<%= chartstack.scriptPath %>/**/*.js'
       ]
     },
