@@ -9,19 +9,38 @@
 
   /**
    * Global options object that is passed to chart instance constructors for settings defaults such as color and chart width/height.  You can override this object before the DOM-ready event.  Chart specific config objects override these defaults.
+   * @namespace
    * @static
    * @memberof chartstack
-   * @namespace
    * @property {Object}  defaults
    * @property {Boolean} [default.labels] - If set to true all charts try to use labels.
    * @property {String} [default.library] - The default charting Library to use if none specified.
    * @property {Array} [default.colors] - The colors of each item in each data series.  Affects all chart types from piecharts to barcharts.
    */
-  var defaults = root.defaults = {
+  var defaults = chartstack.defaults = {
     labels: true,
     library: 'Google Charts',
     colors: ['red', 'yellow', 'blue', 'green', 'purple']
-  }
+  };
+
+  /**
+   * Namespace for transformer methods.  Transformers are simple methods that convert one data type into JSON.
+   * @namespace
+   * @static
+   * @memberof chartstack
+   * @property {Object} transformers
+   * @property {Function} transformers.json - Converts "string" JSON in to live JSON.
+   * @property {Function} transformers.csv - Converts CSV data to JSON.
+   */
+  var transformers = chartstack.transformers = {
+    json : function(data){
+      if (typeof data == 'string'){
+        return JSON.parse(data);
+      }else{
+        return data;
+      }
+    }
+  };
 
   /**
    * Utility method for comparing types between two arguments. Internally uses JavaScript's typeof.
@@ -211,7 +230,23 @@
     }
 
   };
-  chartstack.extend(this, chartstack.Events);
+
+  // Enable the main chartstack namespace to function as a global event bus.
+  extend(chartstack, Events);
+
+  /**
+   * Method for queueing a callback to trigger when Chartstack has fully loaded and the DOM is ready.  Is actually just a shortcut for chartstack.on('ready', cb);
+   * @param {Function} [cb] - The callback to trigger when the chartstack is ready.
+   * @returns {object} Returns a reference to the global chartstack instance.
+   * @memberof chartstack
+   * @method
+   * @static
+   */
+  // Shortcut for chartstack.on('ready', cb);
+  var ready = chartstack.ready = function(cb){
+    chartstack.on('ready', cb);
+    return chartstack;
+  };
 
   /**
    * Base class of all chart views. To be extended but not instantiated directly.
@@ -221,7 +256,7 @@
    * @static
    * @constructor
    */
-  chartstack.View = function(options){
+  var View = chartstack.View = function(options){
     //
   };
 
@@ -231,8 +266,52 @@
    * @static
    * @constructor
    */
-  chartstack.Model = function(options){
+  var Model = chartstack.Model = function(options){
     //
+  };
+
+
+  // Helper function to correctly set up the prototype chain, for subclasses.
+  // Similar to `goog.inherits`, but uses a hash of prototype properties and
+  // class properties to be extended.
+  View.extend = Model.extend = function(protoProps, staticProps) {
+    var parent = this;
+    var child;
+
+    // The constructor function for the new subclass is either defined by you
+    // (the "constructor" property in your `extend` definition), or defaulted
+    // by us to simply call the parent's constructor.
+    if (protoProps && 'constructor' in protoProps) {
+      child = protoProps.constructor;
+    } else {
+      child = function(){
+        return parent.apply(this, arguments);
+      };
+    }
+
+    // Add static properties to the constructor function, if supplied.
+    extend(child, extend(parent, staticProps));
+    //extend(child, parent, staticProps);
+
+    // Set the prototype chain to inherit from `parent`, without calling
+    // `parent`'s constructor function.
+    var Surrogate = function(){
+      this.constructor = child;
+    };
+    Surrogate.prototype = parent.prototype;
+    child.prototype = new Surrogate;
+
+    // Add prototype properties (instance properties) to the subclass,
+    // if supplied.
+    if (protoProps){
+      extend(child.prototype, protoProps);
+    }
+
+    // Set a convenience property in case the parent's prototype is needed
+    // later.
+    child.__super__ = parent.prototype;
+
+    return child;
   };
 
   chartstack.noConflict = function(){
@@ -244,6 +323,7 @@
     //
   };
 
+  // Expose globally.
   extend(chartstack, {
     is : is,
     each : each,
