@@ -1,0 +1,31 @@
+---
+layout: page
+title: Test view class
+test: true
+---
+
+<piechart title="Pie Chart" height="300" adapter="keen-io" dataset="../api/keen/piechart.json"></piechart>
+
+<script src="../public/chartstack2.js"></script>
+<script>
+var d1 = new chartstack.View({
+  data: [
+    ["Browser", "Share"],
+    ["Firefox", 45.0],
+    ["IE", 26.8],
+    ["Chrome", 12.8],
+    ["Safari", 8.5],
+    ["Opera", 6.2],
+    ["Others", 0.7]
+  ],
+  // TODO: test overriding global defaults.
+  colors: ['green', 'yellow', 'blue', 'red', 'purple', 'brown', 'orange']
+});
+
+var d2 = new chartstack.View({
+  // TODO: test ajax
+  url: '/api/universal/piechart.json'
+});
+
+
+</script>
