@@ -279,6 +279,7 @@
    * @constructor
    */
   var View = chartstack.View = function(options){
+    extend(this, chartstack.defaults.view, options);
     //
   };
 
@@ -289,27 +290,18 @@
    * @constructor
    */
   var Model = chartstack.Model = function(options){
+    extend(this, chartstack.defaults.model, options);
     //
   };
-
 
   // Helper function to correctly set up the prototype chain, for subclasses.
   // Similar to `goog.inherits`, but uses a hash of prototype properties and
   // class properties to be extended.
   View.extend = Model.extend = function(protoProps, staticProps) {
     var parent = this;
-    var child;
-
-    // The constructor function for the new subclass is either defined by you
-    // (the "constructor" property in your `extend` definition), or defaulted
-    // by us to simply call the parent's constructor.
-    if (protoProps && 'constructor' in protoProps) {
-      child = protoProps.constructor;
-    } else {
-      child = function(){
-        return parent.apply(this, arguments);
-      };
-    }
+    var child = function(){
+      return parent.apply(this, arguments);
+    };
 
     // Add static properties to the constructor function, if supplied.
     extend(child, parent, staticProps);
