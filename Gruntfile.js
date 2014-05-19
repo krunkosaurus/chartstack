@@ -81,10 +81,12 @@ module.exports = function(grunt) {
     },
 
     watch: {
+      // Used by grunt:serve
       scripts: {
         files: "<%= chartstack.scriptPath %>/**/*.js",
         tasks: ['build']
       },
+      // Used by grunt test:dev
       test: {
         files: [
           '<%= chartstack.scriptPath %>/**/*.js',
@@ -93,7 +95,7 @@ module.exports = function(grunt) {
           '<%= chartstack.testPath %>/test-*/*.html',
           '<%= chartstack.testPath %>/_includes/*.html',
           '<%= chartstack.testPath %>/blog/*.html',
-          '<%= chartstack.testPath %>/_posts/*.*'
+          '<%= chartstack.testPath %>/blog/_posts/*.*'
         ],
         tasks: ['build', 'copy:test', 'jekyll:dist']
       },
