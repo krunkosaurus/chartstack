@@ -12,15 +12,25 @@
    * @namespace
    * @static
    * @memberof chartstack
-   * @property {Object}  defaults
-   * @property {Boolean} [default.labels] - If set to true all charts try to use labels.
-   * @property {String} [default.library] - The default charting Library to use if none specified.
-   * @property {Array} [default.colors] - The colors of each item in each data series.  Affects all chart types from piecharts to barcharts.
+   * @property {Object} defaults
+   * @property {Object} defaults.view - View related defaults.
+   * @property {Boolean} [defaults.view.labels] - If set to true all charts try to use labels.
+   * @property {String} [defaults.view.library] - The default charting Library to use if none specified.
+   * @property {Array} [defaults.view.colors] - The colors of each item in each data series.  Affects all chart types from piecharts to barcharts.
+   * @property {Object}  defaults.model - Model related defaults.
+   * @property {(Boolean|Integer)} [defaults.model.polling] - Default poll refetch period. Time in milliseconds, defaults to false.
    */
   var defaults = chartstack.defaults = {
-    labels: true,
-    library: 'Google Charts',
-    colors: ['red', 'yellow', 'blue', 'green', 'purple']
+    view: {
+      width: 400,
+      height: 200,
+      labels: true,
+      library: 'Google Charts',
+      colors: ['red', 'yellow', 'blue', 'green', 'purple']
+    },
+    model: {
+      polling: false
+    }
   };
 
   /**
