@@ -2,13 +2,6 @@
 (function(cs){
   // Taken from: https://github.com/aaronsnoswell/csvjson.js/blob/master/csvjson.js
   cs.addtransformer('csv', function(data){
-    function isdef(ob) {
-      if(typeof(ob) == "undefined"){
-        return false;
-      }
-      return true;
-    }
-
     /**
      * splitCSV function (c) 2009 Brian Huisman, see http://www.greywyvern.com/?post=258
      * Works by spliting on seperators first, then patching together quoted values
@@ -41,7 +34,7 @@
      */
     function csv2json(csvdata, args) {
       args = args || {};
-      var delim = isdef(args.delim) ? args.delim : ",";
+      var delim = chartstack.is(args.delim, 'undefined') ?  ',' : args.delim;
       // Unused
       //var textdelim = isdef(args.textdelim) ? args.textdelim : "";
 
