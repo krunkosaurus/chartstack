@@ -28,18 +28,20 @@ module.exports = function(grunt) {
     },
 
     uglify: {
-      options : {
-        sourceMap: true,
-        sourceMapIncludeSources: true,
+      options: {
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
         report: 'gzip',
-        beautify : {
-          ascii_only : true
-        }
+        sourceMap: true,
+        sourceMapIncludeSources: true
       },
-      dist: {
-        files: {
-          '<%= chartstack.distPath %>/chartstack2.min.js': '<%= chartstack.distPath %>/chartstack2.js'
-        }
+      build: {
+        src: [
+            '<%= chartstack.scriptPath %>/chartstack2.js',
+            '<%= chartstack.scriptPath %>/transform/chartstack.csv.js',
+            '<%= chartstack.scriptPath %>/adapter/chartstack.keen.universal.adapter.js',
+            '<%= chartstack.scriptPath %>/adapter/chartstack.universal.nvd3.adapter.js',
+        ],
+        dest: '<%= chartstack.distPath %>/chartstack2.min.js'
       }
     },
 
@@ -105,6 +107,7 @@ module.exports = function(grunt) {
 
     copy: {
       build: {
+        // Copy dataform from bower install to src/utils folder and change variable.
         src: './<%= chartstack.bowerPath %>/dataform/dist/dataform.js',
         dest: './<%= chartstack.scriptPath %>/utils/chartstack.dataform.js',
         options: {
@@ -113,13 +116,16 @@ module.exports = function(grunt) {
           }
         }
       },
+      // Copy files for Jekyll tests.
       test: {
         files: [{
+          // Copy api folder to test folder.
           cwd: '<%= chartstack.appPath %>/api/',
           src: ['**'],
           dest: '<%= chartstack.testPath %>/api',
           expand: true
         },{
+          // Copy bower installs to test/public folder.
           src: ['<%= chartstack.bowerPath %>/**'],
           dest: '<%= chartstack.testPath %>/public',
           expand: true
