@@ -222,7 +222,7 @@ var chart = chartstack.columnChart({
   el: document.getElementById('traffic-growth'),
   height: '300',
   width: '400',
-  dataset: data,
+  model: data,
   rowLabelDateFormat: 'MM-DD',
   // columnLabelDateFormat: 'YY/MM/DD',
 })
@@ -242,3 +242,4 @@ As follows, here are a list of changes:
 5. **this.view change**: Inside the modal's event object `this.view` has been changed to `this.parent`.
 6. **Some comment documentation**: Added a few comments to point out "hidden" functionality that wouldn't be obvious to the end user: for example when specifying a data adapter (to convert 3rd party data to universal data) you can optionally inline a function instead that will be passed the raw fetched data to process.
 7. **Polling change**: Poll method has been moved from a method to an init property.  This is because polling is checked and started once a fetch is called.  There is still a `.startPoll` and `.stopPoll` method which both will run a fetch. Internally Chartstack also uses these methods.
+8. Rename View.dataset to View.model.
