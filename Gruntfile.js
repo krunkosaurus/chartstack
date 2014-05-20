@@ -133,8 +133,10 @@ module.exports = function(grunt) {
           dest: '<%= chartstack.testPath %>/public',
           expand: true
         },{
-          src: ['dist/chartstack2.min.js'],
-          dest: '<%= chartstack.testPath %>/public/chartstack2.min.js'
+          // Copy /dist files to test/public/dist folder.
+          src: ['<%= chartstack.distPath %>/**'],
+          dest: '<%= chartstack.testPath %>/public/',
+          expand: true
         }]
       }
     },
