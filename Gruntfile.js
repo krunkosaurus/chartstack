@@ -15,18 +15,6 @@ module.exports = function(grunt) {
 
     pkg: grunt.file.readJSON('package.json'),
 
-    concat: {
-      options: {
-        stripBanners: false
-      },
-      all: {
-        src: [
-          '<%= chartstack.scriptPath %>/chartstack2.js'
-        ],
-        dest: '<%= chartstack.distPath %>/chartstack2.js'
-      }
-    },
-
     // Called by `grunt build`.
     uglify: {
       options: {
@@ -185,7 +173,6 @@ module.exports = function(grunt) {
 
   // Load tasks
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks("grunt-contrib-concat");
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.loadNpmTasks('grunt-contrib-connect');
@@ -197,7 +184,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-jsdoc');
 
   // Build and Serve
-  grunt.registerTask('build', ['copy:build', 'jshint', 'concat', 'uglify']);
+  grunt.registerTask('build', ['copy:build', 'jshint', 'uglify']);
   grunt.registerTask('serve', ['build', 'connect:demo', 'watch:scripts']);
 
   // generate and watch docs
