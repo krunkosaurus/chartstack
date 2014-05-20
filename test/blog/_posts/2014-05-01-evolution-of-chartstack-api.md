@@ -193,3 +193,51 @@ document.getElementById('trafficTab').addEventListener('click', function(){
 Note here that our `Data` object also doesn't just request data as soon as it's instantiated. It has a `.fetch`. We don't see it here because when the `Data` object is passed to `columnChart` it internally calls fetch on it's data when `chart.draw()` is called.
 
 That concludes the idea of further evolving the Chartstack API into its final form.  Let me know your thoughts.
+
+**Updates 5/19/2013 -** A few thoughtful adjustments to the final code. We show a lot of commented out methods here just to point out they exist:
+
+{% highlight js %}
+var data = chartstack.Model({
+  adapter: 'keen-io', // Internal adapter to load or inline func.
+  rowLabelDateFormat: 'MM-DD',
+  // columnLabelDateFormat: 'YY/MM/DD',
+  url: '../api/keen/multilinechart.json',
+  // data: {...} // Inline JSON if not using url.
+  poll: 5000 // Repoll data ever 5 seconds.
+)}
+  .filterRows('1-3,5') // Filter out uneeded rows.
+  .filterColumns('2-*') // Filter out uneeded columns.
+  // .onlyRows('1') // Just use the first row.
+  // .onlyColumns('2,4-6') // Just use certain columns.
+  // .startPoll(5000)
+  .on('error', function(){
+    this.parent.trigger('freeze');
+    this.parent.popNotice('API down.');
+  })
+  .on('update', function(){
+    this.parent.draw();
+  });
+
+var chart = chartstack.columnChart({
+  title: 'Column chart',
+  el: document.getElementById('traffic-growth'),
+  height: '300',
+  width: '400',
+  dataset: data
+})
+
+document.getElementById('trafficTab').addEventListener('click', function(){
+   chart.draw();
+});
+{% endhighlight %}
+<center>Figure 10: _API Adjustments 5/19/2013_</center>
+
+As follows, here are a list of changes:
+
+1. **Class name change:** `chartstack.Dataset` class has been renamed to `chartstack.Model` as it is a more familiar standard for those that understand MVC patterns or have used frameworks like Backbone.js
+2. **Added row/column language to methods:** When modifying data some charting frameworks use concepts like `xLabel` while others use `rowLabel`.  Because we want users to understand the [Universal Date Format](https://github.com/keenlabs/chartstack/wiki/Unified-Chart-Data-Format) inside and out (it looks like a table of data) we are going to standardize on row and column.
+3. **Date method change**: Note that the view property `dateformat: 'MM-DD'` has changed to `rowLabelDateFormat: 'MM-DD'` and `columnLabelDateFormat: 'MM-DD'`.  The previous property assumed dates occured only in row labels when columns can contain dates, too.
+4. **Filter method change**: `.filter` method has now split into two methods: `.filterRows` and `.filterColumns`.  This is more implicit and simplifies parsing the selection.  Additionally there is now similiar methods called `.onlyRows` and `.onlyColumns` which will reduce down to only the passed selection.
+5. **this.view change**: Inside the modal's event object `this.view` has been changed to `this.parent`.
+6. **Some comment documentation**: Added a few comments to point out "hidden" functionality that wouldn't be obvious to the end user: for example when specifying a data adapter (to convert 3rd party data to universal data) you can optionally inline a function instead that will be passed the raw fetched data to process.
+7. **Polling change**: Poll method has been moved from a method to an init property.  This is because polling is checked and started once a fetch is called.  There is still a `.startPoll` and `.stopPoll` method which both will run a fetch. Internally Chartstack also uses these methods.
