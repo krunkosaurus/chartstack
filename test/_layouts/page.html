@@ -1,12 +1,11 @@
 ---
 layout: default
 ---
-
-{% if page.test == true %}
-<div id="mocha"></div>
-{% endif %}
-
 <div class="page">
   <h1 class="page-title">{{ page.title }}</h1>
+  {% if page.test == true %}
+  <div id="mocha"></div>
+  {% endif %}
+
   {{ content }}
 </div>

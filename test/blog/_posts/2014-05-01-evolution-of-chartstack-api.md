@@ -199,8 +199,6 @@ That concludes the idea of further evolving the Chartstack API into its final fo
 {% highlight js %}
 var data = chartstack.Model({
   adapter: 'keen-io', // Internal adapter to load or inline func.
-  rowLabelDateFormat: 'MM-DD',
-  // columnLabelDateFormat: 'YY/MM/DD',
   url: '../api/keen/multilinechart.json',
   // data: {...} // Inline JSON if not using url.
   poll: 5000 // Repoll data ever 5 seconds.
@@ -209,7 +207,8 @@ var data = chartstack.Model({
   .filterColumns('2-*') // Filter out uneeded columns.
   // .onlyRows('1') // Just use the first row.
   // .onlyColumns('2,4-6') // Just use certain columns.
-  // .startPoll(5000)
+  // .startPoll(5000) // Optional time in ms or uses this.poll
+  // .stopPoll()
   .on('error', function(){
     this.parent.trigger('freeze');
     this.parent.popNotice('API down.');
@@ -223,7 +222,9 @@ var chart = chartstack.columnChart({
   el: document.getElementById('traffic-growth'),
   height: '300',
   width: '400',
-  dataset: data
+  dataset: data,
+  rowLabelDateFormat: 'MM-DD',
+  // columnLabelDateFormat: 'YY/MM/DD',
 })
 
 document.getElementById('trafficTab').addEventListener('click', function(){
@@ -236,7 +237,7 @@ As follows, here are a list of changes:
 
 1. **Class name change:** `chartstack.Dataset` class has been renamed to `chartstack.Model` as it is a more familiar standard for those that understand MVC patterns or have used frameworks like Backbone.js
 2. **Added row/column language to methods:** When modifying data some charting frameworks use concepts like `xLabel` while others use `rowLabel`.  Because we want users to understand the [Universal Date Format](https://github.com/keenlabs/chartstack/wiki/Unified-Chart-Data-Format) inside and out (it looks like a table of data) we are going to standardize on row and column.
-3. **Date method change**: Note that the view property `dateformat: 'MM-DD'` has changed to `rowLabelDateFormat: 'MM-DD'` and `columnLabelDateFormat: 'MM-DD'`.  The previous property assumed dates occured only in row labels when columns can contain dates, too.
+3. **Date method change**: Note that the model property `dateformat: 'MM-DD'` has changed to `rowLabelDateFormat: 'MM-DD'` and `columnLabelDateFormat: 'MM-DD'` and moved from a model property to a view property.  This is because the previous property assumed dates occured only in row labels when columns can contain dates, too. Additionally, formatting labels is something that should be handled in the view and not at the data level.
 4. **Filter method change**: `.filter` method has now split into two methods: `.filterRows` and `.filterColumns`.  This is more implicit and simplifies parsing the selection.  Additionally there is now similiar methods called `.onlyRows` and `.onlyColumns` which will reduce down to only the passed selection.
 5. **this.view change**: Inside the modal's event object `this.view` has been changed to `this.parent`.
 6. **Some comment documentation**: Added a few comments to point out "hidden" functionality that wouldn't be obvious to the end user: for example when specifying a data adapter (to convert 3rd party data to universal data) you can optionally inline a function instead that will be passed the raw fetched data to process.
