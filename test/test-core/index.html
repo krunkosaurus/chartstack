@@ -6,7 +6,7 @@ test: true
 
 <piechart title="Pie Chart" height="300" adapter="keen-io" dataset="../api/keen/piechart.json"></piechart>
 
-<script src="../public/chartstack2.js"></script>
+<script src="../public/chartstack2.min.js"></script>
 <script>
 describe('Chartstack defaults', function(){
   it('should have default object', function(){
@@ -14,7 +14,7 @@ describe('Chartstack defaults', function(){
   });
 
   it('should have some default properties', function(){
-    expect(chartstack.defaults.labels).to.be.true;
+    expect(chartstack.defaults.view.labels).to.be.true;
   });
 })
 

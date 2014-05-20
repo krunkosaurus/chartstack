@@ -27,6 +27,7 @@ module.exports = function(grunt) {
       }
     },
 
+    // Called by `grunt build`.
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
@@ -36,7 +37,9 @@ module.exports = function(grunt) {
       },
       build: {
         src: [
-            '<%= chartstack.scriptPath %>/chartstack2.js',
+            '<%= chartstack.scriptPath %>/chartstack.core.js',
+            '<%= chartstack.scriptPath %>/chartstack.view.js',
+            '<%= chartstack.scriptPath %>/chartstack.model.js',
             '<%= chartstack.scriptPath %>/transform/chartstack.csv.js',
             '<%= chartstack.scriptPath %>/adapter/chartstack.keen.universal.adapter.js',
             '<%= chartstack.scriptPath %>/adapter/chartstack.universal.nvd3.adapter.js',
@@ -100,9 +103,7 @@ module.exports = function(grunt) {
         tasks: ['build', 'copy:test', 'jekyll:dist']
       },
       docs: {
-        files: [
-          '<%= chartstack.scriptPath %>/chartstack2.js'
-        ],
+        files: ['<%= chartstack.scriptPath %>/chartstack.*.js'],
         tasks: ['jsdoc']
       }
     },
@@ -132,8 +133,8 @@ module.exports = function(grunt) {
           dest: '<%= chartstack.testPath %>/public',
           expand: true
         },{
-          src: ['src/chartstack2.js'],
-          dest: '<%= chartstack.testPath %>/public/chartstack2.js'
+          src: ['dist/chartstack2.min.js'],
+          dest: '<%= chartstack.testPath %>/public/chartstack2.min.js'
         }]
       }
     },
@@ -154,7 +155,7 @@ module.exports = function(grunt) {
 
     jsdoc : {
         dist : {
-            src: ['src/chartstack2.js'],
+            src: ['src/chartstack.*.js'],
             options: {
                 destination: 'doc'
             }
