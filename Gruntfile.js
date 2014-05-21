@@ -81,6 +81,7 @@ module.exports = function(grunt) {
       test: {
         files: [
           '<%= chartstack.scriptPath %>/**/*.js',
+          '<%= chartstack.testPath %>/index.md',
           '<%= chartstack.testPath %>/public/css/*.css',
           '<%= chartstack.testPath %>/visual-*/*.html',
           '<%= chartstack.testPath %>/test-*/*.html',
