@@ -26,6 +26,7 @@ module.exports = function(grunt) {
       build: {
         src: [
             '<%= chartstack.scriptPath %>/chartstack.core.js',
+            '<%= chartstack.scriptPath %>/chartstack.utils.js',
             '<%= chartstack.scriptPath %>/chartstack.view.js',
             '<%= chartstack.scriptPath %>/chartstack.model.js',
             '<%= chartstack.scriptPath %>/transform/chartstack.csv.js',
