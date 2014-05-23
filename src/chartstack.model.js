@@ -1,4 +1,6 @@
 (function(chartstack) {
+  // Shortcuts
+  var extend = chartstack.extend;
   /**
    * Class that handles all data in Chartstack.  Can be used to fetch and normalize data as well as convert it to various formats acceptable by chart views.
    * @memberof chartstack
@@ -7,6 +9,13 @@
    */
   var Model = chartstack.Model = function(options){
     extend(this, chartstack.defaults.model, options);
+
+    // if options.data exists use it right away.
+
+    // If options.url exists fetch it and trigger fetch
+    if (options.url){
+
+    }
     //
   };
 
