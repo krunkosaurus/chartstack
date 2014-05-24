@@ -65,24 +65,31 @@
    * @memberof chartstack.utils.http
    */
   http.getJSONP = function(url, success, error){
-    var callbackName = "ChartstackJSONPCallback" + new Date().getTime();
-    while (callbackName in window) {
-      callbackName += "a";
-    }
+    var rand = +new Date;
+    var callbackName = 'chartstack' + rand;
     var loaded = false;
-    window[callbackName] = function (response) {
+
+    while (callbackName in window) {
+      callbackName += "1";
+    }
+    window[callbackName] = function(response) {
       loaded = true;
       if (success && response) {
         success(response);
       }
       // Remove this from the namespace
       window[callbackName] = undefined;
+      delete window[callbackName];
     };
+
     url = url + "&jsonp=" + callbackName;
+
     var script = document.createElement("script");
     script.id = "chartstack-jsonp";
     script.src = url;
+
     document.getElementsByTagName("head")[0].appendChild(script);
+
     // for early IE w/ no onerror event
     script.onreadystatechange = function() {
       if (loaded === false && this.readyState === "loaded") {
@@ -92,6 +99,7 @@
         }
       }
     };
+
     // non-ie, etc
     script.onerror = function() {
       if (loaded === false) { // on IE9 both onerror and onreadystatechange are called

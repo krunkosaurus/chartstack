@@ -1,0 +1,42 @@
+---
+layout: page
+title: Test utils
+test: true
+---
+
+<script src="../public/dist/chartstack2.min.js"></script>
+<script>
+describe('Chartstack.utils', function(){
+  it('should have utils object', function(){
+    expect(chartstack.utils).to.be.an('object');
+  });
+})
+
+describe('Chartstack.utils.http', function(){
+  it('should have utils.http object', function(){
+    expect(chartstack.utils.http).to.be.an('object');
+  });
+
+  it('should support .utils.http.getAjax()', function(done){
+    chartstack.utils.http.getAjax('/api/universal/piechart.json', function(r){
+      r = JSON.parse(r);
+      expect(r).to.deep.equal({
+        "data": [
+          ["Browser", "Share"],
+          ["Firefox", 45.0],
+          ["IE", 26.8],
+          ["Chrome", 12.8],
+          ["Safari", 8.5],
+          ["Opera", 6.2],
+          ["Others", 0.7]
+        ],
+        "extras" : {}
+      });
+      done();
+    });
+  });
+
+  xit('should support .utils.http.getJSONP()', function(done){
+  });
+});
+</script>
