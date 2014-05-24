@@ -271,63 +271,6 @@
   };
 
   /**
-   * Base class of all chart views. To be extended but not instantiated directly.
-   * @param {object} options - Options object contains various data to instantiate a chart.
-   * @classdesc This class is subclassed to create a new type of view class.
-   * @memberof chartstack
-   * @static
-   * @constructor
-   */
-  var View = chartstack.View = function(options){
-    extend(this, chartstack.defaults.view, options);
-    //
-  };
-
-  /**
-   * Class that handles all data in Chartstack.  Can be used to fetch and normalize data as well as convert it to various formats acceptable by chart views.
-   * @memberof chartstack
-   * @static
-   * @constructor
-   */
-  var Model = chartstack.Model = function(options){
-    extend(this, chartstack.defaults.model, options);
-    //
-  };
-
-  // Helper function to correctly set up the prototype chain, for subclasses.
-  // Similar to `goog.inherits`, but uses a hash of prototype properties and
-  // class properties to be extended.
-  View.extend = Model.extend = function(protoProps, staticProps) {
-    var parent = this;
-    var child = function(){
-      return parent.apply(this, arguments);
-    };
-
-    // Add static properties to the constructor function, if supplied.
-    extend(child, parent, staticProps);
-
-    // Set the prototype chain to inherit from `parent`, without calling
-    // `parent`'s constructor function.
-    var Surrogate = function(){
-      this.constructor = child;
-    };
-    Surrogate.prototype = parent.prototype;
-    child.prototype = new Surrogate;
-
-    // Add prototype properties (instance properties) to the subclass,
-    // if supplied.
-    if (protoProps){
-      extend(child.prototype, protoProps);
-    }
-
-    // Set a convenience property in case the parent's prototype is needed
-    // later.
-    child.__super__ = parent.prototype;
-
-    return child;
-  };
-
-  /**
    * No conflict method similiar to jQuery.noConflict that allows you to move the chartstack namespace to another variable.
    * @example
    * var companyName = {};
