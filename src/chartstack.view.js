@@ -1,4 +1,7 @@
 (function(chartstack) {
+  // Shortcuts
+  var extend = chartstack.extend;
+
   /**
    * Base class of all chart views. To be extended but not instantiated directly.
    * @param {object} options - Options object contains various data to instantiate a chart.
@@ -12,4 +15,6 @@
     //
   };
 
+  // Add Events Mixin to View.
+  extend(View.prototype, chartstack.Events);
 })(chartstack);

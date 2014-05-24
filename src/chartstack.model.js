@@ -1,6 +1,8 @@
 (function(chartstack) {
   // Shortcuts
   var extend = chartstack.extend;
+  var http = chartstack.utils.http;
+
   /**
    * Class that handles all data in Chartstack.  Can be used to fetch and normalize data as well as convert it to various formats acceptable by chart views.
    * @memberof chartstack
@@ -8,16 +10,45 @@
    * @constructor
    */
   var Model = chartstack.Model = function(options){
+    var self = this;
     extend(this, chartstack.defaults.model, options);
 
     // if options.data exists use it right away.
-
-    // If options.url exists fetch it and trigger fetch
-    if (options.url){
-
+    if (options.data){
+      this.trigger('update');
     }
-    //
   };
+
+  extend(Model.prototype, {
+    fetch: function(){
+      var self = this;
+
+      http.getAjax(self.url, function(r){
+        self.rawData = JSON.parse(r);
+        self.trigger('rawUpdate');
+
+        if (self.poll){
+          self.pollTimer = setTimeout(function(){
+            self.fetch();
+          }, self.poll);
+        }
+      });
+    },
+
+    stopPoll: function(){
+      if (this.pollTimer){
+        clearTimeout(this.pollTimer);
+        this.pollTimer = false;
+      }
+    },
+
+    restore: function(){
+      // Restore data from original feteched data.
+    }
+  });
+
+  // Add Events Mixin to Model.
+  extend(Model.prototype, chartstack.Events);
 
   // Helper function to correctly set up the prototype chain, for subclasses.
   // Similar to `goog.inherits`, but uses a hash of prototype properties and
