@@ -7,7 +7,7 @@ test: true
 <script src="../public/dist/chartstack2.min.js"></script>
 <script>
 
-var rawData = [
+var data = [
   ["Browser", "Share"],
   ["Firefox", 45.0],
   ["IE", 26.8],
@@ -17,13 +17,18 @@ var rawData = [
   ["Others", 0.7]
 ];
 
+var rawData = {
+  data: data,
+  extras: {}
+};
+
 describe('model: direct injecting JSON data', function(){
   var d = new chartstack.Model({
-    data: rawData
+    data: data
   });
 
   it('Should have raw data', function(){
-    expect(d.data).to.deep.equal(rawData);
+    expect(d.data).to.deep.equal(data);
   });
 
   it('Polling default should be there but false.', function(){
@@ -36,15 +41,29 @@ describe('model: fetch data from url', function(){
     // TODO: test ajax
     url: '/api/universal/piechart.json'
   });
+
+  it('Should have raw data', function(done){
+    d.on('rawUpdate', function(){
+      expect(d.rawData).to.deep.equal(rawData);
+      done();
+    });
+    d.fetch();
+  });
 });
 
 describe('model: injecting and polling url data', function(){
-  var d = new chartstack.Model({
-    url: '/api/keen/piechart.json',
+  var d = window.d = new chartstack.Model({
+    url: '/api/universal/piechart.json',
     // TODO: Test polling
-    poll: 2000,
-    // TODO: Test adapter
-    adapter: 'keen-io'
+    poll: 5000
+  });
+
+  it('Should have raw data', function(done){
+    d.on('rawUpdate', function(){
+      expect(d.rawData).to.deep.equal(rawData);
+      done();
+    });
+    d.fetch();
   });
 });
 
