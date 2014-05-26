@@ -52,19 +52,40 @@ describe('model: fetch data from url', function(){
 });
 
 describe('model: injecting and polling url data', function(){
+  var updateCount = 0;
+  var stopCount;
   var d = window.d = new chartstack.Model({
     url: '/api/universal/piechart.json',
     // TODO: Test polling
-    poll: 5000
+    poll: 100
   });
 
   it('Should have raw data', function(done){
     d.on('rawUpdate', function(){
+      //console.log('updateCount', updateCount);
+      updateCount = updateCount + 1;
       expect(d.rawData).to.deep.equal(rawData);
       done();
     });
     d.fetch();
   });
+
+  it('Should be polling data', function(done){
+    setTimeout(function(){
+      stopCount = updateCount;
+      expect(updateCount).to.be.above(2);
+      d.stopPoll();
+      done();
+    },350);
+  });
+
+  it('Should have stopped polling', function(done){
+    setTimeout(function(){
+      expect(updateCount).to.equal(stopCount);
+      done();
+    },250);
+  });
+
 });
 
 
