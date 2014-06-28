@@ -4,7 +4,7 @@
   var http = chartstack.utils.http;
 
   /**
-   * Class that handles all data in Chartstack.  Can be used to fetch and normalize data as well as convert it to various formats acceptable by chart views.
+   * Class that handles all data in Chartstack.  Can be used to fetch and normalize data as well as convert it to specific formats acceptable by specific chart views.
    * @memberof chartstack
    * @static
    * @constructor
@@ -13,12 +13,16 @@
     var self = this;
     extend(this, chartstack.defaults.model, options);
 
-    // if options.data exists use it right away.
+    // If options.data exists use it right away and assume it's "clean" or else
+    // the data would be in options.rawData.
     if (options.data){
       this.trigger('update');
     }
   };
 
+  // Load data from across the internet from .url
+  // - place in .rawData property
+  // - trigger .rawUpdate event
   extend(Model.prototype, {
     fetch: function(){
       var self = this;
@@ -43,7 +47,7 @@
     },
 
     restore: function(){
-      // Restore data from original feteched data.
+      // Restore data from original fetched data.
     }
   });
 
