@@ -34,33 +34,27 @@ In order to support the above features the model keeps two references to its dat
 - **fetch()** - Checks for `.url` property and retrieves data via ajax placing data in `originalData`. Triggering `originalUpdate` event.  Checks `.pollInterval` property to see if `.fetch` needs to be repeated.
 - **set()** - Manually set data on the model. This data will be placed in `.originalData` and `originalUpdate` event is triggered.
 - **pause()** - Pauses polling. To continue simply call `.fetch` again.
-- **clear()** - 
-- **reset()** - 
+- **clear()** - Removes all queued transforms.
+- **reset()** - Get a fresh, normalized copy of `.originalData`, and clears all queued transforms.
 
 **Transforming methods**
 
-These methods queue under the `.transform` event when called to be executed every time the model's data is updated (Internally The `.transform` event is triggered by the `.update` event.)  To reset all transforms call `.clear()` or `.reset()` to also reset back to the original data.
+Transform methods get called right away but also queue under the `.transform` event to be called any time the model's data is updated (Internally The `.transform` event is triggered by the `.update` event.)  To reset all transforms call `.clear()` or `.reset()` to also reset back to the original data.
 
-- **filterRow()** - 
-- **filterColumn()** - 
-- **onlyRow()** - 
-- **onlyColumn()** - 
-- **addRow()** - 
-- **addColumn()** - 
+- **filterRow()** - Filter a row out of `.data`. Can specify as a comma-separated integers, ranges, or a combination.  Can also specify "\*" for everything after or before. Example: "1-3,5,7\*"
+- **filterColumn()** - Filter a column out of `.data`. Can specify as a comma-separated integers, ranges, or a combination.  Can also specify "\*" for everything after or before. Example: "1-3,5,7\*"
+- **onlyRow()** - If there are too many rows you can specify only rows to keep. Example: "3" or "3,5*"
+- **onlyColumn()** - If there are too many columns you can specify only columns to keep. Example: "3" or "3,5*"
+- **addRow()** - Adding a row of data.
+- **addColumn()** - Adding a column of data.
 
 **Events**
 
-- **init**
-- **update**
 - **originalUpdate** - This event is triggered whenever `.originalData` property is updated (generally by `.fetch()` or `.set()`).  One library callback is attached to this event to check for an adapter and if so copy a normalized version of `.originalData` to `.data` or else just an exact copy.
+- **update** - Runs queued transforms (by triggering `.transform`). A view usually also binds to this event to rerender a view.
+- **transform** - Trigger all queued transforms. Queued transformed can be cleared with `.clear()` or `.reset()` methods.
 - **error** - This event is triggered whenever there is an error. Currently the errors are:
-  - if `.fetch` fails due to bad http request.
-
-Events flow:
-- Load data from across the internet from .url
-- place in .rawData property
-- trigger .rawUpdate event
-
+  - if `.fetch()` fails due to bad http request.
 
 ### Test cases to completely test all data features:
 Fetch test cases:
