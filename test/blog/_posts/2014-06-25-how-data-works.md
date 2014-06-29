@@ -6,61 +6,49 @@ title: How data works in the model (proposal)
 Model objects control the entire flow of data inside Chartstack. In addition to storing data, models support the following three major feature categories through the use of various methods, properties, and events.
 
 ### Feature categories
-1. **FETCHING/POLLING:** Fetching and optionally polling data from a URL. This includes continuously reapplying transformations to polled data.
-2. **TRANSFORMING/NORMALIZING:** Optionally transforming data from propietary schema formats to Chartstack Data Format if needed (via an adapter instance). Optionally transforming from other data formats such as CSV or XML to Chartstack Data Format which is JSON (via built-in transformer instances).
-3. **REDUCING/ADDING/OPERATING ON:** Support for live operating on data with subtractive methods like `.filterRow()` and additive methods like `.addColumn()`. Support for resetting back to the original data without refetching from the original data source via `.reset()`.
+1. **Setting data:** Sets the data either directly via `.set()`, fetching via url via `.fetch()` and the `.url` property while optionally polling for data. This includes continuously reapplying transformations to polled data.
+2. **Normalizing data:** Optionally transforming data from propietary schema formats to Chartstack Data Format (via an adapter instance). Optionally transforming from other data formats such as CSV or XML to Chartstack Data Format which is JSON (via built-in transformer instances).
+3. **Transforming data:** Support for live operating on data with subtractive methods like `.filterRow()` and additive methods like `.addColumn()`.
+4. **Resetting data:** Support for resetting back to the original data without refetching from the original data source via `.reset()`.
 
-(At the bottom of this entry is a list of all methods, properties, and events.)
+(At the bottom of this entry is a complete list of all methods, properties, and events present in the model class.)
 
 In order to support the above features the model keeps two references to its data:
 
 ### Two data properties
 1. `.originalData` - The original, unprocessed data passed in via `.fetch()` (remote data)  or `.set()` (inline data).
-2. `.data` - A copy of `.originalData` used in live operations.  This data is automatically converted to Chartstack Data Format on `.init()` and during polling if an adapter instance is also specified.  At any time `.reset()` can be called to get a fresh, normalized copy of `.originalData`.
+2. `.data` - A copy of `.originalData` used in live operations.  This data has been automatically converted to Chartstack Data Format during the `.originalUpdate` event call.  The data here is also continuously transformed during polling if transforms or an adapter is present.  At any time `.reset()` can be called to get a fresh, normalized copy of `.originalData`, and to clear all queued transforms.
 
-{% highlight js %}
-  var d = new chartstack.Model();
-  d.set([
-    ["Year", "Sales", "Expenses"],
-    ["2004",  1000,      400],
-    ["2005",  1170,      460],
-    ["2006",  660,       1120],
-    ["2007",  1030,      540]
-  ])
-    .onlyRow('Sales')
-    .init();
-    // .reset();
-{% endhighlight %}
-<center>Figure 2: _Filtering data to support a piechart view with optional reset shown._</center>
+### List of model properties, methods, and events
 
+**Properties**
 
-### List of model properties and methods
+- **originalData** - (ARRAY) Reference to original passed in data via `.set()` or `.fetch()`. Should never be modified directly.
+- **data** - (ARRAY) Normalized version of `.originalData` which all transforms are applied to during the `.transform` event.
+- **url** - (STRING) HTTP string of where to fetch data source from. Used by `.fetch()` and polling feature.
+- **adapter** - (STRING) Name of loaded Chartstack adapter to perform normalization on this data. Example: 'fitbit'.  This javascript file containing this adapter must be loaded on the page before `.set()` or `fetch()` is called.
+- **pollInterval** - (INTEGER) Time in milliseconds to poll for new data from `.url`. Defaults to 0 to not poll.
 
-Properties
+**Methods**
 
-- **originalData** (internal)
-- **data**
-- **url**
-- **adapter**
-- **pollInterval**
+- **fetch()** - Checks for `.url` property and retrieves data via ajax placing data in `originalData`. Triggering `originalUpdate` event.  Checks `.pollInterval` property to see if `.fetch` needs to be repeated.
+- **set()** - Manually set data on the model. This data will be placed in `.originalData` and `originalUpdate` event is triggered.
+- **pause()** - Pauses polling. To continue simply call `.fetch` again.
+- **clear()** - 
+- **reset()** - 
 
-Methods
+**Transforming methods**
 
-- **init** - init must be manually triggered (or is automatically triggered by the view if the model is nested in a view.  It will do some model checks including:
-  - Copy `.data` to `.originalData` if it is blank.
-  - Lastly, call `.fetch()` if `.url` is specified.
-- **fetch** - Checks for `.url` property and retrieves data via ajax placing data in `originalData` than triggering `originalUpdate` event.
-- **set** - Manually set data on the model. This data will be placed in `.originalData` and `originalUpdate` event is triggered.
-- **startPoll**
-- **stopPoll**
-- **filterRow**
-- **filterColumn**
-- **onlyRow**
-- **onlyColumn**
-- **addRow**
-- **addColumn**
+These methods queue under the `.transform` event when called to be executed every time the model's data is updated (Internally The `.transform` event is triggered by the `.update` event.)  To reset all transforms call `.clear()` or `.reset()` to also reset back to the original data.
 
-Events
+- **filterRow()** - 
+- **filterColumn()** - 
+- **onlyRow()** - 
+- **onlyColumn()** - 
+- **addRow()** - 
+- **addColumn()** - 
+
+**Events**
 
 - **init**
 - **update**
@@ -116,3 +104,17 @@ Addition tests:
 1. `.appendRow`, `.appendColumn`.
 2. `.merge`.
 3. `.reset`.
+
+{% highlight js %}
+  var d = new chartstack.Model();
+  d.set([
+    ["Year", "Sales", "Expenses"],
+    ["2004",  1000,      400],
+    ["2005",  1170,      460],
+    ["2006",  660,       1120],
+    ["2007",  1030,      540]
+  ])
+    .onlyRow('Sales')
+    // .reset();
+{% endhighlight %}
+<center>Figure 2: _Example of filtering data to support a piechart view with optional reset shown._</center>
