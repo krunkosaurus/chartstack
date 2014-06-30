@@ -10,6 +10,12 @@ describe('Chartstack.utils', function(){
   it('should have utils object', function(){
     expect(chartstack.utils).to.be.an('object');
   });
+
+  it('chartstack.utils.clone', function(){
+    var a = {a:1};
+    var b = chartstack.utils.clone(a);
+    expect(a===b).to.equal(false);
+  });
 })
 
 describe('Chartstack.utils.http', function(){

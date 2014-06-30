@@ -7,6 +7,11 @@
    */
   var utils = chartstack.utils = {};
 
+  // Return a copy of a passed in object.
+  utils.clone = function(obj){
+    return JSON.parse(JSON.stringify(obj));
+  };
+
   /**
    * https namespace for useful reuseable http methods.
    * @namespace
