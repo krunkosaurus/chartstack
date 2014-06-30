@@ -15,6 +15,7 @@ describe('Chartstack.utils', function(){
     var a = {a:1};
     var b = chartstack.utils.clone(a);
     expect(a===b).to.equal(false);
+    expect(a).to.deep.equal(b);
   });
 })
 
