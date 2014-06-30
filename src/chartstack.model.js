@@ -1,5 +1,5 @@
 (function(chartstack) {
-  // Shortcuts
+  // Aliases
   var extend = chartstack.extend;
   var http = chartstack.utils.http;
 
@@ -11,13 +11,20 @@
    */
   var Model = chartstack.Model = function(options){
     var self = this;
-    extend(this, chartstack.defaults.model, options);
+
+    // Extend default options with passed options.
+    extend(this, Model.defaults, options);
 
     // If options.data exists use it right away and assume it's "clean" or else
     // the data would be in options.rawData.
     if (options.data){
       this.trigger('update');
     }
+  };
+
+  // Static placeholder for model defaults.
+  Model.defaults = {
+    polling: false
   };
 
   // Load data from across the internet from .url

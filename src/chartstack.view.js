@@ -15,6 +15,15 @@
     //
   };
 
+  // Static placeholder for model defaults.
+  View.defaults = {
+    width: 400,
+    height: 200,
+    labels: true,
+    library: 'Google Charts',
+    colors: ['red', 'yellow', 'blue', 'green', 'purple']
+  };
+
   // Add Events Mixin to View.
   extend(View.prototype, chartstack.Events);
 })(chartstack);

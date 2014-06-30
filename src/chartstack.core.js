@@ -20,18 +20,7 @@
    * @property {Object}  defaults.model - Model related defaults.
    * @property {(Boolean|Integer)} [defaults.model.polling] - Default poll refetch period. Time in milliseconds, defaults to false.
    */
-  var defaults = chartstack.defaults = {
-    view: {
-      width: 400,
-      height: 200,
-      labels: true,
-      library: 'Google Charts',
-      colors: ['red', 'yellow', 'blue', 'green', 'purple']
-    },
-    model: {
-      polling: false
-    }
-  };
+
 
   /**
    * Namespace for transformer methods.  Transformers are simple methods that convert one data type into JSON.
