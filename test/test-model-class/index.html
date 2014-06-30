@@ -64,7 +64,7 @@ describe('model: injecting and polling url data', function(){
 
   it('Should have data', function(done){
     d.on('update', function(){
-      console.log('updateCount', updateCount);
+      // console.log('updateCount', updateCount);
       updateCount = updateCount + 1;
       expect(d.data).to.deep.equal(pieData);
       done();
@@ -78,7 +78,7 @@ describe('model: injecting and polling url data', function(){
       expect(updateCount).to.be.above(2);
       d.stopPoll();
       done();
-    },350);
+    },450);
   });
 
   it('Should have stopped polling', function(done){
