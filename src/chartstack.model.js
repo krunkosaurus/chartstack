@@ -1,7 +1,9 @@
 (function(chartstack) {
   // Aliases
   var extend = chartstack.extend;
-  var http = chartstack.utils.http;
+  var utils = chartstack.utils;
+  var http = utils.http;
+  var each = chartstack.each;
 
   /**
    * Class that handles all data in Chartstack.  Can be used to fetch and normalize data as well as convert it to specific formats acceptable by specific chart views.
@@ -15,46 +17,106 @@
     // Extend default options with passed options.
     extend(this, Model.defaults, options);
 
-    // If options.data exists use it right away and assume it's "clean" or else
-    // the data would be in options.rawData.
     if (options.data){
-      this.trigger('update');
+      this.set(options.data);
     }
+
+    this.on('originalUpdate', function(){
+      // Make copy of original data.
+      var dataCopy = utils.clone(self.originalData);
+
+      // Check to see if adapter is specified.
+      // If so, transform the data.
+
+      self.data = dataCopy;
+
+      // Trigger update.
+      self.trigger('update');
+    });
+
+    this.on('update', function(){
+      self.trigger('transform');
+    });
+
+    this.on('transform', function(){
+      console.log('all transforms triggered.');
+    });
   };
 
   // Static placeholder for model defaults.
   Model.defaults = {
-    polling: false
+    pollInterval: 0
   };
 
   // Load data from across the internet from .url
-  // - place in .rawData property
-  // - trigger .rawUpdate event
   extend(Model.prototype, {
+    set: function(data){
+      var self = this;
+
+      this.originalData = data;
+      setTimeout(function(){
+        self.trigger('originalUpdate');
+       },0);
+    },
+
     fetch: function(){
       var self = this;
 
-      http.getAjax(self.url, function(r){
-        self.rawData = JSON.parse(r);
-        self.trigger('rawUpdate');
+      if (self.url){
+        http.getAjax(self.url, function(r){
+          var data = JSON.parse(r);
 
-        if (self.poll){
-          self.pollTimer = setTimeout(function(){
-            self.fetch();
-          }, self.poll);
-        }
-      });
+          // If data is a child node use it.
+          if (data.data){
+            data = data.data;
+          }
+          // Set the data.
+          self.set(data);
+
+          if (self.pollInterval !== 0){
+            self.pollTimer = setTimeout(function(){
+              self.fetch();
+            }, self.pollInterval);
+          }
+        });
+      }
+
+      return this;
     },
 
     stopPoll: function(){
       if (this.pollTimer){
         clearTimeout(this.pollTimer);
-        this.pollTimer = false;
+        this.pollTimer = 0;
       }
     },
 
-    restore: function(){
-      // Restore data from original fetched data.
+    // Filter data to be only a passed array of matched columns.
+    onlyColumns: function(selector){
+      // Current data
+      var data = this.data;
+      // List of match indexes.
+      var matches = [];
+
+      this.on('transform', function(){
+        if (selector instanceof Array){
+          each(selector, function(title){
+            var matchIndex = data[0].indexOf(title)
+            // If match found push to array of matches.
+            if (matchIndex > 0){
+              matches.push(matchIndex);
+            }
+          });
+
+          // Remove all unmatched columns from .data.
+          each(data, function(ar){
+            console.log('ar', ar);
+          });
+        }else{
+          // TODO: Check if its a string and parse.
+        }
+      });
+      return this;
     }
   });
 

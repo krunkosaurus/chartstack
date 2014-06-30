@@ -8,6 +8,14 @@ test: true
 <script>
 
 var data = [
+  ["Year", "Sales", "Expenses"],
+  ["2004",  1000,      400],
+  ["2005",  1170,      460],
+  ["2006",  660,       1120],
+  ["2007",  1030,      540]
+];
+
+var pieData = [
   ["Browser", "Share"],
   ["Firefox", 45.0],
   ["IE", 26.8],
@@ -16,11 +24,6 @@ var data = [
   ["Opera", 6.2],
   ["Others", 0.7]
 ];
-
-var rawData = {
-  data: data,
-  extras: {}
-};
 
 describe('model: direct injecting JSON data', function(){
   var d = new chartstack.Model({
@@ -31,20 +34,20 @@ describe('model: direct injecting JSON data', function(){
     expect(d.data).to.deep.equal(data);
   });
 
-  it('Polling default should be there but false.', function(){
-    expect(d.polling).to.equal(false);
+  it('Chartstack model defaults: polling property should be there but false.', function(){
+    expect(d.pollInterval).to.equal(0);
   });
 });
 
 describe('model: fetch data from url', function(){
   var d = new chartstack.Model({
-    // TODO: test ajax
     url: '/api/universal/piechart.json'
-  });
+  })
+    .fetch();
 
-  it('Should have raw data', function(done){
-    d.on('rawUpdate', function(){
-      expect(d.rawData).to.deep.equal(rawData);
+  it('Should have properly fetched data', function(done){
+    d.on('update', function(){
+      expect(d.data).to.deep.equal(pieData);
       done();
     });
     d.fetch();
@@ -54,17 +57,16 @@ describe('model: fetch data from url', function(){
 describe('model: injecting and polling url data', function(){
   var updateCount = 0;
   var stopCount;
-  var d = window.d = new chartstack.Model({
+  var d = new chartstack.Model({
     url: '/api/universal/piechart.json',
-    // TODO: Test polling
-    poll: 100
+    pollInterval: 100
   });
 
-  it('Should have raw data', function(done){
-    d.on('rawUpdate', function(){
-      //console.log('updateCount', updateCount);
+  it('Should have data', function(done){
+    d.on('update', function(){
+      console.log('updateCount', updateCount);
       updateCount = updateCount + 1;
-      expect(d.rawData).to.deep.equal(rawData);
+      expect(d.data).to.deep.equal(pieData);
       done();
     });
     d.fetch();
@@ -85,7 +87,19 @@ describe('model: injecting and polling url data', function(){
       done();
     },250);
   });
+});
 
+describe('test transforms with inline data', function(){
+  it('should have reduced down to only Sales column', function(done){
+    var d = new chartstack.Model({
+      data: data
+    })
+      .onlyColumns(['Sales'])
+      .on('update', function(){
+        expect(d.data).to.deep.equal([['Sales', 1000, 1170, 660, 1030]]);
+        done();
+      });
+  });
 });
 
 

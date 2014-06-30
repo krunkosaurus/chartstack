@@ -15,7 +15,7 @@
     //
   };
 
-  // Static placeholder for model defaults.
+  // Static placeholder for view defaults.
   View.defaults = {
     width: 400,
     height: 200,
