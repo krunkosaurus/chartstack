@@ -46,4 +46,67 @@ describe('Chartstack.utils.http', function(){
   xit('should support .utils.http.getJSONP()', function(done){
   });
 });
+
+describe('data table manipulation tests', function(){
+  var table = chartstack.utils.table;
+  var data = [
+    ["Year", "Sales", "Expenses", "Bob"],
+    ["2004",  1000,      400,    1],
+    ["2005",  1170,      460,    2],
+    ["2006",  660,       1120,   3],
+    ["2007",  1030,      540,    4]
+  ];
+
+  it('should support removing column by name', function(){
+    var a = chartstack.utils.clone(data);
+    table.removeColumnByName(a, 'Sales');
+    table.removeColumnByName(a, 'Bob');
+    expect(a).to.deep.equal([
+      ["Year",  "Expenses"],
+      ["2004",  400],
+      ["2005",  460],
+      ["2006",  1120],
+      ["2007",  540]
+    ]);
+  });
+
+  it('should support removing column by number', function(){
+    var a = chartstack.utils.clone(data);
+    table.removeColumnByNumber(a, 2);
+    table.removeColumnByNumber(a, 2);
+    expect(a).to.deep.equal([
+      ["Year", "Sales"],
+      ["2004",  1000],
+      ["2005",  1170],
+      ["2006",  660],
+      ["2007",  1030]
+    ]);
+  });
+
+  it('should support removing row by name', function(){
+    var a = chartstack.utils.clone(data);
+    table.removeRowByName(a, '2004');
+    table.removeRowByName(a, '2005');
+    expect(a).to.deep.equal([
+      ["Year", "Sales", "Expenses", "Bob"],
+      ["2006",  660,       1120,   3],
+      ["2007",  1030,      540,    4]
+    ]);
+  });
+
+  it('should support removing row by number', function(){
+    var a = chartstack.utils.clone(data);
+    table.removeRowByNumber(a, 1);
+    table.removeRowByNumber(a, 1);
+    expect(a).to.deep.equal([
+      ["Year", "Sales", "Expenses", "Bob"],
+      ["2006",  660,       1120,   3],
+      ["2007",  1030,      540,    4]
+    ]);
+  });
+
+
+
+
+});
 </script>

@@ -5,12 +5,53 @@
    * @static
    * @memberof chartstack
    */
+
+  // Aliases.
+  var each = chartstack.each;
+
   var utils = chartstack.utils = {};
 
   // Return a copy of a passed in object.
   utils.clone = function(obj){
     return JSON.parse(JSON.stringify(obj));
   };
+
+  // Handy methods for modifying a data table.
+  var table = utils.table = {};
+
+  table.removeColumnByName = function(data, str){
+    var matchNumber;
+
+    match = data[0].indexOf(str);
+    if (match > 0){
+      each(data, function(rowAr){
+        rowAr.splice(match, 1);
+      });
+    }
+  };
+
+  table.removeColumnByNumber = function(data, num){
+    var match = data[0][num];
+    if (match){
+      table.removeColumnByName(data, match);
+    }
+  };
+
+  table.removeRowByName = function(data, str){
+    var i;
+    for (i = data.length-1; i>=0; i--){
+      if (data[i][0] === str){
+        data.splice(i, 1);
+      }
+    }
+  };
+
+  table.removeRowByNumber = function(data, num){
+    data.splice(num, 1);
+  };
+
+  table.addRow = function(){};
+  table.addColumn = function(){};
 
   /**
    * https namespace for useful reuseable http methods.
