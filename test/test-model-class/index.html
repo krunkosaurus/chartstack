@@ -96,7 +96,13 @@ describe('test transforms with inline data', function(){
     })
       .onlyColumns(['Sales'])
       .on('update', function(){
-        expect(d.data).to.deep.equal([['Sales', 1000, 1170, 660, 1030]]);
+        expect(d.data).to.deep.equal([
+          ["Year", "Sales"],
+          ["2004",  1000],
+          ["2005",  1170],
+          ["2006",  660],
+          ["2007",  1030]
+        ]);
         done();
       });
   });

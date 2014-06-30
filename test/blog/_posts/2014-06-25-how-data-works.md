@@ -162,3 +162,6 @@ Addition tests:
 ### Future functionality
 
 1. `.merge`
+2. `.groupBy`
+3. `.reorderColumns`
+4. `.reorderRows`

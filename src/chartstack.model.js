@@ -4,6 +4,7 @@
   var utils = chartstack.utils;
   var http = utils.http;
   var each = chartstack.each;
+  var table = chartstack.utils.table;
 
   /**
    * Class that handles all data in Chartstack.  Can be used to fetch and normalize data as well as convert it to specific formats acceptable by specific chart views.
@@ -38,9 +39,7 @@
       self.trigger('transform');
     });
 
-    this.on('transform', function(){
-      console.log('all transforms triggered.');
-    });
+    // this.on('transform', function(){});
   };
 
   // Static placeholder for model defaults.
@@ -91,27 +90,21 @@
       }
     },
 
-    // Filter data to be only a passed array of matched columns.
+    // Filter data down to a passed array of matched columns titles.
     onlyColumns: function(selector){
-      // Current data
-      var data = this.data;
-      // List of match indexes.
-      var matches = [];
 
       this.on('transform', function(){
+        var data = this.data;
+
+        // If we were passed an array of column titles...
         if (selector instanceof Array){
-          each(selector, function(title){
-            var matchIndex = data[0].indexOf(title)
-            // If match found push to array of matches.
-            if (matchIndex > 0){
-              matches.push(matchIndex);
+          each(data[0], function(columnTitle){
+            var match = selector.indexOf(columnTitle);
+            if (match === -1){
+              table.removeColumnByName(data, columnTitle);
             }
           });
 
-          // Remove all unmatched columns from .data.
-          each(data, function(ar){
-            console.log('ar', ar);
-          });
         }else{
           // TODO: Check if its a string and parse.
         }
