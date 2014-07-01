@@ -181,7 +181,7 @@
             data.push(row);
           }else{
             // TODO: Trigger event error.
-            throw new Error('.addRows: Invalid length');
+            throw new Error('.addRows: Invalid length. Expected ' + validLength + ' got ' + row.length + '.');
           }
         });
       });
