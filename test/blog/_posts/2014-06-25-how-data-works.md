@@ -6,10 +6,9 @@ title: The data model class (full spec proposal)
 Model objects control the entire flow of data inside Chartstack. In addition to storing data, models support the following three major feature categories through the use of various methods, properties, and events.
 
 ### Feature categories
-1. **Setting data:** Data can be set by passing in a data literal during model creation or after the model has already been created via `.set()`. Remote data can be fetched via `.fetch()` and the `.url` property.  Polling for updates is also supported which includes continuously reapplying transformations to polled data.
+1. **Setting/getting/resetting data:** Data can be set by passing in a data literal during model creation or after the model has already been created via `.set()`. Remote data can be fetched via `.fetch()` and the `.url` property.  Polling for updates is also supported which includes continuously reapplying transformations to polled data. Support for resetting back to the original data without refetching from the original data source via `.reset()`.
 2. **Normalizing data:** Support for transforming data from propietary schema formats to Chartstack Data Format via the `.adapter` property which loads an adapter instance. Adapter instances also support built-in transforming from other data types such as CSV or XML to Chartstack Data Format, which is in JSON.
 3. **Transforming data:** Support for live operating on data with subtractive methods like `.filterRows()` and additive methods like `.addColumns()`.
-4. **Resetting data:** Support for resetting back to the original data without refetching from the original data source via `.reset()`.
 
 (At the bottom of this entry is a complete list of all methods, properties, and events present in the model class.)
 

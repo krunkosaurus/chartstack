@@ -40,17 +40,33 @@ describe('model: direct injecting JSON data', function(){
 });
 
 describe('model: fetch data from url', function(){
-  var d = new chartstack.Model({
-    url: '/api/universal/piechart.json'
-  })
-    .fetch();
-
   it('Should have properly fetched data', function(done){
+    var d = new chartstack.Model({
+      url: '/api/universal/piechart.json'
+    })
+
     d.on('update', function(){
       expect(d.data).to.deep.equal(pieData);
       done();
     });
     d.fetch();
+  });
+
+  it('Should support .filterRows after fetching data', function(done){
+    var d = new chartstack.Model({
+      url: '/api/universal/barchart.json'
+    })
+      .fetch()
+      .filterRows(['2004'])
+      .on('update', function(){
+        expect(d.data).to.deep.equal([
+          ["Year", "Sales","Expenses"],
+          ["2005", 1170,    460],
+          ["2006", 660,     1120],
+          ["2007", 1030,    540]
+        ]);
+        done();
+      });
   });
 });
 
@@ -60,13 +76,19 @@ describe('model: injecting and polling url data', function(){
   var d = new chartstack.Model({
     url: '/api/universal/piechart.json',
     pollInterval: 100
-  });
+  })
+    .filterRows(['Opera', 'Others']);
 
-  it('Should have data', function(done){
+  it('Should have proper filtered data', function(done){
     d.on('update', function(){
-      // console.log('updateCount', updateCount);
       updateCount = updateCount + 1;
-      expect(d.data).to.deep.equal(pieData);
+      expect(d.data).to.deep.equal([
+        ["Browser", "Share"],
+        ["Firefox", 45.0],
+        ["IE", 26.8],
+        ["Chrome", 12.8],
+        ["Safari", 8.5]
+      ]);
       done();
     });
     d.fetch();
@@ -76,6 +98,13 @@ describe('model: injecting and polling url data', function(){
     setTimeout(function(){
       stopCount = updateCount;
       expect(updateCount).to.be.above(2);
+      expect(d.data).to.deep.equal([
+        ["Browser", "Share"],
+        ["Firefox", 45.0],
+        ["IE", 26.8],
+        ["Chrome", 12.8],
+        ["Safari", 8.5]
+      ]);
       d.stopPoll();
       done();
     },450);
@@ -90,115 +119,219 @@ describe('model: injecting and polling url data', function(){
 });
 
 describe('test transforms with inline data', function(){
-  it('.filterRows', function(done){
-    var d = new chartstack.Model({
+
+  it('.filterRows', function(){
+    var model = new chartstack.Model({
       data: data
     })
+      .filterRows(['2004', '2006']);
+
+    // Make sure global data didn't get polluted.
+    expect(model.data).to.not.equal(data);
+
+    expect(model.data).to.deep.equal([
+      ["Year", "Sales", "Expenses", "Pizzas"],
+      ["2005",  1170,      460,     400],
+      ["2007",  1030,      540,     200]
+    ]);
+  });
+
+  it('.filterRows (before setting data)', function(){
+    var model = new chartstack.Model()
       .filterRows(['2004', '2006'])
-      .on('update', function(){
-        expect(d.data).to.deep.equal([
-          ["Year", "Sales", "Expenses", "Pizzas"],
-          ["2005",  1170,      460,     400],
-          ["2007",  1030,      540,     200]
-        ]);
-        done();
-      });
+      .set(data);
+
+    // Make sure global data didn't get polluted.
+    expect(model.data).to.not.equal(data);
+
+    expect(model.data).to.deep.equal([
+      ["Year", "Sales", "Expenses", "Pizzas"],
+      ["2005",  1170,      460,     400],
+      ["2007",  1030,      540,     200]
+    ]);
   });
 
-  it('.filterColumns', function(done){
-    var d = new chartstack.Model({
+
+  it('.filterColumns', function(){
+    var model = new chartstack.Model({
       data: data
     })
-      .filterColumns(['Sales', 'Pizzas'])
-      .on('update', function(){
-        expect(d.data).to.deep.equal([
-          ["Year",  "Expenses"],
-          ["2004",     400],
-          ["2005",     460],
-          ["2006",     1120],
-          ["2007",     540]
-        ]);
-        done();
-      });
+      .filterColumns(['Sales', 'Pizzas']);
+
+    // Make sure global data didn't get polluted.
+    expect(model.data).to.not.equal(data);
+
+    expect(model.data).to.deep.equal([
+      ["Year",  "Expenses"],
+      ["2004",     400],
+      ["2005",     460],
+      ["2006",     1120],
+      ["2007",     540]
+    ]);
   });
 
-  it('.onlyRows', function(done){
-    var d = new chartstack.Model({
+  it('.filterColumns (before setting data)', function(){
+    var model = new chartstack.Model({})
+      .filterColumns(['Sales', 'Pizzas'])
+      .set(data);
+
+    expect(model.data).to.deep.equal([
+      ["Year",  "Expenses"],
+      ["2004",     400],
+      ["2005",     460],
+      ["2006",     1120],
+      ["2007",     540]
+    ]);
+  });
+
+  it('.onlyRows', function(){
+    var model = new chartstack.Model({
       data: data
     })
       .onlyRows(['2004', '2006'])
-      .on('update', function(){
-        expect(d.data).to.deep.equal([
-          ["Year", "Sales", "Expenses", "Pizzas"],
-          ["2004",  1000,      400,     500],
-          ["2006",  660,       1120,    300]
-        ]);
-        done();
-      });
+
+    // Make sure global data didn't get polluted.
+    expect(model.data).to.not.equal(data);
+
+    expect(model.data).to.deep.equal([
+      ["Year", "Sales", "Expenses", "Pizzas"],
+      ["2004",  1000,      400,     500],
+      ["2006",  660,       1120,    300]
+    ]);
   });
 
+  it('.onlyRows (before setting data)', function(){
+    var model = new chartstack.Model({})
+      .onlyRows(['2004', '2006'])
+      .set(data);
 
-  it('.onlyColumns', function(done){
-    var d = new chartstack.Model({
+    expect(model.data).to.deep.equal([
+      ["Year", "Sales", "Expenses", "Pizzas"],
+      ["2004",  1000,      400,     500],
+      ["2006",  660,       1120,    300]
+    ]);
+  });
+
+  it('.onlyColumns', function(){
+    var model = new chartstack.Model({
       data: data
     })
-      .onlyColumns(['Sales', 'Pizzas'])
-      .on('update', function(){
-        expect(d.data).to.deep.equal([
-          ["Year", "Sales",  "Pizzas"],
-          ["2004",  1000,    500],
-          ["2005",  1170,    400],
-          ["2006",  660,     300],
-          ["2007",  1030,    200]
-        ]);
-        done();
-      });
+      .onlyColumns(['Sales', 'Pizzas']);
+
+    // Make sure global data didn't get polluted.
+    expect(model.data).to.not.equal(data);
+
+    expect(model.data).to.deep.equal([
+      ["Year", "Sales",  "Pizzas"],
+      ["2004",  1000,    500],
+      ["2005",  1170,    400],
+      ["2006",  660,     300],
+      ["2007",  1030,    200]
+    ]);
   });
 
-  it('.addRows', function(done){
-    var d = new chartstack.Model({
+  it('.onlyColumns (before setting data)', function(){
+    var model = new chartstack.Model()
+      .onlyColumns(['Sales', 'Pizzas'])
+      .set(data);
+
+    expect(model.data).to.deep.equal([
+      ["Year", "Sales",  "Pizzas"],
+      ["2004",  1000,    500],
+      ["2005",  1170,    400],
+      ["2006",  660,     300],
+      ["2007",  1030,    200]
+    ]);
+  });
+
+  it('.addRows', function(){
+    var model = new chartstack.Model({
       data: data
     })
       .addRows([
         ['2008', 100, 200, 300],
         ['2009', 200, 300, 400]
-      ])
-      .on('update', function(){
-        expect(d.data).to.deep.equal([
-          ["Year", "Sales", "Expenses", "Pizzas"],
-          ["2004",  1000,      400,     500],
-          ["2005",  1170,      460,     400],
-          ["2006",  660,       1120,    300],
-          ["2007",  1030,      540,     200],
-          ['2008',  100,       200,     300],
-          ['2009',  200,       300,     400]
-        ]);
-        done();
-      });
+      ]);
+
+    // Make sure global data didn't get polluted.
+    expect(model.data).to.not.equal(data);
+
+    expect(model.data).to.deep.equal([
+      ["Year", "Sales", "Expenses", "Pizzas"],
+      ["2004",  1000,      400,     500],
+      ["2005",  1170,      460,     400],
+      ["2006",  660,       1120,    300],
+      ["2007",  1030,      540,     200],
+      ['2008',  100,       200,     300],
+      ['2009',  200,       300,     400]
+    ]);
   });
 
-  it('.addColumns', function(done){
-    var d = new chartstack.Model({
+  it('.addRows (before setting data)', function(){
+    var model = new chartstack.Model({})
+      .addRows([
+        ['2008', 100, 200, 300],
+        ['2009', 200, 300, 400]
+      ])
+      .set(data);
+
+    // Make sure global data didn't get polluted.
+    expect(model.data).to.not.equal(data);
+
+    expect(model.data).to.deep.equal([
+      ["Year", "Sales", "Expenses", "Pizzas"],
+      ["2004",  1000,      400,     500],
+      ["2005",  1170,      460,     400],
+      ["2006",  660,       1120,    300],
+      ["2007",  1030,      540,     200],
+      ['2008',  100,       200,     300],
+      ['2009',  200,       300,     400]
+    ]);
+  });
+
+  it('.addColumns', function(){
+    var model = new chartstack.Model({
       data: data
     })
       .addColumns([
         ['Drinks', 100, 200, 300, 400],
         ['Marketing', 200, 300, 400, 500]
-      ])
-      .on('update', function(){
-        expect(d.data).to.deep.equal([
-          ["Year", "Sales", "Expenses", "Pizzas", "Drinks", "Marketing"],
-          ["2004",  1000,      400,     500,      100,      200],
-          ["2005",  1170,      460,     400,      200,      300],
-          ["2006",  660,       1120,    300,      300,      400],
-          ["2007",  1030,      540,     200,      400,      500]
-        ]);
-        done();
-      });
+      ]);
+
+    // Make sure global data didn't get polluted.
+    expect(model.data).to.not.equal(data);
+
+    expect(model.data).to.deep.equal([
+      ["Year", "Sales", "Expenses", "Pizzas", "Drinks", "Marketing"],
+      ["2004",  1000,      400,     500,      100,      200],
+      ["2005",  1170,      460,     400,      200,      300],
+      ["2006",  660,       1120,    300,      300,      400],
+      ["2007",  1030,      540,     200,      400,      500]
+    ]);
   });
 
-  it('multiple transforms: .addColumns + .onlyRows + .addRows', function(done){
-    var d = new chartstack.Model({
+  it('.addColumns (before setting data)', function(){
+    var model = new chartstack.Model({})
+      .addColumns([
+        ['Drinks', 100, 200, 300, 400],
+        ['Marketing', 200, 300, 400, 500]
+      ])
+      .set(data);
+
+    // Make sure global data didn't get polluted.
+    expect(model.data).to.not.equal(data);
+
+    expect(model.data).to.deep.equal([
+      ["Year", "Sales", "Expenses", "Pizzas", "Drinks", "Marketing"],
+      ["2004",  1000,      400,     500,      100,      200],
+      ["2005",  1170,      460,     400,      200,      300],
+      ["2006",  660,       1120,    300,      300,      400],
+      ["2007",  1030,      540,     200,      400,      500]
+    ]);
+  });
+
+  it('multiple transforms: .addColumns + .onlyRows + .addRows', function(){
+    var model = new chartstack.Model({
       data: data
     })
       .addColumns([
@@ -206,18 +339,17 @@ describe('test transforms with inline data', function(){
         ['Marketing', 200, 300, 400, 500]
       ])
       .onlyRows(['2004', '2006'])
-      .addRows([['2030', 20, 40, 60, 80, 100]])
-      .on('update', function(){
-        expect(d.data).to.deep.equal([
-          ["Year", "Sales", "Expenses", "Pizzas", "Drinks", "Marketing"],
-          ["2004",  1000,      400,     500,      100,      200],
-          ["2006",  660,       1120,    300,      300,      400],
-          ["2030",  20,        40,      60,       80,       100]
-        ]);
-        done();
-      });
+      .addRows([['2030', 20, 40, 60, 80, 100]]);
+
+    // Make sure global data didn't get polluted.
+    expect(model.data).to.not.equal(data);
+
+    expect(model.data).to.deep.equal([
+      ["Year", "Sales", "Expenses", "Pizzas", "Drinks", "Marketing"],
+      ["2004",  1000,      400,     500,      100,      200],
+      ["2006",  660,       1120,    300,      300,      400],
+      ["2030",  20,        40,      60,       80,       100]
+    ]);
   });
 });
-
-
 </script>

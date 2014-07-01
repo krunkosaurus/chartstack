@@ -14,13 +14,16 @@
    */
   var Model = chartstack.Model = function(options){
     var self = this;
+    options = options || {};
 
     // Extend default options with passed options.
-    extend(this, Model.defaults, options);
+    extend(this, Model.defaults);
 
-    if (options.data){
-      this.set(options.data);
-    }
+    each(['url', 'adapter', 'pollInterval'], function(prop){
+      if (prop in options){
+        self[prop] = options[prop];
+      }
+    });
 
     this.on('originalUpdate', function(){
       // Make copy of original data.
@@ -40,6 +43,10 @@
     });
 
     // this.on('transform', function(){});
+
+    if (options.data){
+      this.set(options.data);
+    }
   };
 
   // Static placeholder for model defaults.
@@ -50,12 +57,9 @@
   // Load data from across the internet from .url
   extend(Model.prototype, {
     set: function(data){
-      var self = this;
-
       this.originalData = data;
-      setTimeout(function(){
-        self.trigger('originalUpdate');
-       },0);
+      this.trigger('originalUpdate');
+      return this;
     },
 
     fetch: function(){
@@ -69,6 +73,7 @@
           if (data.data){
             data = data.data;
           }
+
           // Set the data.
           self.set(data);
 
@@ -91,9 +96,9 @@
     },
 
     filterRows: function(selector){
-      this.on('transform', function(){
-        var data = this.data;
-
+      var self = this;
+      var action = function(){
+        var data = self.data;
         // If we were passed an array of column titles...
         if (selector instanceof Array){
           for (var len = data.length-1; len>=0; len--){
@@ -103,17 +108,24 @@
               table.removeRowByName(data, rowTitle);
             }
           }
-
         // TODO: Argument string support.
         }else{}
-      });
+      }
+
+      // Run the action if data is ready.
+      if (this.data){
+        action();
+      }
+
+      // Queue action for future data updates.
+      this.on('transform', action);
       return this;
     },
 
     filterColumns: function(selector){
-      this.on('transform', function(){
-        var data = this.data;
-
+      var self = this;
+      var action = function(){
+        var data = self.data;
         // If we were passed an array of column titles...
         if (selector instanceof Array){
           for (var len = data[0].length-1; len>=0; len--){
@@ -126,14 +138,22 @@
 
         // TODO: Argument string support.
         }else{}
-      });
+      }
+
+      // Run the action if data is ready.
+      if (this.data){
+        action();
+      }
+
+      // Queue action for future data updates.
+      this.on('transform', action);
       return this;
     },
 
     onlyRows: function(selector){
-      this.on('transform', function(){
-        var data = this.data;
-
+      var self = this;
+      var action = function(){
+        var data = self.data;
         // If we were passed an array of column titles...
         if (selector instanceof Array){
           for (var len = data.length-1; len>=1; len--){
@@ -146,15 +166,23 @@
 
         // TODO: Argument string support.
         }else{}
-      });
+      }
+
+      // Run the action if data is ready.
+      if (this.data){
+        action();
+      }
+
+      // Queue action for future data updates.
+      this.on('transform', action);
       return this;
     },
 
     // Filter data down to a passed array of matched columns titles.
     onlyColumns: function(selector){
-      this.on('transform', function(){
-        var data = this.data;
-
+      var self = this;
+      var action = function(){
+        var data = self.data;
         // If we were passed an array of column titles...
         if (selector instanceof Array){
           for (var len = data[0].length-1; len>=0; len--){
@@ -167,14 +195,23 @@
 
         // TODO: Argument string support.
         }else{}
-      });
+      }
+
+      // Run the action if data is ready.
+      if (this.data){
+        action();
+      }
+
+      // Queue action for future data updates.
+      this.on('transform', action);
       return this;
     },
 
     addRows: function(newRows){
-      this.on('transform', function(){
-        var validLength = this.data[0].length;
-        var data = this.data;
+      var self = this;
+      var action = function(){
+        var data = self.data;
+        var validLength = self.data[0].length;
 
         each(newRows, function(row){
           if (row.length === validLength){
@@ -184,14 +221,24 @@
             throw new Error('.addRows: Invalid length. Expected ' + validLength + ' got ' + row.length + '.');
           }
         });
-      });
+      }
+
+      // Run the action if data is ready.
+      if (this.data){
+        action();
+      }
+
+      // Queue action for future data updates.
+      this.on('transform', action);
       return this;
     },
 
     addColumns: function(newColumns){
-      this.on('transform', function(){
-        var validLength = this.data.length;
-        var data = this.data;
+      var self = this;
+      var action = function(){
+        var data = self.data;
+        var validLength = self.data.length;
+
 
         each(newColumns, function(row){
           if (row.length === validLength){
@@ -201,9 +248,21 @@
             throw new Error('.addColumns: Invalid length');
           }
         });
-      });
+      }
+
+      // Run the action if data is ready.
+      if (this.data){
+        action();
+      }
+
+      // Queue action for future data updates.
+      this.on('transform', action);
       return this;
     }
+
+
+
+
   });
 
   // Add Events Mixin to Model.
