@@ -53,7 +53,7 @@ To reset all queued transforms call `.clear()` or `.reset()` to both clear and r
 - **.filterRows()** - Filter rows out of `.data`.
 - **.filterColumns()** - Filter columns out of `.data`.
 - **.onlyRows()** - Specify only the rows you want to keep and filter everything else.
-- **.onlyColumn()** - Specify only the columns you want to keep and filter everything else.
+- **.onlyColumns()** - Specify only the columns you want to keep and filter everything else.
 - **.addRows()** - Adding a row of data.
 - **.addColumns()** - Adding a column of data.
 
@@ -127,7 +127,7 @@ Inline data tests:
 
 Operating on data tests:
 
-1. Reduction tests using inline charstack-format data: `.filterRows`, `.filterColumns`, `.onlyRows`, `.onlyColumn`.  Converting  data format to the next lower level: metric, time slice, time series, multi-time series.
+1. Reduction tests using inline charstack-format data: `.filterRows`, `.filterColumns`, `.onlyRows`, `.onlyColumns`.  Converting  data format to the next lower level: metric, time slice, time series, multi-time series.
 2. Empty model with `.set()` tests + transforms.
 3. Test support for `.reset`.
 

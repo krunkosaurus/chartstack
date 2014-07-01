@@ -57,7 +57,7 @@ describe('data table manipulation tests', function(){
     ["2007",  1030,      540,    4]
   ];
 
-  it('should support removing column by name', function(){
+  it('.removeColumnByName: should support removing column by name', function(){
     var a = chartstack.utils.clone(data);
     table.removeColumnByName(a, 'Sales');
     table.removeColumnByName(a, 'Bob');
@@ -70,7 +70,7 @@ describe('data table manipulation tests', function(){
     ]);
   });
 
-  it('should support removing column by number', function(){
+  it('.removeColumnByNumber: should support removing column by number', function(){
     var a = chartstack.utils.clone(data);
     table.removeColumnByNumber(a, 2);
     table.removeColumnByNumber(a, 2);
@@ -83,7 +83,7 @@ describe('data table manipulation tests', function(){
     ]);
   });
 
-  it('should support removing row by name', function(){
+  it('.removeRowByName: should support removing row by name', function(){
     var a = chartstack.utils.clone(data);
     table.removeRowByName(a, '2004');
     table.removeRowByName(a, '2005');
@@ -94,7 +94,7 @@ describe('data table manipulation tests', function(){
     ]);
   });
 
-  it('should support removing row by number', function(){
+  it('.removeRowByNumber: should support removing row by number', function(){
     var a = chartstack.utils.clone(data);
     table.removeRowByNumber(a, 1);
     table.removeRowByNumber(a, 1);
@@ -102,6 +102,18 @@ describe('data table manipulation tests', function(){
       ["Year", "Sales", "Expenses", "Bob"],
       ["2006",  660,       1120,   3],
       ["2007",  1030,      540,    4]
+    ]);
+  });
+
+  it('.addColumn: should support adding a column', function(){
+    var a = chartstack.utils.clone(data);
+    table.addColumn(a, ["Marketing", 100, 200, 300, 400]);
+    expect(a).to.deep.equal([
+      ["Year", "Sales", "Expenses", "Bob", "Marketing"],
+      ["2004",  1000,      400,     1,     100],
+      ["2005",  1170,      460,     2,     200],
+      ["2006",  660,       1120,    3,     300],
+      ["2007",  1030,      540,     4,     400]
     ]);
   });
 

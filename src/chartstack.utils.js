@@ -50,8 +50,11 @@
     data.splice(num, 1);
   };
 
-  table.addRow = function(){};
-  table.addColumn = function(){};
+  table.addColumn = function(data, newColumn){
+    each(data, function(row, i){
+      data[i].push(newColumn[i]);
+    });
+  };
 
   /**
    * https namespace for useful reuseable http methods.

@@ -90,24 +90,117 @@
       }
     },
 
-    // Filter data down to a passed array of matched columns titles.
-    onlyColumns: function(selector){
-
+    filterRows: function(selector){
       this.on('transform', function(){
         var data = this.data;
 
         // If we were passed an array of column titles...
         if (selector instanceof Array){
-          each(data[0], function(columnTitle){
+          for (var len = data.length-1; len>=0; len--){
+            var rowTitle = data[len][0];
+            var match = selector.indexOf(rowTitle);
+            if (match !== -1){
+              table.removeRowByName(data, rowTitle);
+            }
+          }
+
+        // TODO: Argument string support.
+        }else{}
+      });
+      return this;
+    },
+
+    filterColumns: function(selector){
+      this.on('transform', function(){
+        var data = this.data;
+
+        // If we were passed an array of column titles...
+        if (selector instanceof Array){
+          for (var len = data[0].length-1; len>=0; len--){
+            var columnTitle = data[0][len];
+            var match = selector.indexOf(columnTitle);
+            if (match !== -1){
+              table.removeColumnByName(data, columnTitle);
+            }
+          }
+
+        // TODO: Argument string support.
+        }else{}
+      });
+      return this;
+    },
+
+    onlyRows: function(selector){
+      this.on('transform', function(){
+        var data = this.data;
+
+        // If we were passed an array of column titles...
+        if (selector instanceof Array){
+          for (var len = data.length-1; len>=1; len--){
+            var rowTitle = data[len][0];
+            var match = selector.indexOf(rowTitle);
+            if (match === -1){
+              table.removeRowByName(data, rowTitle);
+            }
+          }
+
+        // TODO: Argument string support.
+        }else{}
+      });
+      return this;
+    },
+
+    // Filter data down to a passed array of matched columns titles.
+    onlyColumns: function(selector){
+      this.on('transform', function(){
+        var data = this.data;
+
+        // If we were passed an array of column titles...
+        if (selector instanceof Array){
+          for (var len = data[0].length-1; len>=0; len--){
+            var columnTitle = data[0][len];
             var match = selector.indexOf(columnTitle);
             if (match === -1){
               table.removeColumnByName(data, columnTitle);
             }
-          });
+          }
 
-        }else{
-          // TODO: Check if its a string and parse.
-        }
+        // TODO: Argument string support.
+        }else{}
+      });
+      return this;
+    },
+
+    addRows: function(newRows){
+      this.on('transform', function(){
+        var validLength = this.data[0].length;
+        var data = this.data;
+
+        each(newRows, function(row){
+          if (row.length === validLength){
+            data.push(row);
+          }else{
+            // TODO: Trigger event error.
+            throw new Error('.addRows: Invalid length');
+          }
+        });
+      });
+      return this;
+    },
+
+    addColumns: function(newColumns){
+      this.on('transform', function(){
+        var validLength = this.data.length;
+        var data = this.data;
+
+        each(newColumns, function(row){
+          if (row.length === validLength){
+            table.addColumn(data, row);
+          }else{
+            // TODO: Trigger event error.
+            throw new Error('.addColumns: Invalid length');
+          }
+        });
       });
       return this;
     }
