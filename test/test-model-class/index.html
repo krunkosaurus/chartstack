@@ -351,5 +351,81 @@ describe('test transforms with inline data', function(){
       ["2030",  20,        40,      60,       80,       100]
     ]);
   });
+
+  describe('adapter tests', function(){
+    it('keen adapter test (multi-metric/piechart) conversion', function(done){
+      var d = new chartstack.Model({
+        url: '/api/keen/piechart.json',
+        adapter: 'Keen IO'
+      })
+
+      d.on('update', function(){
+        expect(d.data).to.deep.equal([
+          ["platform", "result"],
+          ["Mobile", 946],
+          ["Web", 229]
+        ]);
+        done();
+      });
+      d.fetch();
+    });
+
+    it('keen adapter test (time-series/barchart) conversion', function(done){
+      var d = new chartstack.Model({
+        url: '/api/keen/barchart.json',
+        adapter: 'Keen IO'
+      })
+
+      d.fetch()
+        .on('update', function(){
+          expect(d.data).to.deep.equal([
+            ["date", "Mobile", "Web"],
+            ["2014-03-04T07:00:00.000Z", 156, 31],
+            ["2014-03-05T07:00:00.000Z", 111, 22],
+            ["2014-03-06T07:00:00.000Z", 92, 31],
+            ["2014-03-07T07:00:00.000Z", 152, 36]
+          ]);
+          done();
+        });
+
+    });
+  });
+
+  describe('adapter + transformation tests', function(){
+    var d = window.bob = new chartstack.Model({
+      url: '/api/keen/barchart.json',
+      adapter: 'Keen IO'
+    })
+      .filterColumns(['Mobile']);
+
+    it('keen adapter test w/ filter (Multi-time-series to time-series) conversion', function(done){
+      d.fetch()
+        .on('update', function(){
+          expect(d.data).to.deep.equal([
+            ["date", "Web"],
+            ["2014-03-04T07:00:00.000Z", 31],
+            ["2014-03-05T07:00:00.000Z", 22],
+            ["2014-03-06T07:00:00.000Z", 31],
+            ["2014-03-07T07:00:00.000Z", 36]
+          ]);
+          done();
+        });
+    });
+
+
+    it('should allow resetting filter', function(done){
+      d.reset();
+
+      expect(d.data).to.deep.equal([
+        ["date", "Mobile", "Web"],
+        ["2014-03-04T07:00:00.000Z", 156, 31],
+        ["2014-03-05T07:00:00.000Z", 111, 22],
+        ["2014-03-06T07:00:00.000Z", 92, 31],
+        ["2014-03-07T07:00:00.000Z", 152, 36]
+      ]);
+      done();
+    });
+
+  });
 });
 </script>

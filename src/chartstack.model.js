@@ -26,16 +26,7 @@
     });
 
     this.on('originalUpdate', function(){
-      // Make copy of original data.
-      var dataCopy = utils.clone(self.originalData);
-
-      // Check to see if adapter is specified.
-      // If so, transform the data.
-
-      self.data = dataCopy;
-
-      // Trigger update.
-      self.trigger('update');
+      self.refreshData();
     });
 
     this.on('update', function(){
@@ -54,12 +45,55 @@
     pollInterval: 0
   };
 
+  Model.adapters = {};
+
+  // Adapters that normalize 3rd party api to a standard format.
+  Model.addAdapter = function(domain, configObj){
+    var namespace = Model.adapters[domain] = {};
+
+    each(configObj, function(func, type){
+      namespace[type] = func;
+    });
+  }
+
   // Load data from across the internet from .url
   extend(Model.prototype, {
     set: function(data){
       this.originalData = data;
       this.trigger('originalUpdate');
       return this;
+    },
+
+    clear: function(){
+      if (this.listeners){
+        delete this.listeners;
+      }
+      return this;
+    },
+
+    refreshData: function(){
+      // Make copy of original data.
+      var dataCopy = utils.clone(this.originalData);
+      var adapter;
+
+      // Check to see if adapter is specified.
+      // TODO: Currently only supports time series type: "all".
+      if (this.adapter && this.adapter in Model.adapters){
+        adapter = Model.adapters[this.adapter];
+        if (adapter.all){
+          dataCopy = adapter.all(dataCopy);
+        }
+      }
+
+      this.data = dataCopy;
+
+      // Trigger update.
+      this.trigger('update');
+    },
+
+    reset: function(){
+      this.clear();
+      this.refreshData();
     },
 
     fetch: function(){
@@ -259,9 +293,6 @@
       this.on('transform', action);
       return this;
     }
-
-
-
 
   });
 

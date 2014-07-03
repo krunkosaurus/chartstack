@@ -29,9 +29,7 @@ module.exports = function(grunt) {
             '<%= chartstack.scriptPath %>/chartstack.utils.js',
             '<%= chartstack.scriptPath %>/chartstack.view.js',
             '<%= chartstack.scriptPath %>/chartstack.model.js',
-            '<%= chartstack.scriptPath %>/transform/chartstack.csv.js',
-            '<%= chartstack.scriptPath %>/adapter/chartstack.keen.universal.adapter.js',
-            '<%= chartstack.scriptPath %>/adapter/chartstack.universal.nvd3.adapter.js',
+            '<%= chartstack.scriptPath %>/adapters/chartstack.keen.data.adapter.js'
         ],
         dest: '<%= chartstack.distPath %>/chartstack2.min.js'
       }
@@ -99,16 +97,6 @@ module.exports = function(grunt) {
     },
 
     copy: {
-      build: {
-        // Copy dataform from bower install to src/utils folder and change variable.
-        src: './<%= chartstack.bowerPath %>/dataform/dist/dataform.js',
-        dest: './<%= chartstack.scriptPath %>/utils/chartstack.dataform.js',
-        options: {
-          process: function (content, path) {
-            return content.replace("\'Dataform\', this", "\'Dataform\', chartstack");
-          }
-        }
-      },
       // Copy files for Jekyll tests.
       test: {
         files: [{
@@ -187,7 +175,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-jsdoc');
 
   // Build and Serve
-  grunt.registerTask('build', ['copy:build', 'jshint', 'uglify']);
+  grunt.registerTask('build', ['jshint', 'uglify']);
   grunt.registerTask('serve', ['build', 'connect:demo', 'watch:scripts']);
 
   // generate and watch docs
