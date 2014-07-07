@@ -1,6 +1,7 @@
 (function(chartstack) {
   // Shortcuts
   var extend = chartstack.extend;
+  var each = chartstack.each;
 
   /**
    * Base class of all chart views. To be extended but not instantiated directly.
@@ -11,8 +12,17 @@
    * @constructor
    */
   var View = chartstack.View = function(options){
-    extend(this, chartstack.defaults.view, options);
-    //
+    var self = this;
+    options = options || {};
+
+    // Extend default options with passed options.
+    extend(this, View.defaults);
+
+    each(['width', 'height', 'labels', 'library', 'colors'], function(prop){
+      if (prop in options){
+        self[prop] = options[prop];
+      }
+    });
   };
 
   // Static placeholder for view defaults.
