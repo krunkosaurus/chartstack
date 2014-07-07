@@ -71,7 +71,6 @@ describe('model: fetch data from url', function(){
 });
 
 describe('model: injecting and polling url data', function(){
-  var updateCount = 0;
   var stopCount;
   var d = new chartstack.Model({
     url: '/api/universal/piechart.json',
@@ -81,7 +80,6 @@ describe('model: injecting and polling url data', function(){
 
   it('Should have proper filtered data', function(done){
     d.on('update', function(){
-      updateCount = updateCount + 1;
       expect(d.data).to.deep.equal([
         ["Browser", "Share"],
         ["Firefox", 45.0],
@@ -91,30 +89,33 @@ describe('model: injecting and polling url data', function(){
       ]);
       done();
     });
+
     d.fetch();
   });
 
-  it('Should be polling data', function(done){
-    setTimeout(function(){
-      stopCount = updateCount;
-      expect(updateCount).to.be.above(2);
-      expect(d.data).to.deep.equal([
-        ["Browser", "Share"],
-        ["Firefox", 45.0],
-        ["IE", 26.8],
-        ["Chrome", 12.8],
-        ["Safari", 8.5]
-      ]);
-      d.stopPoll();
-      done();
-    },450);
-  });
 
-  it('Should have stopped polling', function(done){
-    setTimeout(function(){
-      expect(updateCount).to.equal(stopCount);
+  it('Should be polling data', function(done){
+
+    d.on('polling', function(){
+      var self = this;
+
+      if (this.pollCount = 3){
+        this.stopPoll();
+        setTimeout(function(){
+          expect(self.pollCount).to.equal(3);
+
+          expect(self.data).to.deep.equal([
+            ["Browser", "Share"],
+            ["Firefox", 45.0],
+            ["IE", 26.8],
+            ["Chrome", 12.8],
+            ["Safari", 8.5]
+          ]);
+          done();
+        },this.pollInterval * 2);
+      }
       done();
-    },250);
+    });
   });
 });
 

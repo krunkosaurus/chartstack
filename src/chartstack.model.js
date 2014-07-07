@@ -42,7 +42,8 @@
 
   // Static placeholder for model defaults.
   Model.defaults = {
-    pollInterval: 0
+    pollInterval: 0,
+    pollCount: 0
   };
 
   Model.adapters = {};
@@ -114,6 +115,8 @@
           if (self.pollInterval !== 0){
             self.pollTimer = setTimeout(function(){
               self.fetch();
+              self.pollCount++;
+              self.trigger('polling');
             }, self.pollInterval);
           }
         });
@@ -125,8 +128,8 @@
     stopPoll: function(){
       if (this.pollTimer){
         clearTimeout(this.pollTimer);
-        this.pollTimer = 0;
       }
+      this.pollInterval = 0;
     },
 
     filterRows: function(selector){
