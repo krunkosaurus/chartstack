@@ -57,6 +57,31 @@ describe('data table manipulation tests', function(){
     ["2007",  1030,      540,    4]
   ];
 
+
+  it('.moveColumnForward', function(){
+    var a = chartstack.utils.clone(data);
+    table.moveColumnForward(a, 2);
+    expect(a).to.deep.equal([
+      ["Year", "Expenses", "Sales", "Bob"],
+      ["2004",    400,    1000,    1],
+      ["2005",    460,    1170,    2],
+      ["2006",    1120,   660,     3],
+      ["2007",    540,    1030,    4]
+    ]);
+  });
+
+  it('.sortColumns: support repositioning columns', function(){
+    var a = chartstack.utils.clone(data);
+    table.sortColumns(a, ['Expenses', 'Bob']);
+    expect(a).to.deep.equal([
+      ["Year", "Expenses",  "Bob", "Sales"],
+      ["2004",    400,      1,     1000],
+      ["2005",    460,      2,     1170],
+      ["2006",    1120,     3,     660],
+      ["2007",    540,      4,     1030]
+    ]);
+  });
+
   it('.removeColumnByName: should support removing column by name', function(){
     var a = chartstack.utils.clone(data);
     table.removeColumnByName(a, 'Sales');

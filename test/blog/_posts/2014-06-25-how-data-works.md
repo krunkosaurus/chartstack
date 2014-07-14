@@ -49,6 +49,7 @@ Additive transforming methods accept a single array of nested arrays of columns 
 
 To reset all queued transforms call `.clear()` or `.reset()` to both clear and reset the data back to the original, untransformed source.
 
+- **.sortColumns()** - Reorder by column title.
 - **.filterRows()** - Filter rows out of `.data`.
 - **.filterColumns()** - Filter columns out of `.data`.
 - **.onlyRows()** - Specify only the rows you want to keep and filter everything else.

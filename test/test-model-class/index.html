@@ -231,6 +231,24 @@ describe('test transforms with inline data', function(){
     ]);
   });
 
+  it('.sortColumns', function(){
+    var model = new chartstack.Model({
+      data: data
+    })
+      .sortColumns(['Pizzas', 'Expenses', 'Sales']);
+
+    // Make sure global data didn't get polluted.
+    expect(model.data).to.not.equal(data);
+
+    expect(model.data).to.deep.equal([
+      ["Year",  "Pizzas", "Expenses", "Sales"],
+      ["2004",  500,    400,      1000],
+      ["2005",  400,    460,      1170],
+      ["2006",  300,    1120,     660],
+      ["2007",  200,    540,      1030]
+    ]);
+  });
+
   it('.onlyColumns (before setting data)', function(){
     var model = new chartstack.Model()
       .onlyColumns(['Sales', 'Pizzas'])

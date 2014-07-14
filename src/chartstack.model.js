@@ -159,6 +159,28 @@
       return this;
     },
 
+    sortColumns: function(selector){
+      var self = this;
+      var action = function(){
+        var data = self.data;
+        // If we were passed an array of column titles...
+        if (selector instanceof Array){
+              table.sortColumns(data, selector);
+
+        // TODO: Argument string support.
+        }else{}
+      }
+
+      // Run the action if data is ready.
+      if (this.data){
+        action();
+      }
+
+      // Queue action for future data updates.
+      this.on('transform', action);
+      return this;
+    },
+
     filterColumns: function(selector){
       var self = this;
       var action = function(){

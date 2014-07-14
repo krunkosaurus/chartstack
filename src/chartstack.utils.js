@@ -19,6 +19,24 @@
   // Handy methods for modifying a data table.
   var table = utils.table = {};
 
+  table.moveColumnForward = function(data, index){
+    each(data, function(row){
+      var item = row.splice(index, 1);
+      //row.unshift(item[0]);
+      row.splice(1, 0, item[0]);
+    });
+  }
+
+  table.sortColumns = function(data, arr){
+    for (var i = arr.length - 1; i >= 0; i--){
+      var item = arr[i];
+      var index = data[0].indexOf(item);
+      if (index !== -1){
+        table.moveColumnForward(data, index);
+      }
+    }
+  }
+
   table.removeColumnByName = function(data, str){
     var matchNumber;
 
