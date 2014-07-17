@@ -259,6 +259,8 @@
     return chartstack;
   };
 
+  chartstack.charts = [];
+
   /**
    * No conflict method similiar to jQuery.noConflict that allows you to move the chartstack namespace to another variable.
    * @example
@@ -273,15 +275,29 @@
     return this;
   };
 
-  chartstack.addView = function(options){
-    //
-  };
+  // Returns a chartstack object by html element id or element comparison.
+  function get(strOrEl){
+    var el = strOrEl.nodeName ? strOrEl : document.querySelector(strOrEl);
+    var matchedChart;
+
+    if (el){
+      each(chartstack.charts, function(chart){
+        if (el == chart.el){
+          matchedChart = chart;
+          return false;
+        }
+      });
+      return matchedChart;
+    }
+    throw("That element doesn't exist on the page.");
+  }
 
   // Expose globally.
   extend(chartstack, {
     is : is,
     each : each,
-    extend : extend
+    extend : extend,
+    get: get
   });
 
 })(this);
