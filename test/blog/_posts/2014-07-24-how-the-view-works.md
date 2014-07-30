@@ -17,15 +17,21 @@ Views support the following three major feature categories through the use of va
 ### List of model properties, methods, and events
 
 **Properties**
+
 - **.el** - (ELEMENT or STRING) The HTML element to render the chart in to.  If a string is passed it will be searched for in the DOM using `document.getElmentById()`.
 - **.chartLibrary** - (STRING) The charting library to render the chart in. Defaults to Google Charts if this option is not passed.
 
 **Content Properties**
+
 - **.title** - (STRING) The title of the chart. Note that not all charting libraries support this feature.
 
-**Styling Properties**
+**Size Properties**
+
 - **.width** - (STRING or INTEGER) Pixels to render the width. Defaults to 800.
 - **.height** - (STRING OR INTEGER) Pixels to render the height. Defaults to 600.
+
+**Style Properties**
+
 - **.backgroundColor** - (STRING) Background color of the chart. Defaults to 'white'.
 - **.titleTextColor** - (STRING) Color of the title. Defaults to 'black'. Not all charts support a title.
 - **.legendColor** - (STRING) Color of the legend text. Defaults to black.
@@ -34,19 +40,18 @@ Views support the following three major feature categories through the use of va
 - **.colors** - (ARRAY) An array of colors to use in a pie, chart. Note that colors will repeat if there are more data elements than colors in the array. Defaults to ['red', 'green', 'yellow', 'blue', 'orange'].
 
 **Special Properties**
-- **.libOptions** -
+
+- **.libOptions** - (OBJECT) Options to be passed directly to the 3rd party charting library. This is useful in cases that aren't covered in Chartstack's standard API. For example Google Chart's Piechart have a {is3d : true} options.
 
 **Methods**
 
-- **.draw()** -
-- **.formatRowLabel()** -
-- **.formatColumnLabel()** -
-- **.freeze()** -
-- **.unfreeze()** -
-- **.download()** -
+- **.draw()** - This method triggers the chart to be rendered in to the HTML.  `.draw()` triggers a `.fetch()` on the nested model if the model does not contained inline data.
+- **.formatRowLabel()** - Allows the row label in a chart to be formatted.  When executed, each raw label is passed to be edited. The formatted label must be returned.
+- **.formatColumnLabel()** - Allows the column label in a chart to be formatted.  When executed, each raw label is passed to be edited. The formatted label must be returned.
+- **.freeze()** - Freezes the current chart into a JPG or PNG file. This is good for speeding up a page full of charts or allowing the user to download a rendered version of any chart.
+- **.unfreeze()** - Removed the static JPG or PNG version of the chart and rerenders the chart.
+- **.download()** - Triggers an immediate download of the chart.
 
 **Events**
 
-- **draw** -
-- **update** -
-- **error** -
+- **error** - Triggered whenever an error occurs related to a view.
