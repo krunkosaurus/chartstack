@@ -29,6 +29,7 @@ module.exports = function(grunt) {
             '<%= chartstack.scriptPath %>/chartstack.utils.js',
             '<%= chartstack.scriptPath %>/chartstack.view.js',
             '<%= chartstack.scriptPath %>/chartstack.model.js',
+            '<%= chartstack.scriptPath %>/utils/chartstack.cvs.transform.js',
             '<%= chartstack.scriptPath %>/adapters/chartstack.keen.data.adapter.js'
         ],
         dest: '<%= chartstack.distPath %>/chartstack2.min.js'

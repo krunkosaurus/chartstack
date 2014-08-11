@@ -41,6 +41,10 @@
     }
   };
 
+  chartstack.addTransformer = function(dataType, func){
+    chartstack.transformers[dataType] = func;
+  };
+
   /**
    * Utility method for comparing types between two arguments. Internally uses JavaScript's typeof.
    * @example

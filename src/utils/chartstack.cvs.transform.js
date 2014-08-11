@@ -1,7 +1,7 @@
 /* global chartstack */
 (function(cs){
   // Taken from: https://github.com/aaronsnoswell/csvjson.js/blob/master/csvjson.js
-  cs.addtransformer('csv', function(data){
+  cs.addTransformer('csv', function(data){
     /**
      * splitCSV function (c) 2009 Brian Huisman, see http://www.greywyvern.com/?post=258
      * Works by spliting on seperators first, then patching together quoted values
@@ -79,4 +79,4 @@
 
     return csv2json(data);
   });
-})(chartstack);
+}(chartstack));

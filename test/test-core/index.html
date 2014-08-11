@@ -167,7 +167,7 @@ describe('Testing core events', function(){
   });
 });
 
-describe('Testing method .transformers', function(){
+describe('Testing method .transformers:json', function(){
   it('should support .json', function(){
     var bob = {
       'a': 1,
@@ -181,6 +181,21 @@ describe('Testing method .transformers', function(){
     expect(a1.a).to.equal(1);
     expect(a1.b).to.equal('c');
     expect(a2.a).to.equal(1);
+  });
+});
+
+describe('Testing method .transformers:csv', function(){
+  it('should support transform csv', function(done){
+
+
+    chartstack.utils.http.getAjax('/api/csv/withings.csv', function(r){
+      r = chartstack.transformers.csv(r);
+
+      expect(JSON.stringify(r.headers)).to.equal('["Date","Weight (lb)","Fat mass (%)","Lean mass (%)","Comments"]');
+      expect(r.rows.length).to.equal(240);
+      expect( JSON.stringify(r.rows[0]) ).to.equal('{"Date":"2014-08-09 11:55 AM","Weight (lb)":152,"Fat mass (%)":19.37,"Lean mass (%)":80.63,"Comments":0}');
+      done();
+    });
   });
 });
 
