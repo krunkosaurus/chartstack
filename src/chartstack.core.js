@@ -21,7 +21,6 @@
    * @property {(Boolean|Integer)} [defaults.model.polling] - Default poll refetch period. Time in milliseconds, defaults to false.
    */
 
-
   /**
    * Namespace for transformer methods.  Transformers are simple methods that convert one data type into JSON.
    * @namespace

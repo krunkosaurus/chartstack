@@ -411,7 +411,7 @@ describe('test transforms with inline data', function(){
   });
 
   describe('adapter + transformation tests', function(){
-    var d = window.bob = new chartstack.Model({
+    var d = new chartstack.Model({
       url: '/api/keen/barchart.json',
       adapter: 'Keen IO'
     })

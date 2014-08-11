@@ -4,8 +4,27 @@ title: Test Google Charts
 test: true
 ---
 
+
+<div id="#chart1"></div>
+
 <script src="../public/dist/chartstack2.min.js"></script>
 <script>
+
+var barModel = new chartstack.Model({
+  url: '/api/keen/barchart.json',
+  adapter: 'Keen IO'
+});
+
+
+var view  = chartstack.barChart({
+  title: 'My barchart',
+  el: '#chart1',
+  model: barModel
+});
+
+
+chartstack.ready(view.draw);
+
   describe('Google Charts', function(){
 
     before(function(done){
