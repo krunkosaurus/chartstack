@@ -51,7 +51,6 @@
   };
 
   chartstack.addTransformer = function(dataType, func){
-    console.log('transfomer added', dataType);
     chartstack.transformers[dataType] = func;
   };
 

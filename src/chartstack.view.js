@@ -13,6 +13,12 @@
    */
   var View = chartstack.View = function(options){
     var self = this;
+
+    // Allow new operator to be optional.
+    if (!(self instanceof View)){
+      return new View(options);
+    }
+
     options = options || {};
 
     // Extend default options with passed options.
@@ -37,17 +43,4 @@
 
   // Add Events Mixin to View.
   extend(View.prototype, chartstack.Events);
-
-  // Hack to support google charts as it can only be dynamically loaded
-  // and must be called before DOM-ready.
-  if (window.google){
-    google.load('visualization', '1.0', {'packages':['corechart']});
-    google.setOnLoadCallback(function(){
-      chartstack.trigger('ready');
-    });
-  }else{
-    document.addEventListener("DOMContentLoaded", function(){
-      chartstack.trigger('ready');
-    });
-  }
 })(chartstack);

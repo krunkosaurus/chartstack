@@ -14,6 +14,12 @@
    */
   var Model = chartstack.Model = function(options){
     var self = this;
+
+    // Allow new operator to be optional.
+    if (!(self instanceof Model)){
+      return new Model(options);
+    }
+
     options = options || {};
 
     // Extend default options with passed options.
