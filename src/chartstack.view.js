@@ -24,6 +24,7 @@
     // Extend default options with passed options.
     extend(this, View.defaults);
 
+    // Copy over allowed options.
     each(['width', 'height', 'labels', 'library', 'colors'], function(prop){
       if (prop in options){
         self[prop] = options[prop];

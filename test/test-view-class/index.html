@@ -4,15 +4,29 @@ title: Test View class
 test: true
 ---
 
-<piechart title="Pie Chart" height="300" adapter="keen-io" dataset="../api/keen/piechart.json"></piechart>
+<div id="chart"></div>
 
 <script src="../public/dist/chartstack2.min.js"></script>
 <script>
-var view = new chartstack.View({
-  // TODO: test overriding global defaults.
-  colors: ['green', 'yellow', 'blue', 'red', 'purple', 'brown', 'orange']
+
+chartstack.ready(function(){
+  var data = new chartstack.Model({
+    adapter: 'keen-io', // Internal adapter to load or inline func.
+    url: '../api/keen/multilinechart.json'
+  });
+
+  var view = new chartstack.View({
+    el: 'chart',
+    model: data
+  }).draw();
+
+
 });
 
 
+
+
+// To test
+// library override
 
 </script>

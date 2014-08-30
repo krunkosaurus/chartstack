@@ -25,6 +25,7 @@
     // Extend default options with passed options.
     extend(this, Model.defaults);
 
+    // Copy over allowed options.
     each(['url', 'adapter', 'pollInterval'], function(prop){
       if (prop in options){
         self[prop] = options[prop];

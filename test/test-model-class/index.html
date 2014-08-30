@@ -30,6 +30,14 @@ describe('model: direct injecting JSON data', function(){
     data: data
   });
 
+  var e = chartstack.Model({
+    data: data
+  });
+
+  it('new operator should be optional', function(){
+    expect(e.data).to.deep.equal(data);
+  });
+
   it('Should have raw data', function(){
     expect(d.data).to.deep.equal(data);
   });
