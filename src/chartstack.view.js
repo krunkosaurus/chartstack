@@ -30,10 +30,24 @@
     width: 400,
     height: 200,
     labels: true,
+    // Default library.
     library: 'Google Charts',
     colors: ['red', 'yellow', 'blue', 'green', 'purple']
   };
 
   // Add Events Mixin to View.
   extend(View.prototype, chartstack.Events);
+
+  // Hack to support google charts as it can only be dynamically loaded
+  // and must be called before DOM-ready.
+  if (window.google){
+    google.load('visualization', '1.0', {'packages':['corechart']});
+    google.setOnLoadCallback(function(){
+      chartstack.trigger('ready');
+    });
+  }else{
+    document.addEventListener("DOMContentLoaded", function(){
+      chartstack.trigger('ready');
+    });
+  }
 })(chartstack);

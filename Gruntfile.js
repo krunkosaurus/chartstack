@@ -25,12 +25,20 @@ module.exports = function(grunt) {
       },
       build: {
         src: [
+            // Chartstack core functionality.
             '<%= chartstack.scriptPath %>/chartstack.core.js',
+            // Utilities shared by all chartstack components.
             '<%= chartstack.scriptPath %>/chartstack.utils.js',
+            // Chartstack view class.
             '<%= chartstack.scriptPath %>/chartstack.view.js',
+            // Chartstack model class.
             '<%= chartstack.scriptPath %>/chartstack.model.js',
+            // CSV transformer plugin.
             '<%= chartstack.scriptPath %>/utils/chartstack.cvs.transform.js',
-            '<%= chartstack.scriptPath %>/adapters/chartstack.keen.data.adapter.js'
+            // Keen data transform adapter.
+            '<%= chartstack.scriptPath %>/adapters/chartstack.keen.data.adapter.js',
+            // Google charts library support
+            '<%= chartstack.scriptPath %>/libraries/chartstack.googlecharts.renderset.js'
         ],
         dest: '<%= chartstack.distPath %>/chartstack2.min.js'
       }

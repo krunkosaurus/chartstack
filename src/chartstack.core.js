@@ -6,6 +6,16 @@
    * @namespace chartstack
    */
   var chartstack = root.chartstack = {};
+  var adapters, renderers;
+
+  // Placeholder for chartstack data adapters.
+  chartstack.adapters = adapters = {};
+
+  // Placeholder for chartstack renderers.
+  chartstack.renderers = renderers = {};
+
+  // Array of instantiated charts.
+  chartstack.charts = charts = [];
 
   /**
    * Global options object that is passed to chart instance constructors for settings defaults such as color and chart width/height.  You can override this object before the DOM-ready event.  Chart specific config objects override these defaults.
@@ -41,7 +51,56 @@
   };
 
   chartstack.addTransformer = function(dataType, func){
+    console.log('transfomer added', dataType);
     chartstack.transformers[dataType] = func;
+  };
+
+  // Adapters that normalize 3rd party api to a standard format.
+  chartstack.addAdapter = function(domain, configObj){
+    if (chartstack.is(configObj, 'function')){
+      adapters[domain] = configObj;
+    }else{
+      each(configObj, function(func, type){
+        // If domain doesn't exist, create the namespace.
+        if (!adapters[domain]){
+          adapters[domain] = {};
+        }
+        adapters[domain][type] = func;
+
+      });
+    }
+  };
+
+  // Chart specific Renderers that Chartstack uses to render charts.
+  chartstack.addRenderer = function(provider, configObj){
+    each(configObj, function(func, type){
+      if (!renderers[provider]){
+        renderers[provider] = {};
+      }
+
+      renderers[provider][type] = func;
+    });
+  };
+
+  // Rendersets are chart library-related renderer and adapters.
+  chartstack.addRenderSet = function(configObj){
+    var libfullName = configObj.name;
+    var libNamespace = configObj.namespace;
+    var checkReady = function(lib){
+        if (chartstack.View.defaults.library == lib){
+          chartstack.trigger('ready');
+        }
+    }
+
+    if ('loadLib' in configObj){
+      configObj.loadLib(function(lib){
+        checkReady(lib);
+      });
+    }else{
+      checkReady(lib);
+    }
+    chartstack.addRenderer(libNamespace, configObj.render)
+    chartstack.addAdapter(libNamespace, configObj.adapter)
   };
 
   /**
@@ -254,15 +313,15 @@
    * @static
    */
   var ready = chartstack.ready = function(cb){
+    // If chartstack.ready has already fired, just execute the callback.
     if (_readyFired){
       cb();
     }else{
+    // Else we queue it.
       chartstack.on('ready', cb);
     }
     return chartstack;
   };
-
-  chartstack.charts = [];
 
   /**
    * No conflict method similiar to jQuery.noConflict that allows you to move the chartstack namespace to another variable.

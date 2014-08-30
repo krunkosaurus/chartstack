@@ -55,3 +55,14 @@ Views support the following three major feature categories through the use of va
 **Events**
 
 - **error** - Triggered whenever an error occurs related to a view.
+
+### Flow descriptions
+
+## chartstack initialization / dom-ready flow
+
+- Before Chartstack script is ran all 3rd party charting libraries you want to use should be included in scripts above chartstack so that they are ready to use.
+- If Google Charts is being used, no script tag is required as its the default library and is loaded dynamically.
+- If not planning to use Google Charts set `chartstack.View.defaults.library` to another chart library option that you have loaded.
+- At the bottom of chartstack.core.js there is `bootstrap()` call which:
+  - Iterates across registered libraries and sets a flag if each registered chart lib is loaded (by checking the registered namespace) on the page. If the registered lib has a `.loadLib` method, it is executed to load the lib dynamically.
+  - To test: If rendering charts other than Google Charts, we shouldn't load the Google Charts.

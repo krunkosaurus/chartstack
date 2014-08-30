@@ -544,3 +544,13 @@ Keen.onChartsReady(function(){
 * To do testing:
 - Add in test coverage: https://github.com/gotwarlost/istanbul
 - Add in http://huddle.github.io/Resemble.js/
+* Chartstack developer philosophy
+- All chart API's should be as identical as possible so switching out libraries is easy.
+- All chartstack components should be decoupled enough to be useable on their own
+(only requiring the inclusion of .core.js and .utils.js)
+- All preferences of each component should be accessible by that component.
+- Most all graphs have the same data schema (but arbitrary format) which cover:
+metric, multi-metric, time-series, or multi time-series.  Though there are other formats
+this is the ones Chartstack 1.0 supports.
+- Chartstack can detect whether something is "multi-" as long as it knows the base
+format.

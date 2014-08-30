@@ -4,6 +4,18 @@
     name: 'Google Charts',
     namespace: 'google',
 
+    // If loadLib exists it is called to load the graphic library.
+    // Must execute passed callback when the library is loaded.
+    // If loadLib does not exist, we assume the user loaded the library before
+    // chartstack.js already (most cases).
+    loadLib: function(cb){
+      cs.googleLoadedCallback = function(){
+        cb('Google Charts');
+        delete cs.googleLoadedCallback;
+      }
+      document.write('\x3Cscript type="text/javascript" src="https://www.google.com/jsapi?autoload=' + encodeURIComponent('{"modules":[{"name":"visualization","version":"1","packages":["corechart","table"],callback: chartstack.googleLoadedCallback}]}') + '">\x3C/script>');
+    },
+
     // Adapts data from UD format to library format.
     adapter: function(data){
       return google.visualization.arrayToDataTable(data.data);

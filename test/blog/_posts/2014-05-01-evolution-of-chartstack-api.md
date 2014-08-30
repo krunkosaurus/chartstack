@@ -184,9 +184,10 @@ var chart = chartstack.columnChart({
   dataset: data
 })
 
-document.getElementById('trafficTab').addEventListener('click', function(){
-   chart.draw();
-});
+document.getElementById('trafficTab')
+  .addEventListener('click', function(){
+    chart.draw();
+  });
 {% endhighlight %}
 <center>Figure 9: _Final embed code (super complex example 1)_</center>
 
@@ -197,38 +198,41 @@ That concludes the idea of further evolving the Chartstack API into its final fo
 **Updates 5/19/2013 -** A few thoughtful adjustments to the final code. We show a lot of commented out methods here just to point out they exist:
 
 {% highlight js %}
-var data = chartstack.Model({
-  adapter: 'keen-io', // Internal adapter to load or inline func.
-  url: '../api/keen/multilinechart.json',
-  // data: {...} // Inline JSON if not using url.
-  poll: 5000 // Repoll data ever 5 seconds.
-)}
-  .filterRows('1-3,5') // Filter out uneeded rows.
-  .filterColumns('2-*') // Filter out uneeded columns.
-  // .onlyRows('1') // Just use the first row.
-  // .onlyColumns('2,4-6') // Just use certain columns.
-  // .startPoll(5000) // Optional time in ms or uses this.poll
-  // .stopPoll()
-  .on('error', function(){
-    this.parent.trigger('freeze');
-    this.parent.popNotice('API down.');
+chartstack.ready(function(){
+  var data = chartstack.Model({
+    adapter: 'keen-io', // Internal adapter to load or inline func.
+    url: '../api/keen/multilinechart.json',
+    // data: {...} // Inline JSON if not using url.
+    poll: 5000 // Repoll data ever 5 seconds.
+  )}
+    .filterRows('1-3,5') // Filter out uneeded rows.
+    .filterColumns('2-*') // Filter out uneeded columns.
+    // .onlyRows('1') // Just use the first row.
+    // .onlyColumns('2,4-6') // Just use certain columns.
+    // .startPoll(5000) // Optional time in ms or uses this.poll
+    // .stopPoll()
+    .on('error', function(){
+      this.parent.trigger('freeze');
+      this.parent.popNotice('API down.');
+    })
+    .on('update', function(){
+      this.parent.draw();
+    });
+
+  var chart = chartstack.columnChart({
+    title: 'Column chart',
+    el: document.getElementById('traffic-growth'),
+    height: '300',
+    width: '400',
+    model: data,
+    rowLabelDateFormat: 'MM-DD',
+    // columnLabelDateFormat: 'YY/MM/DD',
   })
-  .on('update', function(){
-    this.parent.draw();
-  });
 
-var chart = chartstack.columnChart({
-  title: 'Column chart',
-  el: document.getElementById('traffic-growth'),
-  height: '300',
-  width: '400',
-  model: data,
-  rowLabelDateFormat: 'MM-DD',
-  // columnLabelDateFormat: 'YY/MM/DD',
-})
-
-document.getElementById('trafficTab').addEventListener('click', function(){
-   chart.draw();
+  document.getElementById('trafficTab')
+    .addEventListener('click', function(){
+      chart.draw();
+    });
 });
 {% endhighlight %}
 <center>Figure 10: _API Adjustments 5/19/2013_</center>
