@@ -10,20 +10,22 @@
     // chartstack.js already (most cases).
     loadLib: function(cb){
       cs.googleLoadedCallback = function(){
-        cb('Google Charts');
         delete cs.googleLoadedCallback;
+        if (cb){
+          cb('google');
+        }
       }
       document.write('\x3Cscript type="text/javascript" src="https://www.google.com/jsapi?autoload=' + encodeURIComponent('{"modules":[{"name":"visualization","version":"1","packages":["corechart","table"],callback: chartstack.googleLoadedCallback}]}') + '">\x3C/script>');
     },
 
     // Adapts data from UD format to library format.
-    adapter: function(data){
+    adapters: function(data){
       return google.visualization.arrayToDataTable(data.data);
     },
 
     // Renders DOM charts.
-    render: {
-      piechart: function($chart, data){
+    charts: {
+      pie: function($chart, data){
 
         if (data instanceof Array) {
           data = google.visualization.arrayToDataTable(data);
@@ -74,7 +76,7 @@
         chart.draw(data, options);
       },
 
-      barchart: function($chart, data){
+      bar: function($chart, data){
         var chart, options;
         var each = cs.each;
         var extend = cs.extend;
@@ -110,7 +112,7 @@
         chart.draw(data, options);
       },
 
-      linechart: function($chart, data){
+      line: function($chart, data){
         var chart, options;
         var each = cs.each;
         var extend = cs.extend;

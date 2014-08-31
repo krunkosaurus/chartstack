@@ -9,18 +9,24 @@ test: true
 <script src="../public/dist/chartstack2.min.js"></script>
 <script>
 
-chartstack.ready(function(){
-  var data = new chartstack.Model({
-    adapter: 'keen-io', // Internal adapter to load or inline func.
-    url: '../api/keen/multilinechart.json'
+describe('Chartstack view', function(){
+  it('should properly support dom ready', function(){
+
+    chartstack.ready(function(){
+      var data = new chartstack.Model({
+        adapter: 'keen-io', // Internal adapter to load or inline func.
+        url: '../api/keen/multilinechart.json'
+      });
+
+      var view = new chartstack.lineChart({
+        el: 'chart',
+        model: data
+      }).draw();
+      console.log('view', view);
+      // done();
+    });
+
   });
-
-  var view = new chartstack.View({
-    el: 'chart',
-    model: data
-  }).draw();
-
-
 });
 
 

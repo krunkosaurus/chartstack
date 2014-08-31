@@ -25,12 +25,51 @@
     extend(this, View.defaults);
 
     // Copy over allowed options.
-    each(['width', 'height', 'labels', 'library', 'colors'], function(prop){
+    each([
+      // Properties
+      'el', 'library',
+      // Content properties
+      'title',
+      // Size properties
+      'width', 'height',
+      // Style properties
+      'backgroundColor', 'titleTextColor', 'legendColor',
+      'pieSliceBorderColor', 'pieSliceTextColor', 'colors',
+      // Special properties
+      'libOptions'
+    ], function(prop){
       if (prop in options){
         self[prop] = options[prop];
       }
     });
   };
+
+  extend(View.prototype, {
+    draw: function(data){
+      console.log('draw!');
+      return this;
+    },
+    formatRowLabel: function(data){
+      console.log('formatRowLabel!');
+      return this;
+    },
+    formatColumnLabel: function(data){
+      console.log('formatColumnLabel!');
+      return this;
+    },
+    freeze: function(data){
+      console.log('freeze!');
+      return this;
+    },
+    unfreeze: function(data){
+      console.log('unfreeze!');
+      return this;
+    },
+    download: function(data){
+      console.log('download!');
+      return this;
+    }
+  });
 
   // Static placeholder for view defaults.
   View.defaults = {
@@ -38,7 +77,7 @@
     height: 200,
     labels: true,
     // Default library.
-    library: 'Google Charts',
+    library: 'google',
     colors: ['red', 'yellow', 'blue', 'green', 'purple']
   };
 

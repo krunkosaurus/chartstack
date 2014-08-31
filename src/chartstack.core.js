@@ -11,8 +11,8 @@
   // Placeholder for chartstack data adapters.
   chartstack.adapters = adapters = {};
 
-  // Placeholder for chartstack renderers.
-  chartstack.renderers = renderers = {};
+  // Placeholder for 3rd party libraries.
+  chartstack.libraries = libraries = {};
 
   // Array of instantiated charts.
   chartstack.charts = charts = [];
@@ -55,7 +55,7 @@
   };
 
   // Adapters that normalize 3rd party api to a standard format.
-  chartstack.addAdapter = function(domain, configObj){
+  chartstack.addAdapters = function(domain, configObj){
     if (chartstack.is(configObj, 'function')){
       adapters[domain] = configObj;
     }else{
@@ -65,19 +65,54 @@
           adapters[domain] = {};
         }
         adapters[domain][type] = func;
-
       });
     }
   };
 
-  // Chart specific Renderers that Chartstack uses to render charts.
-  chartstack.addRenderer = function(provider, configObj){
+  // Internal method that proxies the creation of new chart views.
+  function _runChart(type, configObj){
+    var lib = chartstack.libraries[configObj.library || chartstack.View.defaults.library];
+    var newChart;
+    if (type in lib){
+      newChart = new lib[type](configObj);
+      console.log('newChart', newChart);
+    }else{
+      throw new Error('Chart ' + 'inside of ' + lib + ' is not found: ' + type);
+    }
+  };
+
+  chartstack.addCharts = function(provider, configObj){
+    console.log('provider', provider);
+
     each(configObj, function(func, type){
-      if (!renderers[provider]){
-        renderers[provider] = {};
+      var globalChartName = type + 'Chart';
+
+      // Create the library namespace if it doesn't exist.
+      if (!libraries[provider]){
+        libraries[provider] = {};
       }
 
-      renderers[provider][type] = func;
+      // Add this library renderer.
+      libraries[provider][type] = func;
+
+      if (!(globalChartName in chartstack)){
+        // Create an easy proxy method to this chartType.
+        chartstack[globalChartName] = function(options){
+          var selectedLib;
+
+          // Add the chart type to the options.
+          options.chartType = type;
+
+          // Locate the correct chart lib to pull from.
+          selectedLib = chartstack.libraries[configObj.library || chartstack.View.defaults.library];
+
+          //var args = Array.prototype.slice.call(arguments, 0);
+          //args.unshift(type);
+          //_runChart.apply(chartstack, args);
+
+          return new chartstack.View(options);
+        };
+      }
     });
   };
 
@@ -98,8 +133,8 @@
     }else{
       checkReady(lib);
     }
-    chartstack.addRenderer(libNamespace, configObj.render)
-    chartstack.addAdapter(libNamespace, configObj.adapter)
+    chartstack.addCharts(libNamespace, configObj.charts)
+    chartstack.addAdapters(libNamespace, configObj.adapter)
   };
 
   /**
