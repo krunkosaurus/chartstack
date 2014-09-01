@@ -19,7 +19,7 @@ Views support the following three major feature categories through the use of va
 **Properties**
 
 - **.el** - (ELEMENT or STRING) The HTML element to render the chart in to.  If a string is passed it will be searched for in the DOM using `document.getElmentById()`.
-- **.chartLibrary** - (STRING) The charting library to render the chart in. Defaults to Google Charts if this option is not passed.
+- **.library** - (STRING) The charting library to render the chart in. Defaults to Google Charts if this option is not passed.
 
 **Content Properties**
 
@@ -29,6 +29,9 @@ Views support the following three major feature categories through the use of va
 
 - **.width** - (STRING or INTEGER) Pixels to render the width. Defaults to 800.
 - **.height** - (STRING OR INTEGER) Pixels to render the height. Defaults to 600.
+
+**Display Properties**
+- **.labels** - (BOOLEAN) Decides whether to enable labels. Defaults to true.
 
 **Style Properties**
 
@@ -42,6 +45,10 @@ Views support the following three major feature categories through the use of va
 **Special Properties**
 
 - **.libOptions** - (OBJECT) Options to be passed directly to the 3rd party charting library. This is useful in cases that aren't covered in Chartstack's standard API. For example Google Chart's Piechart have a {is3d : true} options.
+
+** Other properties **
+- **.model** - (MODEL INSTANCE) - model instance the view references data from.
+- **.chartType** - (STRING) - type of chart (usually set internally by proxy chart methods. (example: new chartstack.lineChart()).
 
 **Methods**
 

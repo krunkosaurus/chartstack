@@ -19,34 +19,67 @@
       return new View(options);
     }
 
-    options = options || {};
-
     // Extend default options with passed options.
-    extend(this, View.defaults);
+    options = extend({}, View.defaults, options);
 
     // Copy over allowed options.
     each([
       // Properties
+      // ==========
       'el', 'library',
       // Content properties
       'title',
       // Size properties
       'width', 'height',
+      // Display properties
+      'labels',
       // Style properties
       'backgroundColor', 'titleTextColor', 'legendColor',
       'pieSliceBorderColor', 'pieSliceTextColor', 'colors',
       // Special properties
-      'libOptions'
+      'libOptions',
+
+      // Other properties
+      // =====
+      'model',
+      'chartType'
     ], function(prop){
       if (prop in options){
         self[prop] = options[prop];
       }
     });
+
+    // Set the element node.
+    if (typeof options.el == 'string'){
+      self.el = document.querySelector(options.el);
+    }else{
+      self.el = options.el;
+    }
+
+    // If model is passed, lets fetch it's data.
+    // TODO: Check for inline data first.
+    if (this.model){
+      this.model.on('update', function(){
+        self.data = chartstack.adapters.google(self.model.data);
+        chartFunc(this, this.data);
+        self.draw();
+      });
+    }
   };
 
   extend(View.prototype, {
-    draw: function(data){
-      console.log('draw!');
+
+    // Todo: Consider is draw causes fetch if no data found.
+    draw: function(){
+      console.log('draw!', this.data, this);
+      var self = this;
+      var lib = chartstack.libraries[this.library];
+      var chartFunc = lib[this.chartType];
+
+      if (this.data){
+        chartFunc(this, this.data);
+      }
+
       return this;
     },
     formatRowLabel: function(data){
@@ -71,8 +104,9 @@
     }
   });
 
-  // Static placeholder for view defaults.
+  // Static placeholder for View instance defaults.
   View.defaults = {
+    title: '',
     width: 400,
     height: 200,
     labels: true,

@@ -10,23 +10,66 @@ test: true
 <script>
 
 describe('Chartstack view', function(){
-  it('should properly support dom ready', function(){
 
+  var model = new chartstack.Model({
+    adapter: 'keen-io', // Internal adapter to load or inline func.
+    url: '../api/keen/multilinechart.json'
+  });
+
+  it('should properly support dom ready', function(done){
     chartstack.ready(function(){
-      var data = new chartstack.Model({
-        adapter: 'keen-io', // Internal adapter to load or inline func.
-        url: '../api/keen/multilinechart.json'
-      });
+      done();
+    });
+  });
 
-      var view = new chartstack.lineChart({
-        el: 'chart',
-        model: data
-      }).draw();
-      console.log('view', view);
-      // done();
+  it('should support view without new operator', function(){
+    var view = chartstack.lineChart({
+      el: '#chart'
+    });
+    expect(view.el).to.equal(document.getElementById('chart'));
+  });
+
+  it('should support passed .el as string', function(){
+    var view = chartstack.lineChart({
+      el: '#chart'
+    });
+    expect(view.el).to.equal(document.getElementById('chart'));
+  });
+
+  it('should support passed .el as element', function(){
+    var el = document.getElementById('chart');
+    var view = new chartstack.lineChart({
+      el: el
+    });
+    expect(view.el).to.equal(el);
+  });
+
+  it('should have acquired defaults', function(){
+    var view = new chartstack.lineChart({
+      el: '#chart'
     });
 
+    chartstack.each(chartstack.View.defaults, function(v,k){
+      expect(view[k]).to.equal(v);
+    });
   });
+
+  it('should have autofetched model on draw', function(){
+    var view = new chartstack.lineChart({
+      el: '#chart',
+      model: model
+    }).draw();
+
+    console.log('view w model', view);
+
+  });
+  it('should support inline data instead of model', function(){});
+
+
+
+
+
+
 });
 
 

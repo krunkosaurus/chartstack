@@ -20,10 +20,8 @@
       return new Model(options);
     }
 
-    options = options || {};
-
     // Extend default options with passed options.
-    extend(this, Model.defaults);
+    options = extend({}, Model.defaults, options);
 
     // Copy over allowed options.
     each(['url', 'adapter', 'pollInterval'], function(prop){

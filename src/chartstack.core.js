@@ -56,6 +56,7 @@
 
   // Adapters that normalize 3rd party api to a standard format.
   chartstack.addAdapters = function(domain, configObj){
+    console.log('cs', domain, configObj);
     if (chartstack.is(configObj, 'function')){
       adapters[domain] = configObj;
     }else{
@@ -75,15 +76,13 @@
     var newChart;
     if (type in lib){
       newChart = new lib[type](configObj);
-      console.log('newChart', newChart);
     }else{
       throw new Error('Chart ' + 'inside of ' + lib + ' is not found: ' + type);
     }
   };
 
+  // Add charts from a provider.
   chartstack.addCharts = function(provider, configObj){
-    console.log('provider', provider);
-
     each(configObj, function(func, type){
       var globalChartName = type + 'Chart';
 
@@ -96,11 +95,12 @@
       libraries[provider][type] = func;
 
       if (!(globalChartName in chartstack)){
+
         // Create an easy proxy method to this chartType.
         chartstack[globalChartName] = function(options){
           var selectedLib;
 
-          // Add the chart type to the options.
+          // Add the chart type to the options argument.
           options.chartType = type;
 
           // Locate the correct chart lib to pull from.
@@ -134,7 +134,7 @@
       checkReady(lib);
     }
     chartstack.addCharts(libNamespace, configObj.charts)
-    chartstack.addAdapters(libNamespace, configObj.adapter)
+    chartstack.addAdapters(libNamespace, configObj.adapters)
   };
 
   /**
