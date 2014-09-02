@@ -54,14 +54,13 @@ describe('Chartstack view', function(){
     });
   });
 
-  it('should have autofetched model on draw and rendered HTML chart', function(){
+  it('should have autofetched model on draw and rendered HTML chart', function(done){
     var view = new chartstack.lineChart({
       el: '#chart',
       model: model
+    }).on('drawn', function(){
+      done();
     }).draw();
-
-    console.log('view w model', view);
-
   });
 
   xit('should support inline data instead of model', function(){});

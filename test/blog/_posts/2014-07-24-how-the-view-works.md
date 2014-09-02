@@ -63,6 +63,7 @@ Views support the following three major feature categories through the use of va
 **Events**
 
 - **update** - Triggered whenever an attached model updates its data.  After this is called `View.data` has been updated with fresh data.
+- **drawn** - Triggered whenever `.draw()` has completed rendering a chart.
 - **error** - Triggered whenever an error occurs related to a view.
 
 ### Flow descriptions

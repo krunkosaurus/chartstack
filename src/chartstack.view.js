@@ -70,13 +70,16 @@
       var self = this;
 
       var lib = chartstack.libraries[this.library];
-      var chartFunc = lib[this.chartType];
+      var callChart = function(){
+        lib[self.chartType](self, self.data);
+        self.trigger('drawn');
+      }
 
       if (self.data){
-        chartFunc(self, self.data);
+        callChart();
       }else if (self.model){
         self.one('update', function(){
-          chartFunc(self, self.data);
+          callChart();
         });
       }
       return this;
