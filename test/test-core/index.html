@@ -163,6 +163,20 @@ describe('Testing core events', function(){
     expect(e.listeners.banana.length).to.equal(1);
     e.trigger('banana', 'a', 'monkey');
   });
+
+  it('Events mixin: should support .one and only call event once', function(done){
+    var e = {};
+    chartstack.extend(e, chartstack.Events);
+    var count = 0;
+
+    e.one('countit', function(){
+      count = count+1;
+    });
+
+    e.trigger('countit').trigger('countit');
+    expect(count).to.equal(1);
+    done();
+  });
 });
 
 describe('Testing method .transformers:json', function(){

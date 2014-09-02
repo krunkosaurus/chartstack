@@ -259,6 +259,17 @@
       return this;
     },
 
+    // Listen to an event only once.
+    one: function(name, callback) {
+      var proxy = function(){
+        callback();
+        this.off(name, proxy);
+      }
+      this.on(name, proxy);
+
+      return this;
+    },
+
     /**
      * Method for unsubscribing to an event.
      * @example
