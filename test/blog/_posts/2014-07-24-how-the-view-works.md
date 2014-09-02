@@ -58,9 +58,11 @@ Views support the following three major feature categories through the use of va
 - **.freeze()** - Freezes the current chart into a JPG or PNG file. This is good for speeding up a page full of charts or allowing the user to download a rendered version of any chart.
 - **.unfreeze()** - Removed the static JPG or PNG version of the chart and rerenders the chart.
 - **.download()** - Triggers an immediate download of the chart.
+- **.attachModel()** - Called internally if you passed a model during the View's creation.  Binds internal View methods to the model.
 
 **Events**
 
+- **update** - Triggered whenever an attached model updates its data.  After this is called `View.data` has been updated with fresh data.
 - **error** - Triggered whenever an error occurs related to a view.
 
 ### Flow descriptions

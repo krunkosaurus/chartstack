@@ -26,7 +26,6 @@
     each([
       // Properties
       // ==========
-      'el', 'library',
       // Content properties
       'title',
       // Size properties
@@ -41,7 +40,8 @@
 
       // Other properties
       // =====
-      'model',
+      'el',
+      'library',
       'chartType'
     ], function(prop){
       if (prop in options){
@@ -58,12 +58,8 @@
 
     // If model is passed, lets fetch it's data.
     // TODO: Check for inline data first.
-    if (this.model){
-      this.model.on('update', function(){
-        self.data = chartstack.adapters.google(self.model.data);
-        chartFunc(this, this.data);
-        self.draw();
-      });
+    if (options.model){
+      this.attachModel(options.model);
     }
   };
 
@@ -71,15 +67,18 @@
 
     // Todo: Consider is draw causes fetch if no data found.
     draw: function(){
-      console.log('draw!', this.data, this);
       var self = this;
+
       var lib = chartstack.libraries[this.library];
       var chartFunc = lib[this.chartType];
 
-      if (this.data){
-        chartFunc(this, this.data);
+      if (self.data){
+        chartFunc(self, self.data);
+      }else if (self.model){
+        self.one('update', function(){
+          chartFunc(self, self.data);
+        });
       }
-
       return this;
     },
     formatRowLabel: function(data){
@@ -101,6 +100,20 @@
     download: function(data){
       console.log('download!');
       return this;
+    },
+
+    // Method to attach and setup event listeners
+    attachModel: function(model){
+      var self = this;
+
+      self.model = model;
+
+      // Fetch the model data and whenever it's updated (polling) update the
+      // reference and trigger a view update.
+      model.on('update', function(){
+        self.data = chartstack.adapters.google(self.model.data);
+        self.trigger('update');
+      }).fetch();
     }
   });
 

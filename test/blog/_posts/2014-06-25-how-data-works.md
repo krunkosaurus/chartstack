@@ -59,7 +59,7 @@ To reset all queued transforms call `.clear()` or `.reset()` to both clear and r
 
 **Events**
 
-- **originalUpdate** - This event is triggered whenever `.originalData` property is updated (generally by `.set()` or `.fetch()`).  One library callback is attached to this event to check for an adapter and if so copy a normalized version of `.originalData` to `.data` or else just make an exact copy.
+- **originalUpdate** - This event is triggered whenever `.originalData` property is updated (generally by `.set()` or `.fetch()`).  One internal callback is attached to this event to check for an adapter and if so copy a normalized version of `.originalData` to `.data` or else just make an exact copy.
 - **update** - Runs queued transforms (by triggering `.transform`). If the model is nested in a view, the view automatically binds to this event to rerender a view every time there is a data update.
 - **transform** - Trigger all queued transforms. Queued transformed can be cleared with `.clear()` or `.reset()` methods.
 - **error** - This event is triggered whenever there is an error. Currently the errors are:

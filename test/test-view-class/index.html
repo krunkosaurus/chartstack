@@ -12,7 +12,7 @@ test: true
 describe('Chartstack view', function(){
 
   var model = new chartstack.Model({
-    adapter: 'keen-io', // Internal adapter to load or inline func.
+    adapter: 'Keen IO',
     url: '../api/keen/multilinechart.json'
   });
 
@@ -54,7 +54,7 @@ describe('Chartstack view', function(){
     });
   });
 
-  it('should have autofetched model on draw', function(){
+  it('should have autofetched model on draw and rendered HTML chart', function(){
     var view = new chartstack.lineChart({
       el: '#chart',
       model: model
@@ -63,7 +63,9 @@ describe('Chartstack view', function(){
     console.log('view w model', view);
 
   });
-  it('should support inline data instead of model', function(){});
+
+  xit('should support inline data instead of model', function(){});
+  xit('test attaching model afterwards', function(){});
 
 
 

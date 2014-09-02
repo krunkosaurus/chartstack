@@ -20,7 +20,7 @@
 
     // Adapts data from UD format to library format.
     adapters: function(data){
-      return google.visualization.arrayToDataTable(data.data);
+      return google.visualization.arrayToDataTable(data);
     },
 
     // Renders DOM charts.
