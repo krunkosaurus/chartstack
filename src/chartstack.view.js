@@ -42,7 +42,8 @@
       // =====
       'el',
       'library',
-      'chartType'
+      'chartType',
+      'data'
     ], function(prop){
       if (prop in options){
         self[prop] = options[prop];
@@ -66,9 +67,14 @@
     }
 
     // If model is passed, lets fetch it's data.
-    // TODO: Check for inline data first.
     if (options.model){
       this.attachModel(options.model);
+    }
+
+    // Support for inline data.
+    if (options.data){
+      this.data = self._adaptData(options.data);
+      self.trigger('update');
     }
   };
 
@@ -84,6 +90,9 @@
         self.trigger('drawn');
       }
 
+      // If this view has data when draw is called, use it.
+      // If this view has no data but a model object embedded, subscribe once
+      // to it's update event to draw.
       if (self.data){
         callChart();
       }else if (self.model){
@@ -114,6 +123,12 @@
       return this;
     },
 
+    // Used by both model update and direct data for converting data to specific
+    // chart format.
+    _adaptData: function(data){
+      return chartstack.adapters[this.library](data);
+    },
+
     // Method to attach and setup event listeners
     attachModel: function(model){
       var self = this;
@@ -123,7 +138,8 @@
       // Fetch the model data and whenever it's updated (polling) update the
       // reference and trigger a view update.
       model.on('update', function(){
-        self.data = chartstack.adapters.google(self.model.data);
+        // self.data = chartstack.adapters.google(self.model.data);
+        self.data = self._adaptData(self.model.data);
         self.trigger('update');
       }).fetch();
     }
