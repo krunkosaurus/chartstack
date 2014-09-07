@@ -89,8 +89,10 @@ describe('Chartstack view', function(){
         ["2007",  1030,      540]
       ]
     }).on('drawn', function(){
-      console.log('confirmed drawn!');
+      var el = document.querySelectorAll('#chart5 > div')[0];
       // Should have sized up chart
+      expect(el.style.height).to.equal('400px');
+      expect(el.style.width).to.equal('500px');
       done();
     }).draw();
 
@@ -150,20 +152,5 @@ describe('Chartstack view', function(){
       done();
     }).draw();
   });
-  xit('should support inline data instead of model', function(){});
-  xit('test attaching model afterwards', function(){});
-
-
-
-
-
-
 });
-
-
-
-
-// To test
-// library override
-
 </script>
