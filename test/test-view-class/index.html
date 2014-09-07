@@ -4,7 +4,9 @@ title: Test View class
 test: true
 ---
 
-<div id="chart"></div>
+<div id="chart1"></div>
+<div id="chart2"></div>
+<div id="chart3"></div>
 
 <script src="../public/dist/chartstack2.min.js"></script>
 <script>
@@ -69,13 +71,37 @@ describe('Chartstack view', function(){
 
   it('should have autofetched model on draw and rendered HTML chart', function(done){
     var view = new chartstack.lineChart({
-      el: '#chart',
+      el: '#chart1',
       model: model
     }).on('drawn', function(){
+      expect(this.model.data.length).to.equal(32);
       done();
     }).draw();
   });
 
+  it('should support setting title', function(done){
+    var title = 'This is my chart of things';
+    var view = new chartstack.lineChart({
+      el: '#chart2',
+      model: model,
+      title: title
+    }).on('drawn', function(){
+      var elementText = document.querySelector('#chart2').querySelector('text').innerHTML;
+      expect(elementText).to.equal(title);
+      done();
+    }).draw();
+  });
+
+  it('should support labels off', function(done){
+    var view = new chartstack.lineChart({
+      el: '#chart3',
+      model: model,
+      title: "Test no labels",
+      labels: false
+    }).on('drawn', function(){
+      done();
+    }).draw();
+  });
   xit('should support inline data instead of model', function(){});
   xit('test attaching model afterwards', function(){});
 

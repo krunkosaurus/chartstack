@@ -128,7 +128,7 @@
     labels: true,
     // Default library.
     library: 'google',
-    colors: ['red', 'yellow', 'blue', 'green', 'purple']
+    colors: ['#00afd7', '#49c5b1', '#f35757', '#e9c054', '#6a6aa6', '#8a9eb1', '#c1cbd6']
   };
 
   // Add Events Mixin to View.
