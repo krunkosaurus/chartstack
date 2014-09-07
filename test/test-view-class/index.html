@@ -45,13 +45,26 @@ describe('Chartstack view', function(){
   });
 
   it('should have acquired defaults', function(){
-    var view = new chartstack.lineChart({
+    var view1 = new chartstack.lineChart({
       el: '#chart'
     });
 
-    chartstack.each(chartstack.View.defaults, function(v,k){
-      expect(view[k]).to.equal(v);
+    var width = 500;
+    var height = 400;
+    var view2 = new chartstack.lineChart({
+      el: '#chart',
+      width: width,
+      height: height
     });
+
+    // Confirm defaults are set.
+    chartstack.each(chartstack.View.defaults, function(v,k){
+      expect(view1[k]).to.equal(v);
+    });
+
+    // Expect overrides to work.
+    expect(view2.width).to.equal(width);
+    expect(view2.height).to.equal(height);
   });
 
   it('should have autofetched model on draw and rendered HTML chart', function(done){
