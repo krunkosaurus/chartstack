@@ -18,7 +18,7 @@ Views support the following three major feature categories through the use of va
 
 **Properties**
 
-- **.el** - (ELEMENT or STRING) The HTML element to render the chart in to.  If a string is passed it will be searched for in the DOM using `document.getElmentById()`.
+- **.el** - (ELEMENT or STRING) **(REQUIRED)** The HTML element to render the chart in to.  If a string is passed it will be searched for in the DOM using `document.getElmentById()`.
 - **.library** - (STRING) The charting library to render the chart in. Defaults to Google Charts if this option is not passed.
 
 **Content Properties**
@@ -27,10 +27,11 @@ Views support the following three major feature categories through the use of va
 
 **Size Properties**
 
-- **.width** - (STRING or INTEGER) Pixels to render the width. Defaults to 800.
-- **.height** - (STRING OR INTEGER) Pixels to render the height. Defaults to 600.
+- **.width** - (STRING or INTEGER) Pixels to render the width. Defaults to 200.
+- **.height** - (STRING OR INTEGER) Pixels to render the height. Defaults to 400.
 
 **Display Properties**
+
 - **.labels** - (BOOLEAN) Decides whether to enable labels. Defaults to true.
 
 **Style Properties**
@@ -46,9 +47,10 @@ Views support the following three major feature categories through the use of va
 
 - **.libOptions** - (OBJECT) Options to be passed directly to the 3rd party charting library. This is useful in cases that aren't covered in Chartstack's standard API. For example Google Chart's Piechart have a {is3d : true} options.
 
-** Other properties **
-- **.model** - (MODEL INSTANCE) - model instance the view references data from.
-- **.chartType** - (STRING) - type of chart (usually set internally by proxy chart methods. (example: new chartstack.lineChart()).
+**Other properties**
+
+- **.model** - (MODEL INSTANCE or ARRAY) (REQUIRED) **(REQUIRED)** - model instance the view references data from or an Array that `chartstack.View` will instantiate a new `chartstack.Model` with.
+- **.chartType** - (STRING) - type of chart, not passed directly as it's passed automatically by proxy chart methods. (example: new chartstack.lineChart()).
 
 **Methods**
 
@@ -62,7 +64,7 @@ Views support the following three major feature categories through the use of va
 
 **Events**
 
-- **update** - Triggered whenever an attached model updates its data.  After this is called `View.data` has been updated with fresh data.
+- **update** - Triggered whenever an attached model updates its data.  After this is called `View.data` has been updated with fresh data. Internally, `chartstack.View` uses this event to convert model data to chart-specific data to render the chosen chart.
 - **drawn** - Triggered whenever `.draw()` has completed rendering a chart.
 - **error** - Triggered whenever an error occurs related to a view.
 
