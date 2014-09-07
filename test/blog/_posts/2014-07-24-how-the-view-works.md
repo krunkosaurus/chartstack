@@ -49,7 +49,7 @@ Views support the following three major feature categories through the use of va
 
 **Other properties**
 
-- **.model** - (MODEL INSTANCE or ARRAY) (REQUIRED) **(REQUIRED)** - model instance the view references data from or an Array that `chartstack.View` will instantiate a new `chartstack.Model` with.
+- **.model** - (MODEL INSTANCE or ARRAY) **(REQUIRED)** - model instance the view references data from or an Array that `chartstack.View` will instantiate a new `chartstack.Model` with.
 - **.chartType** - (STRING) - type of chart, not passed directly as it's passed automatically by proxy chart methods. (example: new chartstack.lineChart()).
 
 **Methods**
