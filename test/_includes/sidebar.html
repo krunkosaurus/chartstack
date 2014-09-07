@@ -11,9 +11,11 @@
   <nav class="sidebar-nav">
     <h3 class="sidebar-nav-item"><a href="/">Links</a></h3>
     <a class="sidebar-nav-item{% if page.title == "About Test Suite" %} active{% endif %}" href="/">Home</a>
-    <a class="sidebar-nav-item{% if page.title == "Chartstack Blog" %} active{% endif %}" href="/blog">Blog</a>
-    <!-- <a class="sidebar-nav-item" href="{{ site.github.repo }}/archive/v{{ site.version }}.zip">Download</a> -->
-    <a class="sidebar-nav-item" href="{{ site.github.repo }}">GitHub page</a>
+
+    <h3 class="sidebar-nav-item">Blog</h3>
+    <a class="sidebar-nav-item{% if page.title == "Chartstack Blog" %} active{% endif %}" href="/blog">All</a>
+    <a class="sidebar-nav-item " href="/blog/2014/07/24/how-the-view-works/">View spec</a>
+    <a class="sidebar-nav-item " href="/blog/2014/06/25/how-data-works/">Model spec</a>
     <!-- <span class="sidebar-nav-item">Currently v{{ site.version }}</span> -->
 
     <h3 class="sidebar-nav-item">Tests</h3>
@@ -25,6 +27,9 @@
         {% endif %}
       {% endif %}
     {% endfor %}
+
+    <!-- <a class="sidebar-nav-item" href="{{ site.github.repo }}/archive/v{{ site.version }}.zip">Download</a> -->
+    <a class="sidebar-nav-item" href="{{ site.github.repo }}">GitHub page</a>
   </nav>
 
   <div class="sidebar-item">
