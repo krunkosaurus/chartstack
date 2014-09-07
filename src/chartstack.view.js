@@ -67,6 +67,14 @@
 
     // If model is passed, lets fetch it's data.
     if (options.model){
+
+      // If inline array instead of model, convert it.
+      if (options.model instanceof Array){
+        options.model = new chartstack.Model({
+          data: options.model
+        });
+      }
+
       this.attachModel(options.model);
     }
   };
@@ -118,35 +126,30 @@
 
     // Used by both model update and direct data for converting data to specific
     // chart format.
-    _adaptData: function(data){
-      return chartstack.adapters[this.library](data);
+    _conformData: function(){
+        // self.data = chartstack.adapters.google(self.model.data);
+        this.data = chartstack.adapters[this.library](this.model.data);
+        this.trigger('update');
     },
 
     // Method to attach and setup event listeners
     attachModel: function(model){
       var self = this;
 
-      // If an array was passed in as the model, create a real model from it.
-      if (model instanceof Array){
-        model = new chartstack.Model({
-          data: model
-        });
-      }
-
+      // Keep reference to this model in the view.
       self.model = model;
 
-      // Fetch the model data and whenever it's updated (polling) update the
-      // reference and trigger a view update.
-      model.on('update', function(){
-        // self.data = chartstack.adapters.google(self.model.data);
-        self.data = self._adaptData(self.model.data);
-        self.trigger('update');
-      });
+      // Keep reference to this view in the model.
+      // model.view = self;
 
       if (model.url){
+        model.on('update', function(){
+          self._conformData();
+        });
+
         model.fetch();
       }else{
-        self.data = self._adaptData(self.model.data);
+        self._conformData();
       }
     }
   });
