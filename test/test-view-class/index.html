@@ -18,11 +18,6 @@ test: true
 
 describe('Chartstack view', function(){
 
-  var model = new chartstack.Model({
-    adapter: 'Keen IO',
-    url: '../api/keen/multilinechart.json'
-  });
-
   it('should properly support dom ready', function(done){
     chartstack.ready(function(){
       done();
@@ -110,6 +105,11 @@ describe('Chartstack view', function(){
   });
 
   it('should have autofetched model on draw and rendered HTML chart', function(done){
+    var model = new chartstack.Model({
+      adapter: 'Keen IO',
+      url: '../api/keen/multilinechart.json'
+    });
+
     var view = new chartstack.lineChart({
       el: '#chart6',
       model: model
@@ -120,19 +120,27 @@ describe('Chartstack view', function(){
   });
 
   it('should support setting title', function(done){
+    var model = new chartstack.Model({
+      adapter: 'Keen IO',
+      url: '../api/keen/multilinechart.json'
+    });
     var title = 'This is my chart of things';
     var view = new chartstack.lineChart({
       el: '#chart7',
       model: model,
       title: title
     }).on('drawn', function(){
-      var elementText = document.querySelector('#chart7').querySelector('text').innerHTML;
+      var elementText = document.querySelector('#chart7').querySelector('text').textContent;
       expect(elementText).to.equal(title);
       done();
     }).draw();
   });
 
   it('should support labels off', function(done){
+    var model = new chartstack.Model({
+      adapter: 'Keen IO',
+      url: '../api/keen/multilinechart.json'
+    });
     var view = new chartstack.lineChart({
       el: '#chart8',
       model: model,
