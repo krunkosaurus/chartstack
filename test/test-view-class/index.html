@@ -7,6 +7,11 @@ test: true
 <div id="chart1"></div>
 <div id="chart2"></div>
 <div id="chart3"></div>
+<div id="chart4"></div>
+<div id="chart5"></div>
+<div id="chart6"></div>
+<div id="chart7"></div>
+<div id="chart8"></div>
 
 <script src="../public/dist/chartstack2.min.js"></script>
 <script>
@@ -24,40 +29,75 @@ describe('Chartstack view', function(){
     });
   });
 
+  it('should require element argument', function(done){
+    try {
+      var view = chartstack.lineChart({
+      });
+    }
+    catch(err){
+      expect(err.message).to.equal('el property required in new view.');
+      done();
+    }
+  });
+
+  it('should require valid element', function(done){
+    try {
+      var view = chartstack.lineChart({
+        el: '#chart0'
+      });
+    }
+    catch(err){
+      expect(err.message).to.equal('Element does not exist: #chart0');
+      done();
+    }
+  });
+
   it('should support view without new operator', function(){
     var view = chartstack.lineChart({
-      el: '#chart'
+      el: '#chart1'
     });
-    expect(view.el).to.equal(document.getElementById('chart'));
+    expect(view.el).to.equal(document.getElementById('chart1'));
   });
 
   it('should support passed .el as string', function(){
     var view = chartstack.lineChart({
-      el: '#chart'
+      el: '#chart2'
     });
-    expect(view.el).to.equal(document.getElementById('chart'));
+    expect(view.el).to.equal(document.getElementById('chart2'));
   });
 
   it('should support passed .el as element', function(){
-    var el = document.getElementById('chart');
+    var el = document.getElementById('chart3');
     var view = new chartstack.lineChart({
       el: el
     });
     expect(view.el).to.equal(el);
   });
 
-  it('should have acquired defaults', function(){
+  it('should have acquired defaults (and sized up chart)', function(done){
     var view1 = new chartstack.lineChart({
-      el: '#chart'
+      el: '#chart4'
     });
 
     var width = 500;
     var height = 400;
     var view2 = new chartstack.lineChart({
-      el: '#chart',
+      el: '#chart5',
+      title: 'Override defaults',
       width: width,
-      height: height
-    });
+      height: height,
+      data: [
+        ["Year", "Sales", "Expenses"],
+        ["2004",  1000,      400],
+        ["2005",  1170,      460],
+        ["2006",  660,       1120],
+        ["2007",  1030,      540]
+      ]
+    }).on('drawn', function(){
+      console.log('confirmed drawn!');
+      // Should have sized up chart
+      done();
+    }).draw();
 
     // Confirm defaults are set.
     chartstack.each(chartstack.View.defaults, function(v,k){
@@ -71,7 +111,7 @@ describe('Chartstack view', function(){
 
   it('should have autofetched model on draw and rendered HTML chart', function(done){
     var view = new chartstack.lineChart({
-      el: '#chart1',
+      el: '#chart6',
       model: model
     }).on('drawn', function(){
       expect(this.model.data.length).to.equal(32);
@@ -82,11 +122,11 @@ describe('Chartstack view', function(){
   it('should support setting title', function(done){
     var title = 'This is my chart of things';
     var view = new chartstack.lineChart({
-      el: '#chart2',
+      el: '#chart7',
       model: model,
       title: title
     }).on('drawn', function(){
-      var elementText = document.querySelector('#chart2').querySelector('text').innerHTML;
+      var elementText = document.querySelector('#chart7').querySelector('text').innerHTML;
       expect(elementText).to.equal(title);
       done();
     }).draw();
@@ -94,7 +134,7 @@ describe('Chartstack view', function(){
 
   it('should support labels off', function(done){
     var view = new chartstack.lineChart({
-      el: '#chart3',
+      el: '#chart8',
       model: model,
       title: "Test no labels",
       labels: false
