@@ -49,11 +49,20 @@
       }
     });
 
-    // Set the element node.
-    if (typeof options.el == 'string'){
-      self.el = document.querySelector(options.el);
+    // Set the element node. Find it if needed.
+    if (options.el){
+      if (typeof options.el == 'string'){
+        self.el = document.querySelector(options.el);
+
+        // Validate element
+        if (!(self.el && self.el.nodeType == 1)){
+          throw new Error('Element does not exist: ' + options.el);
+        }
+      }else{
+        self.el = options.el;
+      }
     }else{
-      self.el = options.el;
+      throw new Error('el property required in new view.');
     }
 
     // If model is passed, lets fetch it's data.
