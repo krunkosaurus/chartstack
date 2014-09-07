@@ -42,8 +42,7 @@
       // =====
       'el',
       'library',
-      'chartType',
-      'data'
+      'chartType'
     ], function(prop){
       if (prop in options){
         self[prop] = options[prop];
@@ -69,12 +68,6 @@
     // If model is passed, lets fetch it's data.
     if (options.model){
       this.attachModel(options.model);
-    }
-
-    // Support for inline data.
-    if (options.data){
-      this.data = self._adaptData(options.data);
-      self.trigger('update');
     }
   };
 
@@ -133,6 +126,13 @@
     attachModel: function(model){
       var self = this;
 
+      // If an array was passed in as the model, create a real model from it.
+      if (model instanceof Array){
+        model = new chartstack.Model({
+          data: model
+        });
+      }
+
       self.model = model;
 
       // Fetch the model data and whenever it's updated (polling) update the
@@ -141,7 +141,13 @@
         // self.data = chartstack.adapters.google(self.model.data);
         self.data = self._adaptData(self.model.data);
         self.trigger('update');
-      }).fetch();
+      });
+
+      if (model.url){
+        model.fetch();
+      }else{
+        self.data = self._adaptData(self.model.data);
+      }
     }
   });
 
