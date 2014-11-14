@@ -7,7 +7,7 @@ module.exports = function(grunt) {
     chartstack: {
       // configurable paths
       appPath: 'demo',
-      scriptPath: 'src',
+      srcPath: 'src',
       distPath: 'dist',
       bowerPath: 'lib',
       testPath: 'test'
@@ -26,19 +26,19 @@ module.exports = function(grunt) {
       build: {
         src: [
             // Chartstack core functionality.
-            '<%= chartstack.scriptPath %>/chartstack.core.js',
+            '<%= chartstack.srcPath %>/chartstack.core.js',
             // Utilities shared by all chartstack components.
-            '<%= chartstack.scriptPath %>/chartstack.utils.js',
+            '<%= chartstack.srcPath %>/chartstack.utils.js',
             // Chartstack view class.
-            '<%= chartstack.scriptPath %>/chartstack.view.js',
+            '<%= chartstack.srcPath %>/chartstack.view.js',
             // Chartstack model class.
-            '<%= chartstack.scriptPath %>/chartstack.model.js',
+            '<%= chartstack.srcPath %>/chartstack.model.js',
             // CSV transformer plugin.
-            '<%= chartstack.scriptPath %>/utils/chartstack.cvs.transform.js',
+            '<%= chartstack.srcPath %>/utils/chartstack.cvs.transform.js',
             // Keen data transform adapter.
-            '<%= chartstack.scriptPath %>/adapters/chartstack.keen.data.adapter.js',
+            '<%= chartstack.srcPath %>/adapters/chartstack.keen.data.adapter.js',
             // Google charts library support
-            '<%= chartstack.scriptPath %>/libraries/chartstack.googlecharts.renderset.js'
+            '<%= chartstack.srcPath %>/libraries/chartstack.googlecharts.renderset.js'
         ],
         dest: '<%= chartstack.distPath %>/chartstack2.min.js'
       }
@@ -50,8 +50,8 @@ module.exports = function(grunt) {
       },
       all: [
         // Manual designation, omit 3rd party scripts
-        '<%= chartstack.scriptPath %>/chartstack2.js'
-        //'<%= chartstack.scriptPath %>/*.js', '<%= chartstack.scriptPath %>/**/*.js'
+        '<%= chartstack.srcPath %>/chartstack2.js'
+        //'<%= chartstack.srcPath %>/*.js', '<%= chartstack.srcPath %>/**/*.js'
       ]
     },
 
@@ -82,13 +82,13 @@ module.exports = function(grunt) {
     watch: {
       // Used by grunt:serve
       scripts: {
-        files: "<%= chartstack.scriptPath %>/**/*.js",
+        files: "<%= chartstack.srcPath %>/**/*.js",
         tasks: ['build']
       },
       // Used by grunt test:dev
       test: {
         files: [
-          '<%= chartstack.scriptPath %>/**/*.js',
+          '<%= chartstack.srcPath %>/**/*.js',
           '<%= chartstack.testPath %>/index.md',
           '<%= chartstack.testPath %>/public/css/*.css',
           '<%= chartstack.testPath %>/visual-*/*.html',
@@ -100,7 +100,7 @@ module.exports = function(grunt) {
         tasks: ['build', 'copy:test', 'jekyll:dist']
       },
       docs: {
-        files: ['<%= chartstack.scriptPath %>/chartstack.*.js'],
+        files: ['<%= chartstack.srcPath %>/chartstack.*.js'],
         tasks: ['jsdoc']
       }
     },
@@ -122,6 +122,12 @@ module.exports = function(grunt) {
         },{
           // Copy /dist files to test/public/dist folder.
           src: ['<%= chartstack.distPath %>/**'],
+          dest: '<%= chartstack.testPath %>/public/',
+          expand: true
+        },{
+          // Copy /src files to test/public/dist folder for debugging.
+          cwd: '<%= chartstack.srcPath %>/',
+          src: ['**'],
           dest: '<%= chartstack.testPath %>/public/',
           expand: true
         }]
