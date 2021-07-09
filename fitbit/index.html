@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Chartstack Fitbit>Universal>NVD3 Demo Page</title>
+        <link href="../css/page_styling.css" rel="stylesheet">
+    </head>
+    <body>
+        <h1>Chartstack Fitbit CSV>Universal>NVD3 Demo page</h1>
+        <ul class="menu">
+            <li><a href="../index.html">Go back</a></
+        </ul>
+
+        <div>
+
+        <section>
+            <h1>Steps in Febuary</h1>
+            <barchart width="600px" height="300px" dataformat="csv" provider="fitbit" datasource="../api/fitbit/data.csv"></barchart>
+        </section>
+
+        <section>
+            <h1>Steps in Febuary</h1>
+            <linechart width="600px" height="300px" dataformat="csv" provider="fitbit" datasource="../api/fitbit/data.csv"></linechart>
+        </section>
+
+        <section>
+            <h1>Steps in Febuary vs March</h1>
+            <div id="fitbit1"></div>
+        </section>
+
+        <section>
+            <h1>Steps in Fubuary vs March</h1>
+            <div id="fitbit2"></div>
+        </section>
+
+        </div>
+
+        <!-- NVD3 Charting library -->
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.13-beta/nv.d3.css" />
+        <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.3/d3.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.14-beta/nv.d3.min.js"></script>
+        <!-- Chartstack library -->
+        <script src="../js/chartstack.min.js"></script>
+        <!-- Fitbit to universal data adapter -->
+        <script src="chartstack.fitbit.universal.adapter.js"></script>
+        <!-- CSV to JSON transform adapter -->
+        <script src="chartstack.cvs.transform.js"></script>
+
+        <script>
+// This was example #3. We are now doing a fancy example 3 with a mashup of 2 CSV files below.
+
+/*
+            chartstack.ready(function(){
+              var barchart = new chartstack.Chart({
+                el: document.getElementById('fitbit1'),
+                chartType: 'barchart',
+                datasource: '../api/fitbit/data.csv',
+                dataformat: 'csv',
+                provider: 'fitbit',
+                width: '600',
+                height: '300'
+              });
+            });
+*/
+
+function fetchFormat(url, cb){
+  // Fetch CSV
+  chartstack.getAjax(url, function(r){
+    // Convert to CSV>JSON
+    var d = chartstack.transformers.csv(r);
+    // Convert data to unified data format.
+    d = chartstack.adapters.fitbit.barchart(d);
+    cb(d);
+  });
+}
+
+fetchFormat('../api/fitbit/data.csv', function(d1){
+  fetchFormat('../api/fitbit/data2.csv', function(d2){
+    // Rename headers.
+    d1.data[0][1] = 'April steps';
+    d1.data[0].push('March steps');
+
+    chartstack.each(d1.data, function(row, i){
+      if (i==0){return;}
+      // Push d2 data on to d1.
+      d1.data[i].push(d2.data[i][1]);
+      // Make day label generic.
+      d1.data[i][0] = i;
+    });
+
+    // We make a copy of the data since NVD3 mangles it after first use.
+    var d1copy = JSON.stringify(d1);
+
+    chartstack.ready(function(){
+      var barchart = new chartstack.Chart({
+        el: document.getElementById('fitbit1'),
+        chartType: 'barchart',
+        datasource: d1,
+        width: '600',
+        height: '300'
+      });
+
+      var linechart = new chartstack.Chart({
+        el: document.getElementById('fitbit2'),
+        chartType: 'linechart',
+        datasource: d1copy,
+        width: '600',
+        height: '300'
+      });
+
+    });
+  });
+});
+
+        </script>
+    </body>
+</html>

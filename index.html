@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Chartstack by keenlabs</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecodeom/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Chartstack</h1>
+
+        <p> JavaScript charting library and abstraction layer by Keen IO</p>
+        <p class="view"><a href="https://github.com/keenlabs/chartstack">View the Project on GitHub <small>keenlabs/chartstack</small></a></p>
+
+        <ul>
+          <li><a href="https://github.com/keenlabs/chartstack/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/keenlabs/chartstack/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/keenlabs/chartstack">View On <strong>GitHub</strong></a></li>
+        </ul>
+
+      </header>
+      <section>
+        <h3>
+          <a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>ChartStack by Keen IO</h3>
+
+          <p>ChartStack is an open-source graphing library and abstraction layer built on top of other graphing libraries.  It provides a unified JavaScript API to mask the differences between libraries so you can focus on visualizing your data.  Chartstack also extends HTML with new, simple yet powerful charting elements like &lt;piechart> and &lt;barchart>. It allows creating complex charts using static or data-driven data with as minimal coding as possible.  Here are some examples:</p>
+
+<h4>Chartstack DOM API:</h4>
+
+<div class="code-block">
+    <piechart library="google" width="498px" height="230px" title="Top 5 World Populations 2014" datasource="api/universal/piechart.json"></piechart>
+    <script src="https://www.google.com/jsapi"></script>
+    <script src="js/chartstack.min.js"></script>
+
+<div class="highlight"><pre><code class="html"><span class="c">&lt;!-- Chartstack piechart element --&gt;</span>
+<span class="nt">&lt;piechart</span> <span class="na">title=</span><span class="s">&quot;Top 5 World Populations 2014&quot;</span> <span class="na">width=</span><span class="s">&quot;270px&quot;</span>
+<span class="na">height=</span><span class="s">&quot;300px&quot;</span> <span class="na">datasource=</span><span class="s">&quot;piechart.json&quot;</span> <span class="na">library=</span><span class="s">&quot;google&quot;</span><span class="nt">&gt;&lt;/piechart&gt;</span>
+<span class="c">&lt;!-- Google charting library --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;https://www.google.com/jsapi&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="c">&lt;!-- Chartstack library --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;chartstack.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre></div>
+
+</div>
+
+<p>See more examples of the Chartstack DOM API <a href="dom-api-demo">here</a>.</p>
+
+<h4>Chartstack JS API:</h4>
+
+<div class="code-block">
+    <div id="barchart"></div>
+<!-- NVD3 charting library -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.13-beta/nv.d3.css" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.3/d3.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.14-beta/nv.d3.min.js"></script>
+<script>
+chartstack.ready(function(){
+  var bartchart = new chartstack.Chart({
+    el: document.getElementById('barchart'),
+    library: 'nv',
+    chartType: 'barchart',
+    datasource: 'api/keen/barchart.json',
+    provider: 'api.keen.io',
+    width: '500',
+    height: '300'
+  });
+});
+</script>
+<div class="highlight"><pre><code class="html"><span class="c">&lt;!-- Container div --&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;barchart&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
+<span class="c">&lt;!-- NVD3 charting library --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;//cdnjs.cloudflare.com/ajax/libs/d3/3.4.3/d3.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.14-beta/nv.d3.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="c">&lt;!-- Chartstack library --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;js/chartstack.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre></div>
+<div class="highlight"><pre><code class="html"><span class="nt">&lt;script&gt;</span>
+</code></pre></div>
+<div class="highlight"><pre><code class="javascript"><span class="c1">// Chartstack ready method ensures all chart libraries are loaded.</span>
+<span class="nx">chartstack</span><span class="p">.</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+  <span class="c1">// Instantiate a new Chart class.</span>
+  <span class="kd">var</span> <span class="nx">linechart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">chartstack</span><span class="p">.</span><span class="nx">Chart</span><span class="p">({</span>
+    <span class="c1">// Target which dom element you want to load your chart in.</span>
+    <span class="nx">el</span><span class="o">:</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;barchart&#39;</span><span class="p">),</span>
+    <span class="c1">// Can specify Google Charts or NVD3 charting libraries.</span>
+    <span class="nx">library</span><span class="o">:</span> <span class="s1">&#39;nv&#39;</span><span class="p">,</span>
+    <span class="c1">// Can specify piechart, barchart, or linechart.</span>
+    <span class="nx">chartType</span><span class="o">:</span> <span class="s1">&#39;barchart&#39;</span><span class="p">,</span>
+    <span class="c1">// Can be inline JSON or URL to fetch.</span>
+    <span class="nx">datasource</span><span class="o">:</span> <span class="s1">&#39;api/keen/barchart.json&#39;</span><span class="p">,</span>
+    <span class="c1">// Specify provider if data needs to be transformed.</span>
+    <span class="nx">provider</span><span class="o">:</span> <span class="s1">&#39;api.keen.io&#39;</span><span class="p">,</span>
+    <span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;User Signups&#39;</span><span class="p">,</span>
+    <span class="nx">width</span><span class="o">:</span> <span class="s1">&#39;500&#39;</span><span class="p">,</span>
+    <span class="nx">height</span><span class="o">:</span> <span class="s1">&#39;300&#39;</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div>
+<div class="highlight"><pre><code class="html"><span class="nt">&lt;/script&gt;</span>
+</code></pre></div>
+
+</div>
+
+<p>See more examples of the Chartstack JS API <a href="js-api-demo">here</a>.</p>
+
+<h3>
+<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>One code: many libraries</h3>
+
+<p>Under the hood, ChartStack relies on a charting library but is not fixed to any particular charting library.  Google Charts and NVD3 are currently supported with more charting libraries to come.</p>
+        <!-- Fitbit to universal data adapter -->
+        <script src="fitbit/chartstack.fitbit.universal.adapter.js"></script>
+        <!-- CSV to JSON transform adapter -->
+        <script src="fitbit/chartstack.cvs.transform.js"></script>
+
+<h3>
+<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Includes easy transformation of your data format</h3>
+
+<p>We recognize that everybody collects data in different ways and every charting library has it's own arbitrary data format for displaying that data, that's why ChartStack comes with easy methods to normalize incoming data to one unified format. Though there is no real standard for displaying data in charts, once you've setup the normalization plugin for your data source, all charts just work.  We've already included a normalization plugin for Keen IO data sources and the community is invited to add theirs in the ChartStack Github repo.</p>
+
+<div class="code-block">
+    <div style="text-align: center;">
+        <h4>Febuary Steps: Data pulling from Fitbit CSV File</h4>
+        <barchart width="498px" height="220px" dataformat="csv" provider="fitbit" datasource="api/fitbit/data.csv"></barchart>
+    </div>
+
+<div class="highlight"><pre><code class="html"><span class="nt">&lt;h4&gt;</span>Febuary Steps: Data pulling from Fitbit CSV File<span class="nt">&lt;/h4&gt;</span>
+<span class="nt">&lt;barchart</span> <span class="na">width=</span><span class="s">&quot;500px&quot;</span> <span class="na">height=</span><span class="s">&quot;220px&quot;</span> <span class="na">dataformat=</span><span class="s">&quot;csv&quot;</span>
+<span class="na">provider=</span><span class="s">&quot;fitbit&quot;</span> <span class="na">datasource=</span><span class="s">&quot;api/fitbit/data.csv&quot;</span><span class="nt">&gt;&lt;/barchart&gt;</span>
+<span class="c">&lt;!-- Fitbit to universal data adapter --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;fitbit/chartstack.fitbit.universal.adapter.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="c">&lt;!-- CSV to JSON transform adapter --&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;fitbit/chartstack.cvs.transform.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre></div>
+</div>
+
+<p>See more Fitbit data examples and the Chartstack API <a href="fitbit">here</a>.</p>
+
+<h3>
+<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Change the charting library but not your data</h3>
+
+<p>Because Chartstack understands your data format it means switching to a different supported charting library is as easy as a text change without having to change your data to support the other charting api.  That way you can focus on building and styling your chart.</p>
+
+<h3>
+<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Support for advanced users</h3>
+
+<p>Chartstack's goal is to be as simple and flexible while not tying you to one Graphing Library.  There are cases however, where one graphing library has features that another doesn't.  Chartstack keeps the underlying library accessible so that advanced users can still access those features.</p>
+
+<h3>
+<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>In beta</h3>
+
+<p>Chartstack is still in beta. Checkout the project on <a href="https://github.com/keenlabs/chartstack">github</a> or download the latest <a href="https://github.com/keenlabs/chartstack/releases">release here</a>.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/krunkosaurus">krunkosaurus</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+  </body>
+</html>

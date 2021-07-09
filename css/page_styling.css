@@ -1,0 +1,29 @@
+/* Just styles here for this test page. Not part of any library. */
+body{
+  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+h1{margin-bottom: 0;}
+h3{text-align: center;}
+ul.menu{
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0;
+}
+
+ul.menu li{
+}
+
+.hidden{display: none;}
+#start h3{text-align: left;}
+
+section{
+    float: left;
+    border: solid 1px: black;
+    padding-right: 10px;
+    text-align: center;
+}
+
+.nv-legend{
+    fill: blue;
+}

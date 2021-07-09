@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Chartstack all tests</title>
+        <link href="../css/page_styling.css" rel="stylesheet">
+        <link href="../css/nv.d3.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <h1>Chartstack DOM API charts test page</h1>
+        <ul class="menu">
+            <li><a href="../">Go back</a></
+        </ul>
+
+        <div>
+
+        <section>
+            <div id="piechart1"></div>
+        </section>
+
+        <section>
+            <div id="barchart1"></div>
+        </section>
+
+        <section>
+            <div id="linechart1"></div>
+        </section>
+
+        <section>
+            <div id="piechart2"></div>
+        </section>
+
+        <section>
+            <div id="barchart2"></div>
+        </section>
+
+        <section>
+            <div id="linechart2"></div>
+        </section>
+
+        <section>
+            <div id="piechart3"></div>
+        </section>
+
+        <section>
+            <div id="barchart3"></div>
+        </section>
+
+        <section>
+            <div id="linechart3"></div>
+        </section>
+
+        </div>
+
+        <!-- Load all charting libraries and all renderers and adapters to ensure they work well together. -->
+        <!-- Google Charts -->
+        <script src="https://www.google.com/jsapi"></script>
+        <!-- NVD3 -->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.3/d3.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.1.14-beta/nv.d3.min.js"></script>
+        <!-- Highcharts -->
+        <script src="../js/standalone-framework.src.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.9/highcharts.js"></script>
+        <!-- Chartstack + all renderers + all adapters -->
+        <script src="../js/chartstack.min.js"></script>
+
+        <script>
+            chartstack.ready(function(){
+              var piechart1 = new chartstack.Chart({
+                el: document.getElementById('piechart1'),
+                library: 'nv',
+                chartType: 'piechart',
+                datasource: '../api/keen/piechart.json',
+                provider: 'api.keen.io',
+                width: '500',
+                height: '500'
+              });
+
+              var barchart1 = new chartstack.Chart({
+                el: document.getElementById('barchart1'),
+                library: 'nv',
+                chartType: 'barchart',
+                datasource: '../api/keen/barchart.json',
+                provider: 'api.keen.io',
+                width: '500',
+                height: '300'
+              });
+
+              var linechart1 = new chartstack.Chart({
+                el: document.getElementById('linechart1'),
+                library: 'nv',
+                chartType: 'linechart',
+                datasource: '../api/keen/linechart.json',
+                provider: 'api.keen.io',
+                width: '500',
+                height: '300'
+              });
+
+              var piechart2 = new chartstack.Chart({
+                el: document.getElementById('piechart2'),
+                library: 'google',
+                chartType: 'piechart',
+                datasource: '../api/keen/piechart.json',
+                provider: 'api.keen.io',
+                width: '500',
+                height: '500'
+              });
+
+              var barchart2 = new chartstack.Chart({
+                el: document.getElementById('barchart2'),
+                library: 'google',
+                chartType: 'barchart',
+                datasource: '../api/keen/barchart.json',
+                provider: 'api.keen.io',
+                width: '500',
+                height: '300'
+              });
+
+              var linechart2 = new chartstack.Chart({
+                el: document.getElementById('linechart2'),
+                library: 'google',
+                chartType: 'linechart',
+                datasource: '../api/keen/linechart.json',
+                provider: 'api.keen.io',
+                width: '500',
+                height: '300'
+              });
+
+              var piechart3 = new chartstack.Chart({
+                el: document.getElementById('piechart3'),
+                library: 'Highcharts',
+                chartType: 'piechart',
+                datasource: '../api/universal/piechart.json',
+                width: '500',
+                height: '500'
+              });
+
+              var barchart3 = new chartstack.Chart({
+                el: document.getElementById('barchart3'),
+                library: 'Highcharts',
+                chartType: 'barchart',
+                datasource: '../api/universal/barchart.json',
+                width: '500',
+                height: '300'
+              });
+
+              var linechart3 = new chartstack.Chart({
+                el: document.getElementById('linechart3'),
+                library: 'Highcharts',
+                chartType: 'linechart',
+                datasource: '../api/universal/linechart.json',
+                width: '500',
+                height: '300'
+              });
+            });
+        </script>
+    </body>
+</html>
