@@ -1,6 +1,6 @@
-# Chartstack
+**NOTE:** This is a project I helped write in 2014. I have imported it here since the original no longer exists. The [demo page](http://keenlabs.github.io/chartstack/) is still pretty cool though, and the libarary still works today in modern browsers.
 
-[![Build Status](https://magnum.travis-ci.com/keenlabs/chartstack.svg?token=wfasM9dDfjzGTx53pqzt&branch=master)](https://magnum.travis-ci.com/keenlabs/chartstack)
+# Chartstack
 
 **Chartstack** is a charting library and abstraction layer that enables a user to visualize their data on top of many popular charting libraries using one unified JavaScript API. Chartstack's goal is to allow any data format to work with any charting library, including an easy way to support your own custom data formats. Charstack is created and maintained by [Keen IO](http://keen.io/).
 
